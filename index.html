@@ -140,22 +140,22 @@
       color: var(--navy);
       border: 2px solid var(--navy);
     }
-
+    
+.hero-mascot-img {
+  position: relative;
+  z-index: 2;
+  width: 390px;
+  max-width: 90%;
+  display: block;
+  filter: drop-shadow(0 18px 18px rgba(6,25,74,0.14));
+}
+    
     .hero-art {
       position: relative;
       min-height: 500px;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .hero-circle {
-      position: absolute;
-      width: 430px;
-      height: 430px;
-      border-radius: 50%;
-      background: linear-gradient(180deg, #fff1bd 0%, #fff7dd 100%);
-      z-index: 0;
     }
 
     .cloud {
@@ -214,18 +214,6 @@
       height: 78px;
       right: 8px;
       top: -49px;
-    }
-
-    .hero-mascot {
-      position: relative;
-      z-index: 2;
-      width: 390px;
-      height: 390px;
-      background-image: url("MissionAtlasXD_Mascot.png");
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      filter: drop-shadow(0 18px 18px rgba(6,25,74,0.16));
     }
 
     .mission {
@@ -570,16 +558,18 @@
 
       </div>
 
-      <div class="hero-art">
+<div class="hero-art">
 
-        <div class="hero-circle"></div>
+  <div class="cloud left"></div>
+  <div class="cloud right"></div>
 
-        <div class="cloud left"></div>
-        <div class="cloud right"></div>
+  <img
+    class="hero-mascot-img"
+    src="MissionAtlasXD_Mascot.png"
+    alt="Mission Atlas xD Mascot"
+  >
 
-        <div class="hero-mascot"></div>
-
-      </div>
+</div>
 
     </section>
 
