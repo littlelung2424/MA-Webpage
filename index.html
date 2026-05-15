@@ -8,7 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
 
   <style>
-
     :root {
       --navy: #06194a;
       --deep-navy: #031235;
@@ -17,13 +16,9 @@
       --text: #263246;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -53,13 +48,9 @@
       color: var(--navy);
     }
 
-    .brand img {
-      width: 58px;
-    }
+    .brand img { width: 58px; }
 
-    .brand .xd {
-      color: var(--yellow);
-    }
+    .brand .xd { color: var(--yellow); }
 
     nav a {
       margin-left: 30px;
@@ -67,12 +58,9 @@
       color: var(--navy);
       font-weight: 900;
       font-size: 15px;
-      transition: 0.2s ease;
     }
 
-    nav a:hover {
-      color: var(--yellow);
-    }
+    nav a:hover { color: var(--yellow); }
 
     .hero {
       display: grid;
@@ -80,8 +68,7 @@
       align-items: center;
       gap: 40px;
       padding: 70px 7% 55px;
-      background:
-        radial-gradient(circle at 70% 55%, #fff0c4 0%, #fff8e8 34%, #fffdf8 67%);
+      background: radial-gradient(circle at 70% 55%, #fff0c4 0%, #fff8e8 34%, #fffdf8 67%);
       overflow: hidden;
     }
 
@@ -125,13 +112,11 @@
       border-radius: 8px;
       text-decoration: none;
       font-weight: 900;
-      transition: 0.2s ease;
       font-size: 16px;
+      transition: 0.2s ease;
     }
 
-    .button:hover {
-      transform: translateY(-2px);
-    }
+    .button:hover { transform: translateY(-2px); }
 
     .primary {
       background: var(--yellow);
@@ -225,12 +210,10 @@
       z-index: 2;
       width: 390px;
       height: 390px;
-
-      background-image: url('MissionAtlasXD_Mascot.png');
+      background-image: url("MissionAtlasXD_Mascot.png");
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
-
       filter: drop-shadow(0 18px 18px rgba(6,25,74,0.16));
     }
 
@@ -246,26 +229,6 @@
       overflow: hidden;
     }
 
-    .mission::before,
-    .mission::after {
-      content: "";
-      position: absolute;
-      width: 260px;
-      height: 260px;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 50%;
-    }
-
-    .mission::before {
-      left: -100px;
-      top: -110px;
-    }
-
-    .mission::after {
-      right: -80px;
-      bottom: -130px;
-    }
-
     .mission-icon {
       width: 100px;
       height: 100px;
@@ -275,7 +238,6 @@
       align-items: center;
       justify-content: center;
       font-size: 48px;
-      color: var(--yellow);
       position: relative;
       z-index: 1;
     }
@@ -285,8 +247,6 @@
       text-transform: uppercase;
       font-size: 18px;
       margin: 0 0 10px;
-      position: relative;
-      z-index: 1;
     }
 
     .mission p {
@@ -294,13 +254,9 @@
       line-height: 1.55;
       margin: 0;
       max-width: 940px;
-      position: relative;
-      z-index: 1;
     }
 
-    section {
-      padding: 58px 7%;
-    }
+    section { padding: 58px 7%; }
 
     .section-kicker {
       text-align: center;
@@ -330,15 +286,10 @@
       text-align: center;
       padding: 24px 16px 28px;
       box-shadow: 0 8px 22px rgba(6,25,74,0.04);
-      transition: 0.2s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
     }
 
     .card-icon {
-      font-size: 50px;
+      font-size: 46px;
       margin-bottom: 14px;
     }
 
@@ -387,7 +338,7 @@
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      background: #06194a;
+      background: var(--navy);
       color: white;
       display: flex;
       align-items: center;
@@ -397,40 +348,41 @@
     }
 
     .why-icon {
-      font-size: 58px;
+      font-size: 54px;
       line-height: 1;
-      color: var(--yellow);
     }
 
     .xd-face {
       width: 64px;
       height: 64px;
       border-radius: 50%;
-      background: #f7b500;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #06194a;
+      background: var(--yellow);
+      position: relative;
       box-shadow: 0 6px 14px rgba(247,181,0,0.28);
       transform: rotate(-6deg);
-      overflow: hidden;
     }
 
-    .xd-eyes {
-      font-size: 24px;
+    .xd-face::before {
+      content: "x";
+      position: absolute;
+      left: 17px;
+      top: 13px;
+      color: var(--navy);
+      font-size: 25px;
       font-weight: 900;
-      position: relative;
-      top: -5px;
-      left: 2px;
-      transform: rotate(-10deg);
+      line-height: 1;
+      transform: rotate(-12deg);
     }
 
-    .xd-mouth {
+    .xd-face::after {
+      content: "D";
+      position: absolute;
+      right: 14px;
+      top: 16px;
+      color: var(--navy);
       font-size: 34px;
       font-weight: 900;
-      position: relative;
-      top: 2px;
-      left: 2px;
+      line-height: 1;
     }
 
     .why-item h3 {
@@ -489,21 +441,10 @@
       color: white;
       padding: 18px 7%;
       font-size: 14px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       text-align: center;
-      border-top: 1px solid rgba(255,255,255,0.12);
-    }
-
-    footer a {
-      color: var(--yellow);
-      text-decoration: none;
-      font-weight: 900;
     }
 
     @media (max-width: 1050px) {
-
       .hero {
         grid-template-columns: 1fr;
         text-align: center;
@@ -522,14 +463,9 @@
       .cards {
         grid-template-columns: repeat(2, 1fr);
       }
-
-      .hero-art {
-        min-height: 420px;
-      }
     }
 
     @media (max-width: 760px) {
-
       header {
         display: block;
         text-align: center;
@@ -587,14 +523,12 @@
         margin: 30px auto 0;
       }
     }
-
   </style>
 </head>
 
 <body>
 
   <header>
-
     <div class="brand">
       <img src="02.jpg" alt="Mission Atlas xD Logo">
       <span>MissionAtlas<span class="xd">XD</span></span>
@@ -607,22 +541,15 @@
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
     </nav>
-
   </header>
 
   <main id="home">
 
     <section class="hero">
-
       <div>
+        <div class="eyebrow">We hold the weight so you can grow.</div>
 
-        <div class="eyebrow">
-          We hold the weight so you can grow.
-        </div>
-
-        <h1>
-          Commercial operations support for biotech teams ready to scale.
-        </h1>
+        <h1>Commercial operations support for biotech teams ready to scale.</h1>
 
         <p>
           Mission Atlas xD helps biotech startups streamline Salesforce,
@@ -631,181 +558,110 @@
         </p>
 
         <div class="buttons">
-
-          <a class="button primary" href="mailto:info@missionatlasxd.com">
-            ✉️ Let’s Talk
-          </a>
-
-          <a class="button secondary" href="#services">
-            View Services
-          </a>
-
+          <a class="button primary" href="mailto:info@missionatlasxd.com">✉️ Let’s Talk</a>
+          <a class="button secondary" href="#services">View Services</a>
         </div>
-
       </div>
 
       <div class="hero-art">
-
         <div class="hero-circle"></div>
-
         <div class="cloud left"></div>
         <div class="cloud right"></div>
-
-        <div class="hero-mascot"></div>
-
+        <div class="hero-mascot" aria-label="Mission Atlas xD Mascot"></div>
       </div>
-
     </section>
 
     <section id="about" class="mission">
-
       <div class="mission-icon">🎯</div>
 
       <div>
-
         <h2>Our Mission</h2>
-
         <p>
           To remove the weight off your shoulders and streamline your business process.
           We provide end to end solutions and everything in between, specializing in the
           biosciences. We do this with <strong style="color:#f7b500;">xD</strong> fun
           and xtreme determination.
         </p>
-
       </div>
-
     </section>
 
     <section id="services">
+      <div class="section-kicker">What We Do</div>
 
-      <div class="section-kicker">
-        What We Do
-      </div>
-
-      <h2 class="section-title">
-        End to end solutions. Everything in between.
-      </h2>
+      <h2 class="section-title">End to end solutions. Everything in between.</h2>
 
       <div class="cards">
-
         <div class="card">
           <div class="card-icon">☁️</div>
           <h3>Salesforce Optimization</h3>
           <div class="line"></div>
-          <p>
-            Streamline your CRM to drive adoption, visibility, and growth.
-          </p>
+          <p>Streamline your CRM to drive adoption, visibility, and growth.</p>
         </div>
 
         <div class="card">
           <div class="card-icon">⚙️</div>
           <h3>Commercial Operations Support</h3>
           <div class="line"></div>
-          <p>
-            Hands-on support across go-to-market, process, and systems.
-          </p>
+          <p>Hands-on support across go-to-market, process, and systems.</p>
         </div>
 
         <div class="card">
           <div class="card-icon">📈</div>
           <h3>Workflow Automation</h3>
           <div class="line"></div>
-          <p>
-            Automate the manual so your team can focus on what matters.
-          </p>
+          <p>Automate the manual so your team can focus on what matters.</p>
         </div>
 
         <div class="card">
           <div class="card-icon">🗄️</div>
           <h3>Data, Reporting & Insights</h3>
           <div class="line"></div>
-          <p>
-            Clean, reliable data that powers confident decisions.
-          </p>
+          <p>Clean, reliable data that powers confident decisions.</p>
         </div>
 
         <div class="card">
           <div class="card-icon">💵</div>
           <h3>Order-to-Cash / NetSuite Support</h3>
           <div class="line"></div>
-          <p>
-            Improve O2C processes and NetSuite operations from end to end.
-          </p>
+          <p>Improve O2C processes and NetSuite operations from end to end.</p>
         </div>
-
       </div>
-
     </section>
 
     <section id="why" class="why">
-
-      <div class="section-kicker">
-        Why Mission Atlas xD
-      </div>
+      <div class="section-kicker">Why Mission Atlas xD</div>
 
       <div class="why-grid">
-
         <div class="why-item">
-
           <div class="partnership-icon">🤝</div>
-
           <div>
             <h3>Founder-Led & Hands-On</h3>
-
-            <p>
-              You work directly with an experienced operator who cares
-              about your success.
-            </p>
+            <p>You work directly with an experienced operator who cares about your success.</p>
           </div>
-
         </div>
 
         <div class="why-item">
-
           <div class="why-icon">🛡️⭐</div>
-
           <div>
             <h3>Biotech Startup Experienced</h3>
-
-            <p>
-              We understand the pace, resource constraints,
-              and complexity of your world.
-            </p>
+            <p>We understand the pace, resource constraints, and complexity of your world.</p>
           </div>
-
         </div>
 
         <div class="why-item">
-
-          <div class="xd-face">
-            <div class="xd-eyes">x</div>
-            <div class="xd-mouth">D</div>
-          </div>
-
+          <div class="xd-face" aria-label="xD face icon"></div>
           <div>
             <h3>We Do It with xD</h3>
-
-            <p>
-              We bring positivity, partnership, and xtreme determination
-              to every engagement.
-            </p>
+            <p>We bring positivity, partnership, and xtreme determination to every engagement.</p>
           </div>
-
         </div>
-
       </div>
-
     </section>
 
     <section id="contact" class="contact">
-
       <div class="contact-inner">
-
         <div>
-
-          <h2>
-            Let’s lighten your load.
-          </h2>
+          <h2>Let’s lighten your load.</h2>
 
           <p>
             Ready to simplify your systems and scale with confidence?
@@ -813,13 +669,8 @@
           </p>
 
           <div class="buttons">
-
-            <a class="button primary" href="mailto:info@missionatlasxd.com">
-              ✉️ Let’s Talk
-            </a>
-
+            <a class="button primary" href="mailto:info@missionatlasxd.com">✉️ Let’s Talk</a>
           </div>
-
         </div>
 
         <img
@@ -827,17 +678,13 @@
           src="MissionAtlasXD_wavingmascot.png"
           alt="Mission Atlas xD Waving Mascot"
         >
-
       </div>
-
     </section>
 
   </main>
 
   <footer>
-
     © 2026 Mission Atlas xD, LLC. All rights reserved.
-
   </footer>
 
 </body>
