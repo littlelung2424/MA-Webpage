@@ -311,68 +311,50 @@
     }
 
     .why {
-      background: linear-gradient(90deg, #fffaf0 0%, #fff1c9 100%);
-    }
+  background: linear-gradient(180deg, #fffdf8 0%, #fff7e8 100%);
+}
 
-    .why-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 34px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
 
-    .why-item {
-      display: grid;
-      grid-template-columns: 72px 1fr;
-      gap: 18px;
-      align-items: start;
-    }
+.why-item {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 22px;
+  align-items: start;
+}
 
-    .partnership-icon {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: var(--navy);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      box-shadow: 0 6px 14px rgba(6,25,74,0.18);
-    }
-
-    .why-icon {
-      font-size: 54px;
-      line-height: 1;
-    }
-
-.xd-emoji {
-  width: 64px;
-  height: 64px;
+.icon-circle {
+  width: 82px;
+  height: 82px;
   border-radius: 50%;
   background: #06194a;
-  border: 4px solid #f7b500;
-  color: white;
+  color: #f7b500;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 34px;
-  box-shadow: 0 6px 14px rgba(6,25,74,0.22);
+  font-size: 42px;
+  box-shadow: 0 10px 22px rgba(6,25,74,0.18);
 }
 
-    .why-item h3 {
-      color: var(--navy);
-      font-size: 23px;
-      margin: 0 0 8px;
-      line-height: 1.15;
-    }
+.why-item h3 {
+  color: #06194a;
+  font-size: 24px;
+  line-height: 1.2;
+  margin: 0 0 10px;
+}
 
-    .why-item p {
-      margin: 0;
-      line-height: 1.55;
-      font-size: 16px;
-    }
+.why-item p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #374151;
+}
 
     .contact {
       background: var(--navy);
@@ -643,62 +625,68 @@
 
     </section>
 
-    <section id="why" class="why">
+   <section id="why" class="why">
 
-      <div class="section-kicker">
-        Why Mission Atlas xD
+  <div class="section-kicker">
+    Why Mission Atlas xD
+  </div>
+
+  <div class="why-grid">
+
+    <div class="why-item">
+
+      <div class="icon-circle">
+        🤝
       </div>
 
-      <div class="why-grid">
+      <div>
+        <h3>Founder-Led & Hands-On</h3>
 
-        <div class="why-item">
-
-          <div class="partnership-icon">🤝</div>
-
-          <div>
-            <h3>Founder-Led & Hands-On</h3>
-
-            <p>
-              You work directly with an experienced operator who cares
-              about your success.
-            </p>
-          </div>
-
-        </div>
-
-        <div class="why-item">
-
-          <div class="why-icon">🛡️⭐</div>
-
-          <div>
-            <h3>Biotech Startup Experienced</h3>
-
-            <p>
-              We understand the pace, resource constraints,
-              and complexity of your world.
-            </p>
-          </div>
-
-        </div>
-
-        <div class="why-item">
-
-          <div class="xd-emoji">😆</div>
-
-          <div>
-            <h3>We Do It with xD</h3>
-
-            <p>
-              We bring positivity, partnership, and xtreme determination
-              to every engagement.
-            </p>
-          </div>
-
-        </div>
-
+        <p>
+          You work directly with an experienced operator who cares
+          about your success.
+        </p>
       </div>
 
-    </section>
+    </div>
+
+    <div class="why-item">
+
+      <div class="icon-circle">
+        🛡️
+      </div>
+
+      <div>
+        <h3>Biotech Startup Experienced</h3>
+
+        <p>
+          We understand the pace, resource constraints,
+          and complexity of your world.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="why-item">
+
+      <div class="icon-circle">
+        😆
+      </div>
+
+      <div>
+        <h3>We Do It with xD</h3>
+
+        <p>
+          We bring positivity, partnership, and xtreme determination
+          to every engagement.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
 
     <section id="contact" class="contact">
 
