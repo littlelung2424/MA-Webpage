@@ -157,12 +157,26 @@
 }
     
     .hero-art {
-      position: relative;
-      min-height: 500px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  position: relative;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero-globe {
+  position: absolute;
+  width: 430px;
+  height: 430px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 42%,
+      rgba(255, 246, 205, 0.95) 0%,
+      rgba(255, 235, 150, 0.45) 52%,
+      rgba(255, 248, 232, 0.05) 78%);
+  z-index: 0;
+}
 
     .cloud {
   position: absolute;
@@ -534,6 +548,7 @@
       </div>
 
 <div class="hero-art">
+  <div class="hero-globe"></div>
 
   <div class="cloud left"></div>
   <div class="cloud right"></div>
