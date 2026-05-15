@@ -165,62 +165,49 @@
     }
 
     .cloud {
-      position: absolute;
-      background: white;
-      b-radius: 999px;
-      opacity: 0.95;
-      z-index: 1;
-    }
+  position: absolute;
+  width: 150px;
+  height: 48px;
+  background: white;
+  border-radius: 999px;
+  opacity: 0.9;
+  z-index: 1;
+  pointer-events: none;
+}
 
-    .cloud::before,
-    .cloud::after {
-      content: "";
-      position: absolute;
-      background: white;
-      b-radius: 50%;
-    }
+.cloud::before {
+  content: "";
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  background: white;
+  border-radius: 50%;
+  left: 22px;
+  bottom: 12px;
+}
 
-    .cloud.left {
-      width: 125px;
-      height: 32px;
-      left: 58px;
-      top: 260px;
-    }
+.cloud::after {
+  content: "";
+  position: absolute;
+  width: 92px;
+  height: 92px;
+  background: white;
+  border-radius: 50%;
+  right: 18px;
+  bottom: 8px;
+}
 
-    .cloud.left::before {
-      width: 55px;
-      height: 55px;
-      left: 18px;
-      top: -28px;
-    }
+.cloud.left {
+  left: 8%;
+  top: 58%;
+  transform: scale(0.9);
+}
 
-    .cloud.left::after {
-      width: 72px;
-      height: 72px;
-      right: 12px;
-      top: -42px;
-    }
-
-    .cloud.right {
-      width: 145px;
-      height: 35px;
-      right: 28px;
-      top: 310px;
-    }
-
-    .cloud.right::before {
-      width: 62px;
-      height: 62px;
-      left: 25px;
-      top: -34px;
-    }
-
-    .cloud.right::after {
-      width: 78px;
-      height: 78px;
-      right: 8px;
-      top: -49px;
-    }
+.cloud.right {
+  right: 3%;
+  top: 62%;
+  transform: scale(1.05);
+}
 
     .mission {
       background: var(--navy);
