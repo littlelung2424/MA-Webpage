@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mission Atlas xD</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --navy: #07194a;
+      --navy: #06194a;
       --yellow: #f7b500;
       --cream: #fff9ec;
       --text: #1f2937;
@@ -20,34 +20,40 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       font-family: 'Lato', sans-serif;
-      color: var(--text);
       background: var(--cream);
+      color: var(--text);
     }
 
     header {
-      background: var(--white);
+      background: white;
       padding: 24px 8%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.05);
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 14px;
-      font-weight: 900;
       font-size: 30px;
+      font-weight: 900;
       color: var(--navy);
     }
 
     .brand img {
-      width: 58px;
-      height: auto;
+      width: 62px;
     }
 
     nav a {
@@ -55,50 +61,57 @@
       text-decoration: none;
       color: var(--navy);
       font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    nav a:hover {
+      color: var(--yellow);
     }
 
     .hero {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
-      gap: 40px;
+      gap: 50px;
       align-items: center;
-      padding: 80px 8%;
+      padding: 90px 8%;
       background: linear-gradient(180deg, #ffffff 0%, #fff7df 100%);
     }
 
     .eyebrow {
       color: var(--yellow);
       font-weight: 900;
-      letter-spacing: 1px;
       text-transform: uppercase;
-      margin-bottom: 16px;
+      letter-spacing: 1px;
+      margin-bottom: 18px;
+      font-size: 15px;
     }
 
     h1 {
-      font-size: 56px;
-      line-height: 1.05;
+      font-size: 64px;
+      line-height: 1.02;
       color: var(--navy);
-      margin: 0 0 24px;
+      margin: 0 0 28px;
     }
 
     .hero p {
-      font-size: 21px;
+      font-size: 22px;
       line-height: 1.7;
-      max-width: 620px;
+      max-width: 650px;
     }
 
     .buttons {
-      margin-top: 32px;
       display: flex;
       gap: 18px;
+      margin-top: 36px;
       flex-wrap: wrap;
     }
 
     .button {
-      padding: 15px 24px;
-      border-radius: 8px;
+      padding: 16px 28px;
+      border-radius: 10px;
       text-decoration: none;
       font-weight: 900;
+      transition: 0.2s ease;
       display: inline-block;
     }
 
@@ -107,10 +120,19 @@
       color: var(--navy);
     }
 
+    .primary:hover {
+      transform: translateY(-2px);
+    }
+
     .secondary {
       border: 2px solid var(--navy);
       color: var(--navy);
       background: white;
+    }
+
+    .secondary:hover {
+      background: var(--navy);
+      color: white;
     }
 
     .hero-image {
@@ -118,45 +140,46 @@
     }
 
     .hero-image img {
-      max-width: 420px;
+      max-width: 460px;
       width: 100%;
     }
 
     .mission {
       background: var(--navy);
       color: white;
-      padding: 56px 8%;
       text-align: center;
+      padding: 70px 8%;
     }
 
     .mission h2 {
       color: var(--yellow);
       text-transform: uppercase;
       letter-spacing: 1px;
+      margin-bottom: 24px;
     }
 
     .mission p {
-      max-width: 850px;
+      max-width: 900px;
       margin: 0 auto;
-      font-size: 22px;
+      font-size: 24px;
       line-height: 1.7;
     }
 
     section {
-      padding: 70px 8%;
+      padding: 80px 8%;
     }
 
     .section-title {
       text-align: center;
+      font-size: 44px;
       color: var(--navy);
-      font-size: 38px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .section-subtitle {
       text-align: center;
-      font-size: 20px;
-      margin-bottom: 42px;
+      font-size: 21px;
+      margin-bottom: 48px;
     }
 
     .cards {
@@ -167,70 +190,102 @@
 
     .card {
       background: white;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(7,25,74,0.08);
+      padding: 34px;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(6,25,74,0.08);
       border-top: 5px solid var(--yellow);
+      transition: 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
     }
 
     .card h3 {
       color: var(--navy);
-      font-size: 22px;
+      font-size: 24px;
       margin-top: 0;
     }
 
     .card p {
-      line-height: 1.6;
       font-size: 17px;
+      line-height: 1.7;
     }
 
     .why {
-      background: #ffffff;
+      background: white;
     }
 
     .why-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
-      text-align: center;
+      gap: 30px;
     }
 
     .why-item {
-      padding: 28px;
+      background: #fffdf8;
+      border-radius: 18px;
+      padding: 36px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
     }
 
     .why-icon {
-      font-size: 44px;
-      margin-bottom: 14px;
+      font-size: 48px;
+      margin-bottom: 18px;
+    }
+
+    .why-item h3 {
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+
+    .why-item p {
+      line-height: 1.7;
+      font-size: 17px;
     }
 
     .contact {
       background: var(--navy);
       color: white;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 30px;
-      align-items: center;
+      padding: 80px 8% 30px;
+      overflow: hidden;
+    }
+
+    .contact-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 40px;
     }
 
     .contact h2 {
-      font-size: 40px;
-      margin: 0 0 10px;
+      font-size: 52px;
+      margin: 0 0 14px;
     }
 
-    .contact img {
-      width: 150px;
+    .contact p {
+      font-size: 22px;
+      line-height: 1.7;
+      max-width: 650px;
+    }
+
+    .waving-mascot img {
+      width: 230px;
+      display: block;
     }
 
     footer {
       background: #041033;
       color: white;
       text-align: center;
-      padding: 22px;
+      padding: 24px;
+      font-size: 15px;
     }
 
-    @media (max-width: 900px) {
-      header, .hero, .contact {
+    @media (max-width: 1000px) {
+
+      header {
         display: block;
         text-align: center;
       }
@@ -244,18 +299,45 @@
         margin: 8px;
       }
 
-      h1 {
-        font-size: 42px;
+      .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
       }
 
-      .cards, .why-grid {
+      h1 {
+        font-size: 48px;
+      }
+
+      .hero p {
+        margin: 0 auto;
+      }
+
+      .buttons {
+        justify-content: center;
+      }
+
+      .cards {
         grid-template-columns: 1fr;
       }
 
-      .hero-image {
-        margin-top: 40px;
+      .why-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-content {
+        display: block;
+        text-align: center;
+      }
+
+      .contact p {
+        margin: 0 auto;
+      }
+
+      .waving-mascot img {
+        margin: 40px auto 0;
       }
     }
+
   </style>
 </head>
 
@@ -263,7 +345,7 @@
 
   <header>
     <div class="brand">
-      <img src="02.jpg" alt="Mission Atlas xD logo">
+      <img src="02.jpg" alt="Mission Atlas xD Logo">
       <span>Mission Atlas xD</span>
     </div>
 
@@ -276,96 +358,181 @@
   </header>
 
   <main>
-    <section class="hero">
-      <div>
-        <div class="eyebrow">We hold the weight so you can grow.</div>
 
-        <h1>Commercial operations support for bioscience teams ready to scale.</h1>
+    <section class="hero">
+
+      <div>
+        <div class="eyebrow">
+          We hold the weight so you can grow.
+        </div>
+
+        <h1>
+          Commercial operations support for bioscience teams ready to scale.
+        </h1>
 
         <p>
-          Mission Atlas xD provides end-to-end solutions and everything in between,
-          helping bioscience companies streamline business processes with xD fun
-          and xtreme determination.
+          Mission Atlas xD removes the weight off your shoulders by streamlining
+          systems, workflows, and operations. We provide end-to-end solutions and
+          everything in between with xD fun and xtreme determination.
         </p>
 
         <div class="buttons">
-          <a class="button primary" href="mailto:ngimung@gmail.com">Let’s Talk</a>
-          <a class="button secondary" href="#services">View Services</a>
+          <a class="button primary" href="mailto:ngimung@gmail.com">
+            Let’s Talk
+          </a>
+
+          <a class="button secondary" href="#services">
+            View Services
+          </a>
         </div>
       </div>
 
       <div class="hero-image">
-        <img src="MissionAtlasXD_Mascot.jpg" alt="Mission Atlas xD mascot holding the weight">
+        <img src="MissionAtlasXD_Mascot.jpg" alt="Mission Atlas xD Mascot">
       </div>
+
     </section>
 
     <section id="mission" class="mission">
+
       <h2>Our Mission</h2>
+
       <p>
         To remove the weight off your shoulders and streamline your business process.
+        We provide end-to-end solutions and everything in between, specializing in
+        the biosciences. We do this with xD fun and xtreme determination.
       </p>
+
     </section>
 
     <section id="services">
-      <h2 class="section-title">What We Do</h2>
-      <p class="section-subtitle">End-to-end solutions. Everything in between.</p>
+
+      <h2 class="section-title">
+        What We Do
+      </h2>
+
+      <p class="section-subtitle">
+        End-to-end solutions. Everything in between.
+      </p>
 
       <div class="cards">
+
         <div class="card">
           <h3>Salesforce Optimization</h3>
-          <p>Improve CRM structure, reporting, workflows, adoption, and visibility.</p>
+          <p>
+            Improve CRM structure, reporting, automation, workflows,
+            visibility, and user adoption.
+          </p>
         </div>
 
         <div class="card">
           <h3>Commercial Operations</h3>
-          <p>Hands-on support across go-to-market operations, systems, and process design.</p>
+          <p>
+            Hands-on support across go-to-market operations,
+            systems management, and business processes.
+          </p>
         </div>
 
         <div class="card">
           <h3>Workflow Automation</h3>
-          <p>Automate manual steps so your team can focus on higher-value work.</p>
+          <p>
+            Reduce manual effort and streamline repetitive work
+            so your team can focus on growth.
+          </p>
         </div>
 
         <div class="card">
           <h3>Order-to-Cash Support</h3>
-          <p>Support business processes across Salesforce, NetSuite, reporting, and operations.</p>
+          <p>
+            Operational support across Salesforce, NetSuite,
+            reporting, integrations, and fulfillment workflows.
+          </p>
         </div>
+
       </div>
+
     </section>
 
     <section id="why" class="why">
-      <h2 class="section-title">Why Mission Atlas xD</h2>
+
+      <h2 class="section-title">
+        Why Mission Atlas xD
+      </h2>
 
       <div class="why-grid">
+
         <div class="why-item">
           <div class="why-icon">💛</div>
+
           <h3>Founder-Led</h3>
-          <p>You work directly with an experienced operator who cares about your success.</p>
+
+          <p>
+            Work directly with an experienced operator who genuinely
+            cares about your success.
+          </p>
         </div>
 
         <div class="why-item">
           <div class="why-icon">🧬</div>
+
           <h3>Bioscience Focused</h3>
-          <p>We understand the pace, complexity, and resource constraints of bioscience teams.</p>
+
+          <p>
+            We understand the pace, complexity, and resource
+            constraints of bioscience startups.
+          </p>
         </div>
 
         <div class="why-item">
           <div class="why-icon">😊</div>
+
           <h3>We Do It with xD</h3>
-          <p>We bring positivity, partnership, fun, and xtreme determination to every engagement.</p>
+
+          <p>
+            We bring positivity, partnership, fun,
+            and xtreme determination to every engagement.
+          </p>
         </div>
+
       </div>
+
     </section>
 
     <section id="contact" class="contact">
-      <div>
-        <h2>Let’s lighten your load.</h2>
-        <p>Ready to streamline your systems and business processes?</p>
-        <a class="button primary" href="mailto:ngimung@gmail.com">Contact Mission Atlas xD</a>
+
+      <div class="contact-content">
+
+        <div>
+
+          <h2>
+            Let’s lighten your load.
+          </h2>
+
+          <p>
+            Ready to simplify your systems and streamline your operations?
+            We’re here to help.
+          </p>
+
+          <div class="buttons">
+            <a class="button primary" href="mailto:ngimung@gmail.com">
+              Contact Mission Atlas xD
+            </a>
+          </div>
+
+          <p style="margin-top:22px; opacity:0.9;">
+            ngimung@gmail.com
+          </p>
+
+        </div>
+
+        <div class="waving-mascot">
+          <img src="MissionAtlasXD_wavingmascot.png" alt="Mission Atlas xD Waving Mascot">
+        </div>
+
       </div>
 
-      <img src="MissionAtlasXD_Mascot.jpg" alt="Mission Atlas xD mascot">
     </section>
+
   </main>
 
   <footer>
