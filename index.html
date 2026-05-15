@@ -2,27 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Mission Atlas xD provides commercial operations, Salesforce, workflow automation, and order-to-cash support for bioscience teams ready to scale." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mission Atlas xD</title>
 
-  <title>Mission Atlas xD | Commercial Operations for Bioscience Teams</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
 
   <style>
+
     :root {
       --navy: #06194a;
-      --navy-dark: #041033;
+      --deep-navy: #031235;
       --yellow: #f7b500;
-      --yellow-soft: #fff3c4;
-      --cream: #fff9ec;
-      --text: #1f2937;
-      --muted: #5b6472;
+      --cream: #fff8e8;
+      --text: #263246;
       --white: #ffffff;
-      --shadow: 0 18px 45px rgba(6, 25, 74, 0.12);
-      --radius: 22px;
     }
 
     * {
@@ -35,61 +28,47 @@
 
     body {
       margin: 0;
-      font-family: 'Lato', Arial, sans-serif;
+      font-family: 'Lato', sans-serif;
       background: var(--cream);
       color: var(--text);
     }
 
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    a {
-      color: inherit;
-    }
-
     header {
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(10px);
-      padding: 18px 8%;
+      background: #fffdf8;
+      padding: 28px 7%;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-bottom: 1px solid rgba(6,25,74,0.08);
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 2px 18px rgba(6, 25, 74, 0.08);
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 14px;
-      color: var(--navy);
-      text-decoration: none;
-      font-size: clamp(22px, 3vw, 30px);
+      gap: 12px;
+      font-size: 34px;
       font-weight: 900;
-      letter-spacing: -0.4px;
+      color: var(--navy);
     }
 
     .brand img {
       width: 58px;
-      border-radius: 14px;
     }
 
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 28px;
+    .brand .xd {
+      color: var(--yellow);
     }
 
     nav a {
+      margin-left: 30px;
       text-decoration: none;
       color: var(--navy);
       font-weight: 900;
       font-size: 15px;
-      transition: color 0.2s ease;
+      transition: 0.2s ease;
     }
 
     nav a:hover {
@@ -98,59 +77,42 @@
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
-      gap: 56px;
+      grid-template-columns: 1.05fr 0.95fr;
       align-items: center;
-      padding: 92px 8% 86px;
+      gap: 40px;
+      padding: 70px 7% 55px;
       background:
-        radial-gradient(circle at 85% 18%, rgba(247, 181, 0, 0.24), transparent 30%),
-        linear-gradient(180deg, #ffffff 0%, #fff7df 100%);
+        radial-gradient(circle at 70% 55%, #fff0c4 0%, #fff8e8 34%, #fffdf8 67%);
       overflow: hidden;
     }
 
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--yellow-soft);
-      color: var(--navy);
+      color: var(--yellow);
       font-weight: 900;
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 22px;
-      font-size: 13px;
-      padding: 10px 14px;
-      border-radius: 999px;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 9px;
-      height: 9px;
-      background: var(--yellow);
-      border-radius: 50%;
-      box-shadow: 0 0 0 5px rgba(247, 181, 0, 0.22);
+      font-size: 16px;
+      margin-bottom: 18px;
     }
 
     h1 {
-      font-size: clamp(44px, 6vw, 68px);
-      line-height: 0.98;
       color: var(--navy);
-      margin: 0 0 26px;
-      letter-spacing: -1.6px;
+      font-size: 58px;
+      line-height: 1.1;
+      margin: 0 0 24px;
+      max-width: 650px;
     }
 
     .hero p {
-      font-size: clamp(19px, 2.1vw, 23px);
-      line-height: 1.65;
-      max-width: 690px;
+      font-size: 22px;
+      line-height: 1.6;
+      max-width: 620px;
       margin: 0;
-      color: #263244;
     }
 
     .buttons {
       display: flex;
-      gap: 16px;
+      gap: 20px;
       margin-top: 34px;
       flex-wrap: wrap;
     }
@@ -159,460 +121,748 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 52px;
-      padding: 15px 26px;
-      border-radius: 999px;
+      gap: 10px;
+      padding: 15px 28px;
+      border-radius: 8px;
       text-decoration: none;
       font-weight: 900;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+      transition: 0.2s ease;
+      font-size: 16px;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
     }
 
     .primary {
       background: var(--yellow);
       color: var(--navy);
-      box-shadow: 0 10px 24px rgba(247, 181, 0, 0.28);
-    }
-
-    .primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 28px rgba(247, 181, 0, 0.36);
+      border: 2px solid var(--yellow);
     }
 
     .secondary {
-      border: 2px solid var(--navy);
+      background: white;
       color: var(--navy);
-      background: var(--white);
+      border: 2px solid var(--navy);
     }
 
-    .secondary:hover {
-      background: var(--navy);
-      color: var(--white);
-      transform: translateY(-2px);
-    }
-
-    .hero-image {
+    .hero-art {
       position: relative;
-      text-align: center;
+      min-height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .hero-card {
-      position: relative;
-      background: transparent;
-      border: none;
-      border-radius: 34px;
-      padding: 20px;
-      box-shadow: none;
-    }
-
-    .hero-card::after {
-      content: "Bioscience systems, simplified.";
+    .hero-circle {
       position: absolute;
-      left: 28px;
-      right: 28px;
-      bottom: 22px;
-      background: var(--navy);
-      color: var(--white);
-      border-radius: 18px;
-      padding: 14px 18px;
-      font-weight: 900;
-      box-shadow: 0 12px 26px rgba(6, 25, 74, 0.22);
+      width: 430px;
+      height: 430px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #fff1bd 0%, #fff7dd 100%);
+      z-index: 0;
     }
 
-    .hero-card img {
-      width: 430px;
-      margin-bottom: 42px;
-      filter: drop-shadow(0 16px 18px rgba(6, 25, 74, 0.12));
-      mix-blend-mode: multiply;
+    .cloud {
+      position: absolute;
+      background: white;
+      border-radius: 999px;
+      opacity: 0.95;
+      z-index: 1;
+    }
+
+    .cloud::before,
+    .cloud::after {
+      content: "";
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+    }
+
+    .cloud.left {
+      width: 125px;
+      height: 32px;
+      left: 58px;
+      top: 260px;
+    }
+
+    .cloud.left::before {
+      width: 55px;
+      height: 55px;
+      left: 18px;
+      top: -28px;
+    }
+
+    .cloud.left::after {
+      width: 72px;
+      height: 72px;
+      right: 12px;
+      top: -42px;
+    }
+
+    .cloud.right {
+      width: 145px;
+      height: 35px;
+      right: 28px;
+      top: 310px;
+    }
+
+    .cloud.right::before {
+      width: 62px;
+      height: 62px;
+      left: 25px;
+      top: -34px;
+    }
+
+    .cloud.right::after {
+      width: 78px;
+      height: 78px;
+      right: 8px;
+      top: -49px;
+    }
+
+    .mascot-main {
+      position: relative;
+      z-index: 2;
+      max-width: 390px;
+      width: 88%;
+      filter: drop-shadow(0 18px 18px rgba(6,25,74,0.16));
     }
 
     .mission {
       background: var(--navy);
-      color: var(--white);
-      text-align: center;
-      padding: 76px 8%;
+      color: white;
+      padding: 48px 9%;
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 36px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mission::before,
+    .mission::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+
+    .mission::before {
+      left: -100px;
+      top: -110px;
+    }
+
+    .mission::after {
+      right: -80px;
+      bottom: -130px;
+    }
+
+    .mission-icon {
+      width: 100px;
+      height: 100px;
+      border: 3px solid var(--yellow);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      color: var(--yellow);
+      position: relative;
+      z-index: 1;
     }
 
     .mission h2 {
       color: var(--yellow);
       text-transform: uppercase;
-      letter-spacing: 1.4px;
-      margin: 0 0 22px;
       font-size: 18px;
+      margin: 0 0 10px;
+      position: relative;
+      z-index: 1;
     }
 
     .mission p {
-      max-width: 950px;
-      margin: 0 auto;
-      font-size: clamp(23px, 3vw, 31px);
+      font-size: 22px;
       line-height: 1.55;
-      font-weight: 700;
+      margin: 0;
+      max-width: 940px;
+      position: relative;
+      z-index: 1;
     }
 
     section {
-      padding: 86px 8%;
+      padding: 58px 7%;
+    }
+
+    .section-kicker {
+      text-align: center;
+      color: var(--yellow);
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 8px;
     }
 
     .section-title {
       text-align: center;
-      font-size: clamp(36px, 5vw, 48px);
       color: var(--navy);
-      margin: 0 0 12px;
-      letter-spacing: -0.8px;
-    }
-
-    .section-subtitle {
-      text-align: center;
-      font-size: 21px;
-      color: var(--muted);
-      margin: 0 auto 50px;
-      max-width: 650px;
-      line-height: 1.6;
+      font-size: 38px;
+      margin: 0 0 30px;
     }
 
     .cards {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
     }
 
     .card {
-      background: var(--white);
-      padding: 32px;
-      border-radius: var(--radius);
-      box-shadow: 0 12px 32px rgba(6, 25, 74, 0.08);
-      border: 1px solid rgba(6, 25, 74, 0.06);
-      border-top: 6px solid var(--yellow);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      background: #fffdf8;
+      border: 1px solid rgba(6,25,74,0.12);
+      border-radius: 10px;
+      text-align: center;
+      padding: 24px 16px 28px;
+      box-shadow: 0 8px 22px rgba(6,25,74,0.04);
+      transition: 0.2s ease;
     }
 
     .card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--shadow);
+      transform: translateY(-4px);
+    }
+
+    .card-icon {
+      font-size: 50px;
+      margin-bottom: 14px;
     }
 
     .card h3 {
       color: var(--navy);
-      font-size: 23px;
-      margin: 0 0 12px;
+      font-size: 19px;
       line-height: 1.2;
+      margin: 0;
+    }
+
+    .line {
+      width: 38px;
+      height: 3px;
+      background: var(--yellow);
+      margin: 16px auto;
     }
 
     .card p {
-      font-size: 17px;
-      line-height: 1.7;
-      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
       margin: 0;
     }
 
     .why {
-      background: var(--white);
+      background: linear-gradient(90deg, #fffaf0 0%, #fff1c9 100%);
+      padding-top: 50px;
+      padding-bottom: 50px;
     }
 
     .why-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
+      gap: 34px;
+      max-width: 1100px;
+      margin: 0 auto;
     }
 
     .why-item {
-      background: #fffdf8;
-      border: 1px solid rgba(6, 25, 74, 0.06);
-      border-radius: var(--radius);
-      padding: 36px;
-      text-align: center;
-      box-shadow: 0 10px 28px rgba(6, 25, 74, 0.06);
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .partnership-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #06194a;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 6px 14px rgba(6,25,74,0.18);
     }
 
     .why-icon {
-      width: 68px;
-      height: 68px;
-      display: grid;
-      place-items: center;
-      margin: 0 auto 18px;
-      background: var(--yellow-soft);
-      border-radius: 50%;
-      font-size: 34px;
-      overflow: hidden;
+      font-size: 58px;
+      line-height: 1;
+      color: var(--yellow);
     }
 
-    
+    .xd-face {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #f7b500;
+  color: #06194a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-weight: 900;
+  box-shadow: 0 6px 14px rgba(247,181,0,0.28);
+  transform: rotate(-5deg);
+}
+
+.xd-face .eye {
+  font-size: 26px;
+  line-height: 1;
+  transform: translateY(-4px) rotate(-8deg);
+}
+
+.xd-face .mouth {
+  font-size: 34px;
+  line-height: 1;
+  transform: translateY(2px);
+}
+    }
+
+    .xd-face span:first-child {
+      position: relative;
+      top: -1px;
+    }
+
+    .xd-face span:last-child {
+      font-size: 28px;
+    }
 
     .why-item h3 {
       color: var(--navy);
-      margin: 0 0 12px;
       font-size: 23px;
+      margin: 0 0 8px;
+      line-height: 1.15;
     }
 
     .why-item p {
-      line-height: 1.7;
-      font-size: 17px;
-      color: var(--muted);
       margin: 0;
+      line-height: 1.55;
+      font-size: 16px;
     }
 
     .contact {
-      background:
-        radial-gradient(circle at 86% 18%, rgba(247, 181, 0, 0.18), transparent 28%),
-        var(--navy);
-      color: var(--white);
-      padding: 82px 8% 42px;
+      background: var(--navy);
+      color: white;
+      padding: 36px 7% 0;
       overflow: hidden;
     }
 
-    .contact-content {
+    .contact-inner {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 260px;
-      justify-content: space-between;
+      grid-template-columns: 1fr 220px;
+      gap: 40px;
       align-items: end;
-      gap: 44px;
-      max-width: 1200px;
+      max-width: 1120px;
       margin: 0 auto;
     }
 
     .contact h2 {
-      font-size: clamp(38px, 5vw, 56px);
-      margin: 0 0 14px;
-      letter-spacing: -0.8px;
+      font-size: 40px;
+      margin: 0 0 8px;
     }
 
     .contact p {
-      font-size: 21px;
-      line-height: 1.65;
-      max-width: 660px;
-      color: rgba(255, 255, 255, 0.88);
+      font-size: 19px;
+      line-height: 1.5;
       margin: 0;
     }
 
     .contact .buttons {
-      margin-top: 30px;
+      margin-top: 22px;
     }
 
-        .waving-mascot img {
-      width: 230px;
+    .bottom-mascot {
+      width: 215px;
       display: block;
-      filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.18));
+      margin-bottom: -2px;
+      filter: drop-shadow(0 12px 12px rgba(0,0,0,0.25));
     }
 
     footer {
-      background: var(--navy-dark);
-      color: rgba(255, 255, 255, 0.86);
-      text-align: center;
-      padding: 24px;
-      font-size: 15px;
+      background: var(--deep-navy);
+      color: white;
+      padding: 18px 7%;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      border-top: 1px solid rgba(255,255,255,0.12);
     }
 
-    @media (max-width: 1100px) {
-      .cards {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    footer a {
+      color: var(--yellow);
+      text-decoration: none;
+      font-weight: 900;
     }
 
-    @media (max-width: 900px) {
-      header {
-        display: block;
-        text-align: center;
-        padding: 18px 6%;
-      }
-
-      .brand {
-        justify-content: center;
-      }
-
-      nav {
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 14px 22px;
-        margin-top: 16px;
-      }
+    @media (max-width: 1050px) {
 
       .hero {
         grid-template-columns: 1fr;
         text-align: center;
-        padding: 64px 6% 72px;
       }
 
+      h1,
       .hero p {
-        margin: 0 auto;
+        margin-left: auto;
+        margin-right: auto;
       }
 
       .buttons {
         justify-content: center;
       }
 
-      section,
-      .mission,
-      .contact {
-        padding-left: 6%;
-        padding-right: 6%;
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
       }
 
-      .why-grid {
-        grid-template-columns: 1fr;
+      .hero-art {
+        min-height: 420px;
+      }
+    }
+
+    @media (max-width: 760px) {
+
+      header {
+        display: block;
+        text-align: center;
       }
 
-      .contact-content {
+      nav {
+        margin-top: 18px;
+      }
+
+      nav a {
+        display: inline-block;
+        margin: 8px 10px;
+      }
+
+      .brand {
+        justify-content: center;
+        font-size: 28px;
+      }
+
+      h1 {
+        font-size: 42px;
+      }
+
+      .mission {
         grid-template-columns: 1fr;
         text-align: center;
       }
 
-      .contact p {
-        margin-left: auto;
-        margin-right: auto;
+      .mission-icon {
+        margin: 0 auto;
       }
 
-      .waving-mascot img {
-        margin: 8px auto 0;
-      }
-    }
-
-    @media (max-width: 640px) {
-      nav a {
-        font-size: 14px;
-      }
-
-      .cards {
+      .cards,
+      .why-grid,
+      .contact-inner {
         grid-template-columns: 1fr;
       }
 
-      .hero-card {
-        padding: 22px;
-        border-radius: 26px;
+      .why-item {
+        grid-template-columns: 1fr;
+        text-align: center;
       }
 
-      .hero-card::after {
-        position: static;
-        margin-top: 10px;
+      .partnership-icon,
+      .why-icon,
+      .xd-face {
+        margin: 0 auto;
       }
 
-      .hero-card img {
-        margin-bottom: 10px;
+      .contact {
+        text-align: center;
       }
 
-      .button {
-        width: 100%;
+      .bottom-mascot {
+        margin: 30px auto 0;
+      }
+
+      footer {
+        justify-content: center;
+        text-align: center;
       }
     }
+
   </style>
 </head>
 
 <body>
-  <header>
-    <a class="brand" href="#top" aria-label="Mission Atlas xD home">
-      <img src="02.jpg" alt="Mission Atlas xD logo" />
-      <span>Mission Atlas xD</span>
-    </a>
 
-    <nav aria-label="Primary navigation">
-      <a href="#mission">Mission</a>
-      <a href="#services">Services</a>
+  <header>
+
+    <div class="brand">
+      <img src="02.jpg" alt="Mission Atlas xD Logo">
+      <span>MissionAtlas<span class="xd">XD</span></span>
+    </div>
+
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#services">What We Do</a>
       <a href="#why">Why Us</a>
+      <a href="#about">About</a>
       <a href="#contact">Contact</a>
     </nav>
+
   </header>
 
-  <main id="top">
-    <section class="hero">
-      <div>
-        <div class="eyebrow">We hold the weight so you can grow</div>
+  <main id="home">
 
-        <h1>Commercial operations support for bioscience teams ready to scale.</h1>
+    <section class="hero">
+
+      <div>
+
+        <div class="eyebrow">
+          We hold the weight so you can grow.
+        </div>
+
+        <h1>
+          Commercial operations support for biotech teams ready to scale.
+        </h1>
 
         <p>
-          Mission Atlas xD helps remove the operational weight from your shoulders by streamlining systems, workflows, and commercial processes. We provide end-to-end solutions and everything in between with xD fun and xtreme determination.
+          Mission Atlas xD helps biotech startups streamline Salesforce,
+          improve operational workflows, and build cleaner systems for
+          commercial growth.
         </p>
 
         <div class="buttons">
-          <a class="button primary" href="mailto:info@missionatlasxd.com">Let’s Talk</a>
-          <a class="button secondary" href="#services">View Services</a>
+
+          <a class="button primary" href="mailto:info@missionatlasxd.com">
+            ✉️ Let’s Talk
+          </a>
+
+          <a class="button secondary" href="https://linkedin.com" target="_blank">
+            in Connect on LinkedIn
+          </a>
+
         </div>
+
       </div>
 
-      <div class="hero-image" aria-label="Mission Atlas xD mascot illustration">
-        <div class="hero-card">
-          <img src="MissionAtlasXD_Mascot.jpg" alt="Mission Atlas xD mascot" />
-        </div>
+      <div class="hero-art">
+
+        <div class="hero-circle"></div>
+
+        <div class="cloud left"></div>
+        <div class="cloud right"></div>
+
+        <img
+          class="mascot-main"
+          src="MissionAtlasXD_Mascot.png"
+          alt="Mission Atlas xD Mascot"
+        >
+
       </div>
+
     </section>
 
-    <section id="mission" class="mission">
-      <h2>Our Mission</h2>
-      <p>
-        To remove the weight off your shoulders and streamline your business processes so your team can move with more clarity, confidence, and momentum.
-      </p>
+    <section id="about" class="mission">
+
+      <div class="mission-icon">🎯</div>
+
+      <div>
+
+        <h2>Our Mission</h2>
+
+        <p>
+          To remove the weight off your shoulders and streamline your business process.
+          We provide end to end solutions and everything in between, specializing in the
+          biosciences. We do this with <strong style="color:#f7b500;">xD</strong> fun
+          and xtreme determination.
+        </p>
+
+      </div>
+
     </section>
 
     <section id="services">
-      <h2 class="section-title">What We Do</h2>
-      <p class="section-subtitle">End-to-end support for the systems, processes, and workflows that keep bioscience teams moving.</p>
+
+      <div class="section-kicker">
+        What We Do
+      </div>
+
+      <h2 class="section-title">
+        End to end solutions. Everything in between.
+      </h2>
 
       <div class="cards">
+
         <div class="card">
+          <div class="card-icon">☁️</div>
           <h3>Salesforce Optimization</h3>
-          <p>Improve CRM structure, reporting, automation, workflows, visibility, and user adoption.</p>
+          <div class="line"></div>
+          <p>
+            Streamline your CRM to drive adoption, visibility, and growth.
+          </p>
         </div>
 
         <div class="card">
-          <h3>Commercial Operations</h3>
-          <p>Hands-on support across go-to-market operations, systems management, and business processes.</p>
+          <div class="card-icon">⚙️</div>
+          <h3>Commercial Operations Support</h3>
+          <div class="line"></div>
+          <p>
+            Hands-on support across go-to-market, process, and systems.
+          </p>
         </div>
 
         <div class="card">
+          <div class="card-icon">📈</div>
           <h3>Workflow Automation</h3>
-          <p>Reduce manual effort and streamline repetitive work so your team can focus on growth.</p>
+          <div class="line"></div>
+          <p>
+            Automate the manual so your team can focus on what matters.
+          </p>
         </div>
 
         <div class="card">
-          <h3>Order-to-Cash Support</h3>
-          <p>Operational support across Salesforce, NetSuite, reporting, integrations, and fulfillment workflows.</p>
+          <div class="card-icon">🗄️</div>
+          <h3>Data, Reporting & Insights</h3>
+          <div class="line"></div>
+          <p>
+            Clean, reliable data that powers confident decisions.
+          </p>
         </div>
+
+        <div class="card">
+          <div class="card-icon">💵</div>
+          <h3>Order-to-Cash / NetSuite Support</h3>
+          <div class="line"></div>
+          <p>
+            Improve O2C processes and NetSuite operations from end to end.
+          </p>
+        </div>
+
       </div>
+
     </section>
 
     <section id="why" class="why">
-      <h2 class="section-title">Why Mission Atlas xD</h2>
-      <p class="section-subtitle">A practical, warm, founder-led partner for teams that need smart execution without unnecessary complexity.</p>
+
+      <div class="section-kicker">
+        Why Mission Atlas xD
+      </div>
 
       <div class="why-grid">
+
         <div class="why-item">
-          <div class="why-icon" aria-hidden="true">❤️</div>
-          <h3>Founder-Led</h3>
-          <p>Work directly with an experienced operator who genuinely cares about your team’s success.</p>
+
+          <div class="partnership-icon">🤝</div>
+
+          <div>
+            <h3>Founder-Led & Hands-On</h3>
+
+            <p>
+              You work directly with an experienced operator who cares
+              about your success.
+            </p>
+          </div>
+
         </div>
 
         <div class="why-item">
-          <div class="why-icon" aria-hidden="true">🧬</div>
-          <h3>Bioscience Focused</h3>
-          <p>Support built around the pace, complexity, and resource constraints of bioscience startups.</p>
+
+          <div class="why-icon">🛡️⭐</div>
+
+          <div>
+            <h3>Biotech Startup Experienced</h3>
+
+            <p>
+              We understand the pace, resource constraints,
+              and complexity of your world.
+            </p>
+          </div>
+
         </div>
 
         <div class="why-item">
-          <div class="why-icon" aria-hidden="true">😆</div>
-          <h3>We Do It with xD</h3>
-          <p>We bring positivity, partnership, fun, and xtreme determination to every engagement.</p>
+
+        <div class="xd-face">
+  <span class="eye">x</span>
+  <span class="mouth">D</span>
+</div>
+
+          <div>
+            <h3>We Do It with xD</h3>
+
+            <p>
+              We bring positivity, partnership, and xtreme determination
+              to every engagement.
+            </p>
+          </div>
+
         </div>
+
       </div>
+
     </section>
 
     <section id="contact" class="contact">
-      <div class="contact-content">
+
+      <div class="contact-inner">
+
         <div>
-          <h2>Let’s lighten your load.</h2>
-          <p>Ready to simplify your systems and streamline your operations? Mission Atlas xD is here to help.</p>
+
+          <h2>
+            Let’s lighten your load.
+          </h2>
+
+          <p>
+            Ready to simplify your systems and scale with confidence?
+            We’re here to help.
+          </p>
 
           <div class="buttons">
-            <a class="button primary" href="mailto:info@missionatlasxd.com">Contact Mission Atlas xD</a>
+
+            <a class="button primary" href="mailto:info@missionatlasxd.com">
+              ✉️ Let’s Talk
+            </a>
+
           </div>
+
         </div>
 
-        <div class="waving-mascot">
-          <img src="MissionAtlasXD_wavingmascot.png" alt="Mission Atlas xD waving mascot" />
-        </div>
+        <img
+          class="bottom-mascot"
+          src="MissionAtlasXD_wavingmascot.png"
+          alt="Mission Atlas xD Waving Mascot"
+        >
+
       </div>
+
     </section>
+
   </main>
 
   <footer>
-    © 2026 Mission Atlas xD. All rights reserved.
+
+    <span>
+      © 2026 Mission Atlas xD, LLC. All rights reserved.
+    </span>
+
+    <a href="https://missionatlasxd.com">
+      missionatlasxd.com
+    </a>
+
+    <span>
+      in
+    </span>
+
   </footer>
+
 </body>
-</html>
+</html><div class="xd-face">
+  <span>x</span>
+  <span>D</span>
+</div>
