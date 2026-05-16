@@ -32,6 +32,7 @@
       font-family: 'Lato', sans-serif;
       background: var(--cream);
       color: var(--text);
+      overflow-x: hidden;
     }
 
     header {
@@ -443,15 +444,24 @@
       header {
         display: block;
         text-align: center;
+        padding: 18px 5%;
       }
 
       nav {
-        margin-top: 18px;
+        margin-top: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px 6px;
       }
 
       nav a {
         display: inline-block;
-        margin: 8px 10px;
+        margin: 0;
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: rgba(6,25,74,0.06);
+        font-size: 14px;
       }
 
       .brand {
@@ -459,17 +469,65 @@
         font-size: 28px;
       }
 
+      .hero {
+        padding: 16px 5% 18px;
+        gap: 22px;
+      }
+
       h1 {
-        font-size: 42px;
+        font-size: clamp(32px, 9vw, 42px);
+        margin-bottom: 18px;
+      }
+
+      .hero p {
+        font-size: 19px;
+        line-height: 1.5;
+      }
+
+      .hero-art {
+        min-height: 220px;
+      }
+
+      .hero-globe {
+        width: 320px;
+        height: 320px;
+      }
+
+      .hero-mascot-img {
+        width: min(360px, 86vw);
+        max-width: 100%;
+      }
+
+      .cloud.left {
+        left: 6%;
+        top: 52%;
+      }
+
+      .cloud.right {
+        right: 6%;
+        top: 60%;
       }
 
       .mission {
         grid-template-columns: 1fr;
         text-align: center;
+        padding: 36px 5%;
+      }
+
+      .mission p {
+        font-size: 19px;
       }
 
       .mission-icon {
         margin: 0 auto;
+      }
+
+      section {
+        padding: 44px 5%;
+      }
+
+      .section-title {
+        font-size: 32px;
       }
 
       .cards,
@@ -481,6 +539,15 @@
       .why-item {
         grid-template-columns: 1fr;
         text-align: center;
+        gap: 14px;
+      }
+
+      .why-item h3 {
+        font-size: 22px;
+      }
+
+      .why-item p {
+        font-size: 16px;
       }
 
       .partnership-icon,
@@ -491,10 +558,49 @@
 
       .contact {
         text-align: center;
+        padding: 24px 5% 0;
+      }
+
+      .contact h2 {
+        font-size: 34px;
+      }
+
+      .contact p {
+        font-size: 17px;
       }
 
       .bottom-mascot {
-        margin: 30px auto 0;
+        width: min(260px, 72vw);
+        margin: 20px auto 0;
+      }
+
+      footer {
+        padding: 16px 5%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand {
+        font-size: 24px;
+      }
+
+      .brand img {
+        width: 48px;
+      }
+
+      .buttons {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .mission-icon {
+        width: 86px;
+        height: 86px;
       }
     }
 
