@@ -103,8 +103,10 @@
     .hero {
       position: relative;
       overflow: hidden;
-      background: #f7f4e8;
-      color: var(--ma-navy);
+      background:
+        radial-gradient(circle at 18% 20%, rgba(247, 181, 0, 0.24), transparent 27%),
+        linear-gradient(135deg, var(--ma-navy), var(--ma-deep-navy));
+      color: var(--ma-white);
     }
 
     .hero-inner {
@@ -131,15 +133,15 @@
 
     h1 {
       font-size: clamp(2.5rem, 5vw, 4.8rem);
-      line-height: 0.96;
+      line-height: 1.1;
       margin: 0 0 22px;
-      letter-spacing: -0.055em;
+      letter-spacing: normal;
     }
 
     .hero p {
       font-size: 1.16rem;
       line-height: 1.7;
-      color: var(--ma-ink);
+      color: rgba(255, 255, 255, 0.84);
       max-width: 660px;
       margin: 0 0 30px;
     }
@@ -167,9 +169,9 @@
     }
 
     .btn-secondary {
-      color: var(--ma-navy);
-      border-color: rgba(6,25,74,0.25);
-      background: rgba(255,255,255,0.72);
+      color: var(--ma-white);
+      border-color: rgba(255,255,255,0.32);
+      background: rgba(255,255,255,0.08);
     }
 
     .hero-panel {
