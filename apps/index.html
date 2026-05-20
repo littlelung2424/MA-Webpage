@@ -34,7 +34,7 @@
       margin: 0;
       font-family: 'Lato', sans-serif;
       color: var(--ma-ink);
-      background: linear-gradient(180deg, #f7fbff 0%, #ffffff 42%, #eef6ff 100%);
+      background: #fff9ec;
     }
 
     a {
@@ -157,8 +157,8 @@
       align-items: center;
       justify-content: center;
       min-height: 48px;
-      padding: 0 20px;
-      border-radius: 999px;
+      padding: 16px 28px;
+      border-radius: 10px;
       font-weight: 900;
       border: 1px solid transparent;
     }
@@ -242,7 +242,7 @@
     section {
       max-width: 1160px;
       margin: 0 auto;
-      padding: 76px 24px;
+      padding: 80px 8%;
     }
 
     .section-heading {
@@ -281,14 +281,24 @@
     }
 
     .app-card {
-      background: var(--ma-card);
-      border: 1px solid var(--ma-border);
-      border-radius: 28px;
-      padding: 24px;
-      box-shadow: var(--ma-shadow);
+      background: white;
+      padding: 34px;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(6,25,74,0.08);
+      border-top: 5px solid var(--ma-gold);
+      border-left: none;
+      border-right: none;
+      border-bottom: none;
+      transition: 0.2s ease;
       display: flex;
       flex-direction: column;
       min-height: 360px;
+    }
+
+
+
+    .app-card:hover {
+      transform: translateY(-5px);
     }
 
     .app-icon {
