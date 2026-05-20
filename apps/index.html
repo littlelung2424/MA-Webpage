@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Mission Atlas xD | Apps & Automations</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
@@ -39,31 +38,36 @@
     }
 
     a {
-      text-decoration: none;
       color: inherit;
+      text-decoration: none;
     }
 
-    /* HEADER */
-
     .site-header {
-      background: #fffdf8;
-      padding: 24px 8%;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--ma-border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .nav-wrap {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 16px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 14px rgba(0,0,0,0.05);
+      gap: 18px;
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 14px;
-      font-size: 30px;
+      font-size: 28px;
       font-weight: 900;
-      color: #06194a;
+      color: var(--ma-navy);
     }
 
     .brand-logo {
@@ -75,21 +79,23 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 28px;
-    }
-
-    .nav-links a {
-      color: #06194a;
+      gap: 22px;
+      color: var(--ma-navy);
       font-weight: 700;
-      font-size: 16px;
-      transition: 0.2s ease;
+      font-size: 0.95rem;
     }
 
     .nav-links a:hover {
-      color: #f7b500;
+      color: var(--ma-gold);
     }
 
-    /* HERO */
+    .nav-cta {
+      background: var(--ma-gold);
+      color: var(--ma-navy);
+      padding: 10px 16px;
+      border-radius: 999px;
+      box-shadow: 0 10px 20px rgba(247, 181, 0, 0.24);
+    }
 
     .hero {
       position: relative;
@@ -97,7 +103,7 @@
       background:
         radial-gradient(circle at 18% 20%, rgba(247, 181, 0, 0.24), transparent 27%),
         linear-gradient(135deg, var(--ma-navy), var(--ma-deep-navy));
-      color: white;
+      color: var(--ma-white);
     }
 
     .hero-inner {
@@ -111,32 +117,35 @@
     }
 
     .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       color: var(--ma-gold);
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
       margin-bottom: 18px;
-      font-size: 14px;
     }
 
     h1 {
-      font-size: clamp(2.8rem, 5vw, 5rem);
-      line-height: 0.95;
-      margin: 0 0 24px;
-      letter-spacing: -0.05em;
+      font-size: clamp(2.5rem, 5vw, 4.8rem);
+      line-height: 0.96;
+      margin: 0 0 22px;
+      letter-spacing: -0.055em;
     }
 
     .hero p {
-      font-size: 1.18rem;
+      font-size: 1.16rem;
       line-height: 1.7;
-      color: rgba(255,255,255,0.84);
-      margin-bottom: 34px;
-      max-width: 680px;
+      color: rgba(255, 255, 255, 0.84);
+      max-width: 660px;
+      margin: 0 0 30px;
     }
 
     .hero-actions {
       display: flex;
-      gap: 16px;
+      gap: 14px;
       flex-wrap: wrap;
     }
 
@@ -144,10 +153,11 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 16px 24px;
+      min-height: 48px;
+      padding: 0 20px;
       border-radius: 999px;
       font-weight: 900;
-      transition: 0.2s ease;
+      border: 1px solid transparent;
     }
 
     .btn-primary {
@@ -155,30 +165,25 @@
       color: var(--ma-navy);
     }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-    }
-
     .btn-secondary {
-      border: 1px solid rgba(255,255,255,0.28);
-      color: white;
+      color: var(--ma-white);
+      border-color: rgba(255,255,255,0.32);
       background: rgba(255,255,255,0.08);
     }
-
-    /* HERO PANEL */
 
     .hero-panel {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 32px;
-      padding: 28px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 30px;
+      padding: 26px;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.25);
     }
 
     .mini-window {
-      background: white;
-      border-radius: 24px;
-      padding: 20px;
+      background: #ffffff;
+      color: var(--ma-ink);
+      border-radius: 22px;
+      padding: 18px;
     }
 
     .window-top {
@@ -197,41 +202,39 @@
     .metric-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
+      gap: 12px;
     }
 
     .metric {
       background: var(--ma-sky);
       border-radius: 18px;
-      padding: 18px;
+      padding: 16px;
       border: 1px solid var(--ma-border);
     }
 
     .metric strong {
       display: block;
-      font-size: 1.7rem;
       color: var(--ma-navy);
-      margin-bottom: 5px;
+      font-size: 1.6rem;
+      margin-bottom: 4px;
     }
 
     .metric span {
       color: var(--ma-muted);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 700;
     }
 
     .hero-mascot {
       text-align: center;
-      margin-top: 26px;
+      margin-top: 24px;
     }
 
     .hero-mascot img {
-      width: 260px;
+      width: 250px;
       max-width: 90%;
-      filter: drop-shadow(0 14px 24px rgba(0,0,0,0.25));
+      filter: drop-shadow(0 14px 24px rgba(0,0,0,0.22));
     }
-
-    /* SECTIONS */
 
     section {
       max-width: 1160px;
@@ -241,45 +244,44 @@
 
     .section-heading {
       max-width: 760px;
-      margin-bottom: 38px;
+      margin-bottom: 34px;
     }
 
     .section-kicker {
       color: var(--ma-gold);
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 2px;
-      font-size: 13px;
-      margin-bottom: 12px;
+      letter-spacing: 0.12em;
+      font-size: 0.76rem;
+      margin-bottom: 10px;
     }
 
     h2 {
-      font-size: clamp(2rem, 3vw, 3.3rem);
-      line-height: 1;
-      margin: 0 0 18px;
       color: var(--ma-navy);
-      letter-spacing: -0.04em;
+      font-size: clamp(2rem, 3vw, 3.2rem);
+      line-height: 1;
+      margin: 0 0 16px;
+      letter-spacing: -0.045em;
     }
 
     .section-heading p {
       color: var(--ma-muted);
       line-height: 1.7;
       font-size: 1.05rem;
+      margin: 0;
     }
-
-    /* APP GRID */
 
     .app-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+      gap: 22px;
     }
 
     .app-card {
-      background: white;
+      background: var(--ma-card);
       border: 1px solid var(--ma-border);
       border-radius: 28px;
-      padding: 26px;
+      padding: 24px;
       box-shadow: var(--ma-shadow);
       display: flex;
       flex-direction: column;
@@ -302,11 +304,12 @@
       color: var(--ma-navy);
       font-size: 1.25rem;
       margin: 0 0 12px;
+      letter-spacing: -0.02em;
     }
 
     .app-card p {
       color: var(--ma-muted);
-      line-height: 1.7;
+      line-height: 1.65;
       margin: 0 0 18px;
     }
 
@@ -315,60 +318,59 @@
       flex-wrap: wrap;
       gap: 8px;
       margin-top: auto;
+      padding-top: 14px;
     }
 
     .tag {
       background: #f2f6fc;
+      color: var(--ma-navy);
       border: 1px solid var(--ma-border);
       border-radius: 999px;
-      padding: 7px 12px;
+      padding: 7px 10px;
       font-size: 0.78rem;
       font-weight: 800;
-      color: var(--ma-navy);
     }
-
-    /* CUSTOMIZE BAND */
 
     .customize-band {
       background: var(--ma-navy);
-      color: white;
-      border-radius: 36px;
+      color: var(--ma-white);
+      border-radius: 34px;
       padding: 42px;
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 28px;
       align-items: center;
-      box-shadow: 0 24px 60px rgba(6,25,74,0.22);
+      box-shadow: 0 24px 60px rgba(6, 25, 74, 0.22);
     }
 
     .customize-band h2 {
-      color: white;
+      color: var(--ma-white);
+      margin-bottom: 14px;
     }
 
     .customize-band p {
-      color: rgba(255,255,255,0.82);
+      color: rgba(255,255,255,0.8);
       line-height: 1.7;
-      max-width: 700px;
+      margin: 0;
+      max-width: 690px;
     }
-
-    /* PROCESS */
 
     .process {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
+      gap: 18px;
     }
 
     .step {
-      background: white;
-      border-radius: 24px;
-      padding: 24px;
+      background: #ffffff;
       border: 1px solid var(--ma-border);
+      border-radius: 24px;
+      padding: 22px;
     }
 
     .step-number {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       background: var(--ma-gold);
       color: var(--ma-navy);
@@ -380,31 +382,32 @@
 
     .step h3 {
       color: var(--ma-navy);
-      margin-bottom: 8px;
+      margin: 0 0 8px;
+      font-size: 1rem;
     }
 
     .step p {
       color: var(--ma-muted);
       line-height: 1.6;
+      margin: 0;
+      font-size: 0.94rem;
     }
 
-    /* SCHEDULE */
-
     .schedule-section {
-      background: white;
-      border-radius: 34px;
-      padding: 40px;
+      background: #ffffff;
       border: 1px solid var(--ma-border);
+      border-radius: 34px;
+      padding: 38px;
       box-shadow: var(--ma-shadow);
       display: grid;
       grid-template-columns: 0.9fr 1.1fr;
-      gap: 34px;
+      gap: 32px;
       align-items: center;
     }
 
     .calendar-placeholder {
       min-height: 320px;
-      border: 2px dashed rgba(6,25,74,0.18);
+      border: 2px dashed rgba(6, 25, 74, 0.18);
       border-radius: 24px;
       background: linear-gradient(135deg, #f7fbff, #eef6ff);
       display: grid;
@@ -415,12 +418,10 @@
       font-weight: 800;
     }
 
-    /* BOTTOM MASCOT */
-
     .apps-bottom-mascot {
       display: flex;
       justify-content: center;
-      margin-top: -30px;
+      margin-top: -35px;
       margin-bottom: -2px;
     }
 
@@ -430,8 +431,6 @@
       filter: drop-shadow(0 12px 18px rgba(0,0,0,0.25));
     }
 
-    /* FOOTER */
-
     footer {
       background: var(--ma-deep-navy);
       color: rgba(255,255,255,0.76);
@@ -440,9 +439,7 @@
       font-size: 0.92rem;
     }
 
-    /* MOBILE */
-
-    @media (max-width: 950px) {
+    @media (max-width: 900px) {
 
       .hero-inner,
       .schedule-section,
@@ -458,28 +455,34 @@
 
     @media (max-width: 640px) {
 
-      .site-header {
+      .nav-wrap {
+        align-items: center;
         flex-direction: column;
         text-align: center;
-        gap: 18px;
+      }
+
+      .brand {
+        font-size: 24px;
       }
 
       .nav-links {
         flex-wrap: wrap;
         justify-content: center;
+        gap: 12px;
       }
 
       .hero-inner {
+        padding-top: 60px;
         text-align: center;
-      }
-
-      .hero-actions {
-        justify-content: center;
       }
 
       .hero p {
         margin-left: auto;
         margin-right: auto;
+      }
+
+      .hero-actions {
+        justify-content: center;
       }
 
       .app-grid,
@@ -500,21 +503,21 @@
 
   <header class="site-header">
 
-    <a href="../index.html" class="brand">
-      <img src="../02.jpg" alt="Mission Atlas xD Logo" class="brand-logo">
+    <div class="nav-wrap">
 
-      <span>
-        MissionAtlas<span style="color:#f7b500;">XD</span>
-      </span>
-    </a>
+      <a href="../index.html" class="brand">
+        <img src="../02.jpg" alt="Mission Atlas xD Logo" class="brand-logo">
+        <span>Mission Atlas xD</span>
+      </a>
 
-    <nav class="nav-links">
-      <a href="../index.html">Home</a>
-      <a href="#applications">What We Do</a>
-      <a href="#customize">Why Us</a>
-      <a href="#schedule">About</a>
-      <a href="#schedule">Contact</a>
-    </nav>
+      <nav class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="#applications">Applications</a>
+        <a href="#customize">Customize</a>
+        <a href="#schedule" class="nav-cta">Schedule Time</a>
+      </nav>
+
+    </div>
 
   </header>
 
@@ -536,9 +539,9 @@
 
           <p>
             Explore purpose-built tools designed for biotech,
-            Salesforce workflows, operational automation,
-            support scoring, data cleanup,
-            and AI-enhanced business operations.
+            commercial operations, Salesforce workflows,
+            data cleanup, customer support scoring,
+            and AI-enhanced process automation.
           </p>
 
           <div class="hero-actions">
@@ -614,10 +617,10 @@
         </h2>
 
         <p>
-          Mission Atlas xD applications are designed
-          to adapt around your workflows,
-          reporting needs, operational processes,
-          and team habits.
+          These applications are starting points.
+          Mission Atlas xD can further configure logic,
+          fields, scoring rules, dashboards, integrations,
+          and workflows around your business.
         </p>
 
       </div>
@@ -625,35 +628,31 @@
       <div class="app-grid">
 
         <article class="app-card">
-
           <div class="app-icon">🧭</div>
 
           <h3>Account Enrichment Assistant</h3>
 
           <p>
-            Uses company domains and public firmographic
-            signals to clean account records and prepare
-            structured Salesforce-ready data.
+            Uses company domains and firmographic signals
+            to help clean account records and prepare
+            structured data for Salesforce workflows.
           </p>
 
           <div class="tag-row">
             <span class="tag">Salesforce</span>
-            <span class="tag">AI Research</span>
             <span class="tag">Data Cleanup</span>
+            <span class="tag">AI Research</span>
           </div>
-
         </article>
 
         <article class="app-card">
-
           <div class="app-icon">📊</div>
 
           <h3>NetSuite Upload Generator</h3>
 
           <p>
-            Converts spreadsheet data into cleaner CSV
-            upload formats with validations,
-            prompts, and repeatable exports.
+            Converts spreadsheet data into cleaner CSV upload
+            formats with validation rules and repeatable exports.
           </p>
 
           <div class="tag-row">
@@ -661,19 +660,16 @@
             <span class="tag">CSV</span>
             <span class="tag">Finance Ops</span>
           </div>
-
         </article>
 
         <article class="app-card">
-
           <div class="app-icon">🎧</div>
 
           <h3>Support Interaction Scorer</h3>
 
           <p>
-            Applies structured rubrics to support
-            interactions to identify strong responses,
-            escalation risk, and coaching opportunities.
+            Applies structured rubrics to support interactions
+            to identify strong responses and coaching opportunities.
           </p>
 
           <div class="tag-row">
@@ -681,19 +677,16 @@
             <span class="tag">QA</span>
             <span class="tag">Customer Ops</span>
           </div>
-
         </article>
 
         <article class="app-card">
-
           <div class="app-icon">⚙️</div>
 
           <h3>Workflow Automation Builder</h3>
 
           <p>
-            Converts repetitive operational work into
-            lightweight automations across spreadsheets,
-            Salesforce, and internal tools.
+            Converts repetitive operational work into lightweight
+            automations across spreadsheets and Salesforce.
           </p>
 
           <div class="tag-row">
@@ -701,19 +694,16 @@
             <span class="tag">Ops Design</span>
             <span class="tag">Human-led AI</span>
           </div>
-
         </article>
 
         <article class="app-card">
-
           <div class="app-icon">🧪</div>
 
           <h3>Biotech Commercial Ops Toolkit</h3>
 
           <p>
-            Configurable operational tools for biotech
-            startup teams needing reporting support,
-            account hygiene, and process visibility.
+            Configurable operational tools for biotech startup
+            teams needing account hygiene and reporting support.
           </p>
 
           <div class="tag-row">
@@ -721,17 +711,15 @@
             <span class="tag">Commercial Ops</span>
             <span class="tag">Startup Ready</span>
           </div>
-
         </article>
 
         <article class="app-card">
-
           <div class="app-icon">🚀</div>
 
           <h3>Custom App Concept Sprint</h3>
 
           <p>
-            Have a manual workflow that should become a tool?
+            Have a manual workflow that should be a tool?
             Mission Atlas xD can help prototype the first version.
           </p>
 
@@ -740,7 +728,6 @@
             <span class="tag">Custom Build</span>
             <span class="tag">Strategy</span>
           </div>
-
         </article>
 
       </div>
@@ -762,9 +749,9 @@
           </h2>
 
           <p>
-            Every organization has different workflows,
-            approval paths, reporting needs, and operational quirks.
-            These applications are built to adapt.
+            Every organization has different approval paths,
+            reporting needs, workflows, and team habits.
+            These applications are designed to adapt.
           </p>
 
         </div>
@@ -802,7 +789,7 @@
         <div class="step">
           <div class="step-number">2</div>
           <h3>Shape the logic</h3>
-          <p>We define prompts, rules, validations, and automation paths.</p>
+          <p>We define rules, prompts, automation paths, and validations.</p>
         </div>
 
         <div class="step">
@@ -814,7 +801,7 @@
         <div class="step">
           <div class="step-number">4</div>
           <h3>Refine and scale</h3>
-          <p>We tune the experience and prepare it for team use.</p>
+          <p>We tune the tool and prepare it for team use.</p>
         </div>
 
       </div>
@@ -832,13 +819,13 @@
           </div>
 
           <h2>
-            Want one customized?
+            Want one of these customized?
           </h2>
 
           <p>
-            Add a Calendly, HubSpot,
-            or Google Calendar embed here
-            so clients can schedule directly from this page.
+            Add a Calendly, Google Calendar,
+            or HubSpot meeting embed here
+            so prospective clients can book directly.
           </p>
 
           <br />
