@@ -54,6 +54,15 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 120px;
+    }
+
+    section[id] {
+      scroll-margin-top: 120px;
+    }
+
     body {
       margin: 0;
       font-family: 'Lato', sans-serif;
@@ -481,6 +490,16 @@
         right: 3%;
         top: 42%;
         transform: scale(0.8);
+      }
+    }
+
+    @media (max-width: 1000px) {
+      html {
+        scroll-padding-top: 160px;
+      }
+
+      section[id] {
+        scroll-margin-top: 160px;
       }
     }
 
