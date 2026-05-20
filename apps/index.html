@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mission Atlas xD | Apps & Automations</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+
+  <style>
+
+    :root {
+      --ma-navy: #06194a;
+      --ma-deep-navy: #031033;
+      --ma-gold: #f7b500;
+      --ma-sky: #eaf5ff;
+      --ma-white: #ffffff;
+      --ma-ink: #172033;
+      --ma-muted: #667085;
+      --ma-card: #ffffff;
+      --ma-border: rgba(6, 25, 74, 0.12);
+      --ma-shadow: 0 18px 45px rgba(6, 25, 74, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Lato', sans-serif;
+      color: var(--ma-ink);
+      background: linear-gradient(180deg, #f7fbff 0%, #ffffff 42%, #eef6ff 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .site-header {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--ma-border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .nav-wrap {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--ma-navy);
+    }
+
+    .brand-logo {
+      width: 62px;
+      height: auto;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: var(--ma-navy);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: var(--ma-gold);
+    }
+
+    .nav-cta {
+      background: var(--ma-gold);
+      color: var(--ma-navy);
+      padding: 10px 16px;
+      border-radius: 999px;
+      box-shadow: 0 10px 20px rgba(247, 181, 0, 0.24);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(247, 181, 0, 0.24), transparent 27%),
+        linear-gradient(135deg, var(--ma-navy), var(--ma-deep-navy));
+      color: var(--ma-white);
+    }
+
+    .hero-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 86px 24px 76px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 42px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ma-gold);
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4.8rem);
+      line-height: 0.96;
+      margin: 0 0 22px;
+      letter-spacing: -0.055em;
+    }
+
+    .hero p {
+      font-size: 1.16rem;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.84);
+      max-width: 660px;
+      margin: 0 0 30px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 20px;
+      border-radius: 999px;
+      font-weight: 900;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: var(--ma-gold);
+      color: var(--ma-navy);
+    }
+
+    .btn-secondary {
+      color: var(--ma-white);
+      border-color: rgba(255,255,255,0.32);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .hero-panel {
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 30px;
+      padding: 26px;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.25);
+    }
+
+    .mini-window {
+      background: #ffffff;
+      color: var(--ma-ink);
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .window-top {
+      display: flex;
+      gap: 7px;
+      margin-bottom: 18px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #d9e3f0;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .metric {
+      background: var(--ma-sky);
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid var(--ma-border);
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--ma-navy);
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+
+    .metric span {
+      color: var(--ma-muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .hero-mascot {
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .hero-mascot img {
+      width: 250px;
+      max-width: 90%;
+      filter: drop-shadow(0 14px 24px rgba(0,0,0,0.22));
+    }
+
+    section {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 76px 24px;
+    }
+
+    .section-heading {
+      max-width: 760px;
+      margin-bottom: 34px;
+    }
+
+    .section-kicker {
+      color: var(--ma-gold);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.76rem;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      color: var(--ma-navy);
+      font-size: clamp(2rem, 3vw, 3.2rem);
+      line-height: 1;
+      margin: 0 0 16px;
+      letter-spacing: -0.045em;
+    }
+
+    .section-heading p {
+      color: var(--ma-muted);
+      line-height: 1.7;
+      font-size: 1.05rem;
+      margin: 0;
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .app-card {
+      background: var(--ma-card);
+      border: 1px solid var(--ma-border);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: var(--ma-shadow);
+      display: flex;
+      flex-direction: column;
+      min-height: 360px;
+    }
+
+    .app-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: var(--ma-navy);
+      color: var(--ma-gold);
+      font-size: 1.8rem;
+      margin-bottom: 18px;
+    }
+
+    .app-card h3 {
+      color: var(--ma-navy);
+      font-size: 1.25rem;
+      margin: 0 0 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .app-card p {
+      color: var(--ma-muted);
+      line-height: 1.65;
+      margin: 0 0 18px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 14px;
+    }
+
+    .tag {
+      background: #f2f6fc;
+      color: var(--ma-navy);
+      border: 1px solid var(--ma-border);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .customize-band {
+      background: var(--ma-navy);
+      color: var(--ma-white);
+      border-radius: 34px;
+      padding: 42px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: center;
+      box-shadow: 0 24px 60px rgba(6, 25, 74, 0.22);
+    }
+
+    .customize-band h2 {
+      color: var(--ma-white);
+      margin-bottom: 14px;
+    }
+
+    .customize-band p {
+      color: rgba(255,255,255,0.8);
+      line-height: 1.7;
+      margin: 0;
+      max-width: 690px;
+    }
+
+    .process {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .step {
+      background: #ffffff;
+      border: 1px solid var(--ma-border);
+      border-radius: 24px;
+      padding: 22px;
+    }
+
+    .step-number {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--ma-gold);
+      color: var(--ma-navy);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+
+    .step h3 {
+      color: var(--ma-navy);
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .step p {
+      color: var(--ma-muted);
+      line-height: 1.6;
+      margin: 0;
+      font-size: 0.94rem;
+    }
+
+    .schedule-section {
+      background: #ffffff;
+      border: 1px solid var(--ma-border);
+      border-radius: 34px;
+      padding: 38px;
+      box-shadow: var(--ma-shadow);
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .calendar-placeholder {
+      min-height: 320px;
+      border: 2px dashed rgba(6, 25, 74, 0.18);
+      border-radius: 24px;
+      background: linear-gradient(135deg, #f7fbff, #eef6ff);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 24px;
+      color: var(--ma-muted);
+      font-weight: 800;
+    }
+
+    .apps-bottom-mascot {
+      display: flex;
+      justify-content: center;
+      margin-top: -35px;
+      margin-bottom: -2px;
+    }
+
+    .apps-bottom-mascot img {
+      width: 240px;
+      display: block;
+      filter: drop-shadow(0 12px 18px rgba(0,0,0,0.25));
+    }
+
+    footer {
+      background: var(--ma-deep-navy);
+      color: rgba(255,255,255,0.76);
+      padding: 30px 24px;
+      text-align: center;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 900px) {
+
+      .hero-inner,
+      .schedule-section,
+      .customize-band {
+        grid-template-columns: 1fr;
+      }
+
+      .app-grid,
+      .process {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+
+      .nav-wrap {
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .brand {
+        font-size: 24px;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .hero-inner {
+        padding-top: 60px;
+        text-align: center;
+      }
+
+      .hero p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-actions {
+        justify-content: center;
+      }
+
+      .app-grid,
+      .process {
+        grid-template-columns: 1fr;
+      }
+
+      .customize-band,
+      .schedule-section {
+        padding: 28px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <header class="site-header">
+
+    <div class="nav-wrap">
+
+      <a href="../index.html" class="brand">
+        <img src="../02.jpg" alt="Mission Atlas xD Logo" class="brand-logo">
+        <span>Mission Atlas xD</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="#applications">Applications</a>
+        <a href="#customize">Customize</a>
+        <a href="#schedule" class="nav-cta">Schedule Time</a>
+      </nav>
+
+    </div>
+
+  </header>
+
+  <main>
+
+    <section class="hero">
+
+      <div class="hero-inner">
+
+        <div>
+
+          <div class="eyebrow">
+            Human-led AI. Built with xD.
+          </div>
+
+          <h1>
+            Applications that turn messy operations into momentum.
+          </h1>
+
+          <p>
+            Explore purpose-built tools designed for biotech,
+            commercial operations, Salesforce workflows,
+            data cleanup, customer support scoring,
+            and AI-enhanced process automation.
+          </p>
+
+          <div class="hero-actions">
+
+            <a href="#applications" class="btn btn-primary">
+              Explore Applications
+            </a>
+
+            <a href="#schedule" class="btn btn-secondary">
+              Schedule a Customization Call
+            </a>
+
+          </div>
+
+        </div>
+
+        <div class="hero-panel">
+
+          <div class="mini-window">
+
+            <div class="window-top">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div>
+
+            <div class="metric-grid">
+
+              <div class="metric">
+                <strong>AI</strong>
+                <span>Enhanced workflows</span>
+              </div>
+
+              <div class="metric">
+                <strong>SFDC</strong>
+                <span>Ops automation</span>
+              </div>
+
+              <div class="metric">
+                <strong>CSV</strong>
+                <span>Upload preparation</span>
+              </div>
+
+              <div class="metric">
+                <strong>QA</strong>
+                <span>Rubric scoring</span>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="hero-mascot">
+            <img src="../MissionAtlasXD_Mascot.png" alt="Mission Atlas xD Mascot">
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section id="applications">
+
+      <div class="section-heading">
+
+        <div class="section-kicker">
+          Application Library
+        </div>
+
+        <h2>
+          Ready-to-adapt tools for real operational problems.
+        </h2>
+
+        <p>
+          These applications are starting points.
+          Mission Atlas xD can further configure logic,
+          fields, scoring rules, dashboards, integrations,
+          and workflows around your business.
+        </p>
+
+      </div>
+
+      <div class="app-grid">
+
+        <article class="app-card">
+          <div class="app-icon">🧭</div>
+
+          <h3>Account Enrichment Assistant</h3>
+
+          <p>
+            Uses company domains and firmographic signals
+            to help clean account records and prepare
+            structured data for Salesforce workflows.
+          </p>
+
+          <div class="tag-row">
+            <span class="tag">Salesforce</span>
+            <span class="tag">Data Cleanup</span>
+            <span class="tag">AI Research</span>
+          </div>
+        </article>
+
+        <article class="app-card">
+          <div class="app-icon">📊</div>
+
+          <h3>NetSuite Upload Generator</h3>
+
+          <p>
+            Converts spreadsheet data into cleaner CSV upload
+            formats with validation rules and repeatable exports.
+          </p>
+
+          <div class="tag-row">
+            <span class="tag">Google Sheets</span>
+            <span class="tag">CSV</span>
+            <span class="tag">Finance Ops</span>
+          </div>
+        </article>
+
+        <article class="app-card">
+          <div class="app-icon">🎧</div>
+
+          <h3>Support Interaction Scorer</h3>
+
+          <p>
+            Applies structured rubrics to support interactions
+            to identify strong responses and coaching opportunities.
+          </p>
+
+          <div class="tag-row">
+            <span class="tag">LLM Rubric</span>
+            <span class="tag">QA</span>
+            <span class="tag">Customer Ops</span>
+          </div>
+        </article>
+
+        <article class="app-card">
+          <div class="app-icon">⚙️</div>
+
+          <h3>Workflow Automation Builder</h3>
+
+          <p>
+            Converts repetitive operational work into lightweight
+            automations across spreadsheets and Salesforce.
+          </p>
+
+          <div class="tag-row">
+            <span class="tag">Automation</span>
+            <span class="tag">Ops Design</span>
+            <span class="tag">Human-led AI</span>
+          </div>
+        </article>
+
+        <article class="app-card">
+          <div class="app-icon">🧪</div>
+
+          <h3>Biotech Commercial Ops Toolkit</h3>
+
+          <p>
+            Configurable operational tools for biotech startup
+            teams needing account hygiene and reporting support.
+          </p>
+
+          <div class="tag-row">
+            <span class="tag">Biotech</span>
+            <span class="tag">Commercial Ops</span>
+            <span class="tag">Startup Ready</span>
+          </div>
+        </article>
+
+        <article class="app-card">
+          <div class="app-icon">🚀</div>
+
+          <h3>Custom App Concept Sprint</h3>
+
+          <p>
+            Have a manual workflow that should be a tool?
+            Mission Atlas xD can help prototype the first version.
+          </p>
+
+          <div class="tag-row">
+            <span class="tag">Prototype</span>
+            <span class="tag">Custom Build</span>
+            <span class="tag">Strategy</span>
+          </div>
+        </article>
+
+      </div>
+
+    </section>
+
+    <section id="customize">
+
+      <div class="customize-band">
+
+        <div>
+
+          <div class="section-kicker">
+            Further Customize
+          </div>
+
+          <h2>
+            Start with a framework. Shape it around your business.
+          </h2>
+
+          <p>
+            Every organization has different approval paths,
+            reporting needs, workflows, and team habits.
+            These applications are designed to adapt.
+          </p>
+
+        </div>
+
+        <a href="#schedule" class="btn btn-primary">
+          Talk Through a Use Case
+        </a>
+
+      </div>
+
+    </section>
+
+    <section>
+
+      <div class="section-heading">
+
+        <div class="section-kicker">
+          How It Works
+        </div>
+
+        <h2>
+          From idea to useful tool.
+        </h2>
+
+      </div>
+
+      <div class="process">
+
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Identify the friction</h3>
+          <p>We clarify the workflow and where time is being lost.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Shape the logic</h3>
+          <p>We define rules, prompts, automation paths, and validations.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Build the prototype</h3>
+          <p>We create a usable first version for testing.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Refine and scale</h3>
+          <p>We tune the tool and prepare it for team use.</p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <section id="schedule">
+
+      <div class="schedule-section">
+
+        <div>
+
+          <div class="section-kicker">
+            Schedule Time
+          </div>
+
+          <h2>
+            Want one of these customized?
+          </h2>
+
+          <p>
+            Add a Calendly, Google Calendar,
+            or HubSpot meeting embed here
+            so prospective clients can book directly.
+          </p>
+
+          <br />
+
+          <a href="mailto:info@missionatlasxd.com" class="btn btn-primary">
+            Request a Customization Call
+          </a>
+
+        </div>
+
+        <div class="calendar-placeholder">
+          Calendar booking embed goes here<br />
+          Calendly / Google Calendar / HubSpot Meetings
+        </div>
+
+      </div>
+
+    </section>
+
+    <div class="apps-bottom-mascot">
+      <img src="../MA_wavingmascot-hat.png" alt="Mission Atlas xD Waving Mascot">
+    </div>
+
+  </main>
+
+  <footer>
+    © 2026 Mission Atlas xD. Human-led. AI-enhanced. Built for better operations.
+  </footer>
+
+</body>
+</html>
