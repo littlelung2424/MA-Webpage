@@ -119,9 +119,9 @@
     }
 
     .hero-inner {
-      max-width: 1160px;
+      max-width: 1360px;
       margin: 0 auto;
-      padding: 86px 24px 76px;
+      padding: 95px 32px 84px;
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
       gap: 42px;
@@ -141,11 +141,18 @@
     }
 
     h1 {
-      font-size: 64px;
+      font-size: 76px;
       line-height: 1.02;
       color: white;
       margin: 0 0 28px;
       letter-spacing: normal;
+    }
+
+
+    @media (max-width: 1200px) {
+      h1 {
+        font-size: 68px;
+      }
     }
 
     .hero p {
@@ -188,7 +195,7 @@
       background: rgba(255, 255, 255, 0.09);
       border: 1px solid rgba(255,255,255,0.18);
       border-radius: 30px;
-      padding: 26px;
+      padding: 21px;
       box-shadow: 0 25px 70px rgba(0,0,0,0.25);
     }
 
@@ -250,9 +257,9 @@
     }
 
     section {
-      max-width: 1160px;
+      max-width: 1360px;
       margin: 0 auto;
-      padding: 80px 8%;
+      padding: 80px 32px;
     }
 
     .section-heading {
@@ -506,8 +513,12 @@
       }
 
       .hero-inner {
-        padding-top: 60px;
+        padding: 70px 20px 64px;
         text-align: center;
+      }
+
+      h1 {
+        font-size: 52px;
       }
 
       .hero p {
