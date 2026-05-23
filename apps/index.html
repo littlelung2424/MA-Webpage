@@ -13,6 +13,7 @@
       --ma-navy: #06194a;
       --ma-deep-navy: #031033;
       --ma-gold: #f7b500;
+      --ma-cream: #fff8e8;
       --ma-sky: #eaf5ff;
       --ma-white: #ffffff;
       --ma-ink: #172033;
@@ -39,7 +40,7 @@
       margin: 0;
       font-family: 'Lato', sans-serif;
       color: var(--ma-ink);
-      background: #fff9ec;
+      background: var(--ma-cream);
     }
 
     a {
@@ -112,55 +113,50 @@
     .hero {
       position: relative;
       overflow: hidden;
-      background:
-        radial-gradient(circle at 18% 20%, rgba(247, 181, 0, 0.24), transparent 27%),
-        linear-gradient(135deg, var(--ma-navy), var(--ma-deep-navy));
-      color: var(--ma-white);
+      background: #f7f4e8;
+      color: var(--ma-ink);
     }
 
     .hero-inner {
       max-width: 1360px;
       margin: 0 auto;
-      padding: 95px 32px 84px;
+      padding: 52px 7% 30px;
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 42px;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 40px;
       align-items: center;
     }
 
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
       color: var(--ma-gold);
       font-weight: 900;
       text-transform: uppercase;
-      font-size: 0.78rem;
-      letter-spacing: 0.14em;
+      font-size: 16px;
+      letter-spacing: 1px;
       margin-bottom: 18px;
     }
 
     h1 {
-      font-size: 76px;
-      line-height: 1.02;
-      color: white;
-      margin: 0 0 28px;
-      letter-spacing: normal;
+      color: var(--ma-navy);
+      font-size: 58px;
+      line-height: 1.1;
+      margin: 0 0 24px;
+      max-width: 650px;
     }
 
 
     @media (max-width: 1200px) {
       h1 {
-        font-size: 68px;
+        font-size: 54px;
       }
     }
 
     .hero p {
-      font-size: 1.16rem;
-      line-height: 1.7;
-      color: rgba(255, 255, 255, 0.84);
-      max-width: 660px;
-      margin: 0 0 30px;
+      font-size: 22px;
+      line-height: 1.6;
+      color: var(--ma-ink);
+      max-width: 620px;
+      margin: 0 0 34px;
     }
 
     .hero-actions {
@@ -174,10 +170,15 @@
       align-items: center;
       justify-content: center;
       min-height: 48px;
-      padding: 16px 28px;
-      border-radius: 10px;
+      padding: 15px 28px;
+      border-radius: 8px;
       font-weight: 900;
       border: 1px solid transparent;
+      transition: 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
     }
 
     .btn-primary {
@@ -186,24 +187,28 @@
     }
 
     .btn-secondary {
-      color: var(--ma-white);
-      border-color: rgba(255,255,255,0.32);
-      background: rgba(255,255,255,0.08);
+      color: var(--ma-navy);
+      border-color: var(--ma-navy);
+      background: white;
     }
 
     .hero-panel {
-      background: rgba(255, 255, 255, 0.09);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 30px;
-      padding: 21px;
-      box-shadow: 0 25px 70px rgba(0,0,0,0.25);
+      position: relative;
+      min-height: 350px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .mini-window {
+      position: relative;
+      z-index: 2;
       background: #ffffff;
       color: var(--ma-ink);
       border-radius: 22px;
       padding: 18px;
+      width: min(420px, 100%);
+      box-shadow: 0 18px 45px rgba(6,25,74,0.14);
     }
 
     .window-top {
@@ -246,14 +251,17 @@
     }
 
     .hero-mascot {
+      position: absolute;
+      right: 2%;
+      bottom: -8px;
+      z-index: 1;
       text-align: center;
-      margin-top: 24px;
     }
 
     .hero-mascot img {
-      width: 250px;
+      width: 235px;
       max-width: 90%;
-      filter: drop-shadow(0 14px 24px rgba(0,0,0,0.22));
+      filter: drop-shadow(0 18px 18px rgba(6,25,74,0.14));
     }
 
     section {
@@ -513,12 +521,12 @@
       }
 
       .hero-inner {
-        padding: 70px 20px 64px;
+        padding: 36px 20px 34px;
         text-align: center;
       }
 
       h1 {
-        font-size: 52px;
+        font-size: clamp(32px, 9vw, 42px);
       }
 
       .hero p {
@@ -552,7 +560,7 @@
 
       <a href="../index.html" class="brand">
         <img src="../02.png" alt="Mission Atlas xD Logo" class="brand-logo">
-        <span>MissionAtlas <span class="xd">XD</span></span>
+        <span>MissionAtlas<span class="xd">XD</span></span>
       </a>
 
       <nav class="nav-links">
