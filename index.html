@@ -469,6 +469,16 @@
       text-align: center;
     }
 
+    @media (max-width: 1200px) {
+      h1 {
+        font-size: 54px;
+      }
+
+      .cards {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
     @media (max-width: 600px) {
       .cloud {
         width: 116px;
@@ -542,6 +552,8 @@
       .hero {
         grid-template-columns: 1fr;
         text-align: center;
+        padding-top: 42px;
+        padding-bottom: 28px;
       }
 
       h1,
@@ -554,17 +566,31 @@
         justify-content: center;
       }
 
+      .hero-art {
+        min-height: 300px;
+      }
+
+      .hero-globe {
+        width: 390px;
+        height: 390px;
+      }
+
+      .hero-mascot-img {
+        width: min(430px, 78vw);
+        max-width: 100%;
+      }
+
       .cards {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 760px) {
+    @media (max-width: 800px) {
 
       header {
         display: block;
         text-align: center;
-        padding: 18px 5%;
+        padding: 20px 5%;
       }
 
       nav {
@@ -572,7 +598,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 8px 6px;
+        gap: 10px;
       }
 
       nav a {
@@ -590,17 +616,17 @@
       }
 
       .hero {
-        padding: 16px 5% 18px;
+        padding: 42px 5% 34px;
         gap: 22px;
       }
 
       h1 {
-        font-size: clamp(32px, 9vw, 42px);
+        font-size: clamp(38px, 8vw, 50px);
         margin-bottom: 18px;
       }
 
       .hero p {
-        font-size: 19px;
+        font-size: 20px;
         line-height: 1.5;
       }
 
@@ -697,6 +723,20 @@
 
       footer {
         padding: 16px 5%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding: 36px 5% 28px;
+      }
+
+      h1 {
+        font-size: clamp(32px, 9vw, 42px);
+      }
+
+      .hero p {
+        font-size: 19px;
       }
     }
 
