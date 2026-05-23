@@ -325,41 +325,49 @@
     .cards {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 16px;
+      gap: 22px;
     }
 
     .card {
-      background: #fffdf8;
-      border: 1px solid rgba(6,25,74,0.12);
-      border-radius: 10px;
+      background: white;
+      border-top: 5px solid var(--gold);
+      border-left: none;
+      border-right: none;
+      border-bottom: none;
+      border-radius: 18px;
       text-align: center;
-      padding: 24px 16px 28px;
-      box-shadow: 0 8px 22px rgba(6,25,74,0.04);
+      padding: 34px 24px;
+      box-shadow: 0 10px 30px rgba(6,25,74,0.08);
+      transition: 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      min-height: 300px;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
     }
 
     .card-icon {
       font-size: 46px;
-      margin-bottom: 14px;
+      margin-bottom: 18px;
     }
 
     .card h3 {
       color: var(--navy);
       font-size: 19px;
       line-height: 1.2;
-      margin: 0;
+      margin: 0 0 16px;
     }
 
     .line {
-      width: 38px;
-      height: 3px;
-      background: var(--gold);
-      margin: 16px auto;
+      display: none;
     }
 
     .card p {
       font-size: 15px;
       line-height: 1.5;
-      margin: 0;
+      margin: auto 0 0;
     }
 
     .why {
