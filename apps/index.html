@@ -424,17 +424,13 @@
       align-items: center;
     }
 
-    .calendar-placeholder {
-      min-height: 320px;
-      border: 2px dashed rgba(6, 25, 74, 0.18);
+    .calendly-embed {
+      min-width: 320px;
+      min-height: 700px;
+      overflow: hidden;
+      border: 1px solid rgba(6, 25, 74, 0.12);
       border-radius: 24px;
-      background: linear-gradient(135deg, #f7fbff, #eef6ff);
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 24px;
-      color: var(--ma-muted);
-      font-weight: 800;
+      background: #ffffff;
     }
 
     .apps-bottom-mascot {
@@ -908,23 +904,24 @@
           </h2>
 
           <p>
-            Add a Calendly, Google Calendar,
-            or HubSpot meeting embed here
-            so prospective clients can book directly.
+            Pick a time that works for you.
+            We can talk through the workflow,
+            the tool you want customized,
+            and what would make it useful for your team.
           </p>
 
           <br />
 
-          <a href="mailto:info@missionatlasxd.com" class="btn btn-primary">
+          <a href="https://calendly.com/missionatlasxd" class="btn btn-primary">
             Request a Customization Call
           </a>
 
         </div>
 
-        <div class="calendar-placeholder">
-          Calendar booking embed goes here<br />
-          Calendly / Google Calendar / HubSpot Meetings
-        </div>
+        <div
+          class="calendly-inline-widget calendly-embed"
+          data-url="https://calendly.com/missionatlasxd"
+        ></div>
 
       </div>
 
@@ -939,6 +936,8 @@
   <footer>
     © 2026 Mission Atlas xD. Human-led. AI-enhanced. Built for better operations.
   </footer>
+
+  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
 
 </body>
 </html>
