@@ -1,0 +1,23 @@
+{
+  "name": "Mission Atlas xD",
+  "short_name": "MissionAtlasXD",
+  "description": "Human-led, AI-enhanced commercial operations consulting and apps for biotech teams.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fff8e8",
+  "theme_color": "#06194a",
+  "icons": [
+    {
+      "src": "/favicon-180x180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
