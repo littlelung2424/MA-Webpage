@@ -149,8 +149,9 @@ export async function POST(request: Request) {
 
     // Configure Supabase delivery in Vercel Project Settings > Environment Variables.
     // SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required for every submission.
-    // Vercel Blob uploads use project-level Blob authentication on Vercel.
-    // BLOB_READ_WRITE_TOKEN is only needed for local development or stores not connected to this project.
+    // Vercel Blob uploads are intentionally private so attachments require authenticated access.
+    // Vercel Blob uses project-level authentication on Vercel; BLOB_READ_WRITE_TOKEN is only
+    // needed for local development or stores not connected to this project.
     const { blobToken, supabaseUrl, supabaseServiceRoleKey, hasSupabaseDelivery } = getIntakeDeliveryConfig();
 
     if (!hasSupabaseDelivery) {
@@ -165,7 +166,7 @@ export async function POST(request: Request) {
 
       for (const file of filesToUpload) {
         const blob = await put(`intake/${folder}/${Date.now()}-${safeFileName(file.name)}`, file, {
-          access: "public",
+          access: "private",
           addRandomSuffix: true,
           ...(blobToken ? { token: blobToken } : {}),
         });
