@@ -1,6 +1,8 @@
 :root {
   --intake-navy: #071841;
   --intake-gold: #f6aa00;
+  --intake-orange: #ff8a00;
+  --intake-cream: #fff8e8;
   --intake-sky: #f8fbff;
   --intake-text: #15213c;
   --intake-muted: #5c6882;
@@ -20,15 +22,18 @@ body {
   min-height: 100vh;
   padding: 40px 16px;
   background:
+    radial-gradient(circle at 12% 10%, rgba(246, 170, 0, 0.42), transparent 30%),
+    radial-gradient(circle at 88% 8%, rgba(255, 138, 0, 0.34), transparent 31%),
+    radial-gradient(circle at 82% 86%, rgba(7, 24, 65, 0.11), transparent 36%),
     radial-gradient(circle at 7px 7px, rgba(7, 24, 65, 0.055) 1px, transparent 1.5px) 0 0 / 20px 20px,
-    linear-gradient(180deg, #ffffff 0%, var(--intake-sky) 100%);
+    linear-gradient(135deg, #fff2c6 0%, #ffffff 48%, var(--intake-sky) 100%);
   color: var(--intake-text);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Lato, Arial, Helvetica, sans-serif;
 }
 
 .intake-card {
   position: relative;
-  width: min(900px, 100%);
+  width: min(1180px, 100%);
   margin: 0 auto;
   padding: clamp(28px, 5vw, 56px);
   overflow: hidden;
@@ -195,13 +200,12 @@ body {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.96));
 }
 
-.file-field input {
-  padding: 12px;
-  background: #ffffff;
-}
-
-.file-field input::file-selector-button {
-  margin-right: 12px;
+.file-picker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: start;
+  gap: 10px;
   border: 0;
   border-radius: 999px;
   background: var(--intake-navy);
@@ -210,10 +214,34 @@ body {
   font: inherit;
   font-weight: 900;
   padding: 10px 14px;
+  transition: background 0.18s ease, transform 0.18s ease;
 }
 
-.file-field input::file-selector-button:hover {
+.file-picker:hover,
+.file-picker:focus-within,
+.visually-hidden-file-input:focus-visible + .file-picker {
   background: #102b69;
+  transform: translateY(-1px);
+}
+
+.upload-icon {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.visually-hidden-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .file-field small,
@@ -265,20 +293,21 @@ body {
 }
 
 .intake-form .submit-button {
-  justify-self: start;
+  width: 100%;
   border: 0;
-  border-radius: 999px;
-  background: var(--intake-navy);
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--intake-navy), #102b69);
   color: #ffffff;
   cursor: pointer;
   font: inherit;
   font-weight: 900;
-  padding: 15px 24px;
-  transition: transform 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+  padding: 16px 24px;
+  box-shadow: 0 12px 26px rgba(6, 25, 74, 0.22);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
 }
 
 .intake-form .submit-button:hover:not(:disabled) {
-  background: #102b69;
+  box-shadow: 0 16px 32px rgba(6, 25, 74, 0.28);
   transform: translateY(-1px);
 }
 
