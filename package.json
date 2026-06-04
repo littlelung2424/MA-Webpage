@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "screenshot:intake": "playwright screenshot http://localhost:3000/intake intake-preview.png"
   },
   "dependencies": {
     "@vercel/blob": "latest",
@@ -19,6 +20,7 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "typescript": "latest"
+    "typescript": "latest",
+    "@playwright/test": "latest"
   }
 }
