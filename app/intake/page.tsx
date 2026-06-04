@@ -1,7 +1,7 @@
 "use client";
 
 import type { ChangeEvent, ClipboardEvent, FormEvent, SetStateAction } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 const MAX_FILE_COUNT = 12;
@@ -9,6 +9,40 @@ const ACCEPTED_EXTENSIONS = ["png", "jpg", "jpeg", "pdf", "doc", "docx", "xls", 
 const ACCEPTED_TYPES = ".png,.jpg,.jpeg,.pdf,.doc,.docx,.xls,.xlsx,.csv";
 
 type FormState = "idle" | "loading" | "success" | "error";
+type DictationField = "task" | "success";
+
+type IntakeSpeechRecognitionResult = {
+  readonly length: number;
+  item(index: number): { transcript: string } | undefined;
+  [index: number]: { transcript: string } | undefined;
+};
+
+type IntakeSpeechRecognitionEvent = {
+  readonly resultIndex: number;
+  readonly results: {
+    readonly length: number;
+    item(index: number): IntakeSpeechRecognitionResult;
+    [index: number]: IntakeSpeechRecognitionResult;
+  };
+};
+
+type IntakeSpeechRecognitionErrorEvent = {
+  readonly error?: string;
+};
+
+type IntakeSpeechRecognition = {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  onend: (() => void) | null;
+  onerror: ((event: IntakeSpeechRecognitionErrorEvent) => void) | null;
+  onresult: ((event: IntakeSpeechRecognitionEvent) => void) | null;
+  abort: () => void;
+  start: () => void;
+  stop: () => void;
+};
+
+type IntakeSpeechRecognitionConstructor = new () => IntakeSpeechRecognition;
 
 type IntakeFields = {
   name: string;
@@ -43,18 +77,97 @@ function pastedScreenshotName(index: number) {
   return `pasted-screenshot-${new Date().toISOString().replace(/[:.]/g, "-")}-${index + 1}.png`;
 }
 
+function getSpeechRecognitionConstructor() {
+  if (typeof window === "undefined") return null;
+
+  const speechWindow = window as Window & {
+    SpeechRecognition?: IntakeSpeechRecognitionConstructor;
+    webkitSpeechRecognition?: IntakeSpeechRecognitionConstructor;
+  };
+
+  return speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition ?? null;
+}
+
 export default function IntakePage() {
   const [fields, setFields] = useState<IntakeFields>(initialFields);
   const [currentFiles, setCurrentFiles] = useState<File[]>([]);
   const [successFiles, setSuccessFiles] = useState<File[]>([]);
   const [formState, setFormState] = useState<FormState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [listeningField, setListeningField] = useState<DictationField | null>(null);
+  const recognitionRef = useRef<IntakeSpeechRecognition | null>(null);
 
   const currentFilesLabel = useMemo(() => formatFileLabel(currentFiles), [currentFiles]);
   const successFilesLabel = useMemo(() => formatFileLabel(successFiles), [successFiles]);
 
+  useEffect(() => {
+    return () => {
+      recognitionRef.current?.abort();
+    };
+  }, []);
+
   function updateField(field: keyof IntakeFields, value: string) {
     setFields((current) => ({ ...current, [field]: value }));
+  }
+
+  function appendDictation(field: DictationField, transcript: string) {
+    setFields((current) => {
+      const existingText = current[field].trim();
+      const nextText = existingText ? `${existingText} ${transcript}` : transcript;
+      return { ...current, [field]: nextText };
+    });
+  }
+
+  function startDictation(field: DictationField) {
+    if (listeningField === field && recognitionRef.current) {
+      recognitionRef.current.stop();
+      return;
+    }
+
+    const SpeechRecognition = getSpeechRecognitionConstructor();
+
+    if (!SpeechRecognition) {
+      setErrorMessage("Voice dictation is not supported in this browser. You can still type or paste your response.");
+      setFormState("error");
+      return;
+    }
+
+    recognitionRef.current?.abort();
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onresult = (event) => {
+      const transcript = Array.from({ length: event.results.length }, (_, index) => event.results.item(index))
+        .slice(event.resultIndex)
+        .map((result) => result.item(0)?.transcript ?? result[0]?.transcript ?? "")
+        .join(" ")
+        .trim();
+
+      if (transcript) appendDictation(field, transcript);
+    };
+
+    recognition.onerror = (event) => {
+      setErrorMessage(
+        event.error === "not-allowed"
+          ? "Microphone access was blocked. Please allow microphone access or type your response."
+          : "Voice dictation stopped. Please try again or type your response.",
+      );
+      setFormState("error");
+    };
+
+    recognition.onend = () => {
+      setListeningField((currentField) => (currentField === field ? null : currentField));
+      recognitionRef.current = null;
+    };
+
+    recognitionRef.current = recognition;
+    setListeningField(field);
+    setErrorMessage("");
+    if (formState === "error") setFormState("idle");
+    recognition.start();
   }
 
   function validateFiles(filesToValidate: File[]) {
@@ -218,19 +331,30 @@ export default function IntakePage() {
 
           <label>
             <span>What are you trying to do?</span>
-            <textarea
-              name="task"
-              rows={5}
-              placeholder="Describe the task, process, report, spreadsheet, workflow, or repetitive thing that takes too long. Don't have time to describe, show us below."
-              value={fields.task}
-              onChange={(event) => updateField("task", event.target.value)}
-            />
+            <div className="textarea-with-action">
+              <textarea
+                name="task"
+                rows={5}
+                placeholder="Describe the task, process, report, spreadsheet, email workflow, or repetitive thing that takes too much time."
+                value={fields.task}
+                onChange={(event) => updateField("task", event.target.value)}
+              />
+              <button
+                className={`dictation-button${listeningField === "task" ? " is-listening" : ""}`}
+                type="button"
+                aria-label={listeningField === "task" ? "Stop dictating what you are trying to do" : "Dictate what you are trying to do"}
+                aria-pressed={listeningField === "task"}
+                onClick={() => startDictation("task")}
+              >
+                {listeningField === "task" ? "Listening…" : "🎙️ Dictate"}
+              </button>
+            </div>
           </label>
 
           <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "current")}>
-            <span>Show us how you do it (Input)</span>
+            <span>Show me how you do it today</span>
             <input name="files" type="file" multiple accept={ACCEPTED_TYPES} onChange={(event) => handleFiles(event, "current")} />
-            <small>Upload files or paste screenshots here. Up to 10MB each.</small>
+            <small>Optional. Upload files or paste screenshots here with Ctrl+V / Cmd+V. Up to 10MB each.</small>
             <em>{currentFilesLabel}</em>
             {currentFiles.length > 0 && (
               <ul className="selected-file-list" aria-label="Current process screenshots and files">
@@ -247,18 +371,29 @@ export default function IntakePage() {
           </div>
 
           <label>
-            <span>What does success look like?</span>
-            <textarea
-              name="success"
-              rows={5}
-              placeholder="Describe the final outcome and or output you want to see. Don't have time to describe, show us below."
-              value={fields.success}
-              onChange={(event) => updateField("success", event.target.value)}
-            />
+            <span>What would success look like?</span>
+            <div className="textarea-with-action">
+              <textarea
+                name="success"
+                rows={5}
+                placeholder="Describe the task, process, report, spreadsheet, email workflow, or repetitive thing that takes too much time."
+                value={fields.success}
+                onChange={(event) => updateField("success", event.target.value)}
+              />
+              <button
+                className={`dictation-button${listeningField === "success" ? " is-listening" : ""}`}
+                type="button"
+                aria-label={listeningField === "success" ? "Stop dictating what success would look like" : "Dictate what success would look like"}
+                aria-pressed={listeningField === "success"}
+                onClick={() => startDictation("success")}
+              >
+                {listeningField === "success" ? "Listening…" : "🎙️ Dictate"}
+              </button>
+            </div>
           </label>
 
           <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "success")}>
-            <span>Show us your final product (Output)</span>
+            <span>Upload or paste the output file/screenshots</span>
             <input
               name="successFiles"
               type="file"
@@ -266,7 +401,7 @@ export default function IntakePage() {
               accept={ACCEPTED_TYPES}
               onChange={(event) => handleFiles(event, "success")}
             />
-            <small>Upload files or paste screenshots here. Up to 10MB each.</small>
+            <small>Optional. Add the final report, spreadsheet, email, or screenshots you want back.</small>
             <em>{successFilesLabel}</em>
             {successFiles.length > 0 && (
               <ul className="selected-file-list" aria-label="Desired output screenshots and files">
