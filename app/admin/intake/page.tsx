@@ -375,7 +375,7 @@ export default async function AdminIntakePage() {
       <section className="intake-card admin-card">
         <div className="intro-block admin-intro">
           <p className="eyebrow">Private admin</p>
-          <h1>Intake Submission Dashboard</h1>
+          <h1>Submission Dashboard</h1>
           <p className="intro-copy">
             Review active requests, securely download private uploads through
             fresh server-generated Blob links, and keep status and internal
