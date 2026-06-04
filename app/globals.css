@@ -1,13 +1,11 @@
 :root {
-  --intake-navy: #06194a;
-  --intake-gold: #f7b500;
-  --intake-cream: #fff8e8;
-  --intake-paper: #fffdf8;
-  --intake-sky: #eaf5ff;
-  --intake-text: #263246;
-  --intake-muted: #667085;
-  --intake-border: rgba(6, 25, 74, 0.16);
-  --intake-shadow: 0 24px 70px rgba(6, 25, 74, 0.13);
+  --intake-navy: #071841;
+  --intake-gold: #f6aa00;
+  --intake-sky: #f8fbff;
+  --intake-text: #15213c;
+  --intake-muted: #5c6882;
+  --intake-border: #cdd6e6;
+  --intake-shadow: 0 28px 64px rgba(7, 24, 65, 0.15), 0 6px 20px rgba(7, 24, 65, 0.08);
 }
 
 * {
@@ -20,61 +18,85 @@ body {
 
 .intake-page {
   min-height: 100vh;
-  padding: 32px 16px;
+  padding: 40px 16px;
   background:
-    radial-gradient(circle at top left, rgba(247, 181, 0, 0.2), transparent 32rem),
-    linear-gradient(135deg, var(--intake-cream), var(--intake-sky));
+    radial-gradient(circle at 7px 7px, rgba(7, 24, 65, 0.055) 1px, transparent 1.5px) 0 0 / 20px 20px,
+    linear-gradient(180deg, #ffffff 0%, var(--intake-sky) 100%);
   color: var(--intake-text);
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .intake-card {
+  position: relative;
   width: min(900px, 100%);
   margin: 0 auto;
-  padding: clamp(24px, 5vw, 52px);
-  background: rgba(255, 253, 248, 0.94);
-  border: 1px solid var(--intake-border);
-  border-radius: 28px;
+  padding: clamp(28px, 5vw, 56px);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(205, 214, 230, 0.9);
+  border-radius: 10px;
   box-shadow: var(--intake-shadow);
 }
 
+.intake-card::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 8px;
+  background: var(--intake-gold);
+  content: "";
+}
+
 .intro-block {
-  max-width: 720px;
-  margin-bottom: 30px;
+  max-width: 690px;
+  margin-bottom: 28px;
 }
 
 .eyebrow {
   margin: 0 0 10px;
   color: var(--intake-gold);
-  font-size: 0.85rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
 .intro-block h1 {
   margin: 0;
   color: var(--intake-navy);
-  font-size: clamp(2.1rem, 7vw, 4.2rem);
+  font-size: clamp(2.45rem, 7vw, 4.45rem);
+  font-weight: 900;
   line-height: 0.98;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.055em;
+}
+
+.intro-block h1::after {
+  display: block;
+  width: 52px;
+  height: 4px;
+  margin-top: 16px;
+  background: var(--intake-gold);
+  content: "";
 }
 
 .intro-copy {
+  max-width: 620px;
   margin: 18px 0 0;
-  color: var(--intake-muted);
-  font-size: clamp(1rem, 2.5vw, 1.18rem);
-  line-height: 1.6;
+  color: var(--intake-text);
+  font-size: clamp(1rem, 2.2vw, 1.1rem);
+  font-weight: 500;
+  line-height: 1.55;
 }
 
 .intake-form {
   display: grid;
-  gap: 20px;
+  gap: 22px;
 }
 
 .field-grid {
   display: grid;
-  gap: 20px;
+  gap: 22px;
 }
 
 .two-columns {
@@ -83,7 +105,7 @@ body {
 
 .intake-form label {
   display: grid;
-  gap: 8px;
+  gap: 9px;
   color: var(--intake-navy);
   font-weight: 800;
 }
@@ -92,31 +114,37 @@ body {
 .file-field > span {
   color: var(--intake-navy);
   font-size: 0.98rem;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .intake-form label strong {
-  color: #bd3f32;
+  color: #c7322b;
 }
 
 .intake-form input,
 .intake-form textarea {
   width: 100%;
   border: 1px solid var(--intake-border);
-  border-radius: 16px;
+  border-radius: 8px;
   background: #ffffff;
   color: var(--intake-text);
   font: inherit;
   font-weight: 500;
-  padding: 14px 16px;
+  padding: 15px 16px;
   outline: none;
+  box-shadow: inset 0 1px 2px rgba(7, 24, 65, 0.03);
   transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.intake-form input::placeholder,
+.intake-form textarea::placeholder {
+  color: #71809b;
 }
 
 .intake-form input:focus,
 .intake-form textarea:focus {
-  border-color: var(--intake-gold);
-  box-shadow: 0 0 0 4px rgba(247, 181, 0, 0.18);
+  border-color: var(--intake-navy);
+  box-shadow: 0 0 0 3px rgba(246, 170, 0, 0.24), inset 0 1px 2px rgba(7, 24, 65, 0.03);
 }
 
 .intake-form textarea {
@@ -135,7 +163,7 @@ body {
   position: absolute;
   right: 12px;
   bottom: 12px;
-  border: 1px solid rgba(6, 25, 74, 0.14);
+  border: 1px solid rgba(7, 24, 65, 0.18);
   border-radius: 999px;
   background: #ffffff;
   color: var(--intake-navy);
@@ -148,7 +176,7 @@ body {
 }
 
 .intake-form .dictation-button:hover {
-  border-color: rgba(247, 181, 0, 0.7);
+  border-color: var(--intake-gold);
   transform: translateY(-1px);
 }
 
@@ -160,16 +188,32 @@ body {
 
 .file-field {
   display: grid;
-  gap: 8px;
-  padding: 18px;
-  border: 1px dashed rgba(6, 25, 74, 0.26);
-  border-radius: 18px;
-  background: rgba(234, 245, 255, 0.55);
+  gap: 9px;
+  padding: 20px 22px;
+  border: 1.5px dashed rgba(7, 24, 65, 0.72);
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.96));
 }
 
 .file-field input {
   padding: 12px;
   background: #ffffff;
+}
+
+.file-field input::file-selector-button {
+  margin-right: 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--intake-navy);
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 900;
+  padding: 10px 14px;
+}
+
+.file-field input::file-selector-button:hover {
+  background: #102b69;
 }
 
 .file-field small,
@@ -194,9 +238,9 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  border: 1px solid rgba(6, 25, 74, 0.1);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(7, 24, 65, 0.11);
+  border-radius: 8px;
+  background: #ffffff;
   color: var(--intake-text);
   font-size: 0.9rem;
   font-weight: 700;
@@ -207,7 +251,7 @@ body {
   flex: 0 0 auto;
   border: 0;
   border-radius: 999px;
-  background: rgba(6, 25, 74, 0.08);
+  background: rgba(7, 24, 65, 0.08);
   color: var(--intake-navy);
   cursor: pointer;
   font: inherit;
@@ -217,7 +261,7 @@ body {
 }
 
 .selected-file-list button:hover {
-  background: rgba(6, 25, 74, 0.15);
+  background: rgba(7, 24, 65, 0.15);
 }
 
 .intake-form .submit-button {
@@ -234,7 +278,7 @@ body {
 }
 
 .intake-form .submit-button:hover:not(:disabled) {
-  background: #0b276c;
+  background: #102b69;
   transform: translateY(-1px);
 }
 
@@ -252,7 +296,7 @@ body {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  border-radius: 14px;
+  border-radius: 8px;
   font-weight: 800;
   line-height: 1.4;
   padding: 12px 14px;
@@ -300,13 +344,12 @@ body {
   }
 
   .intake-card {
-    border-radius: 22px;
+    border-radius: 8px;
   }
 
   .two-columns {
     grid-template-columns: 1fr;
   }
-
 
   .textarea-with-action textarea {
     padding-right: 16px;
