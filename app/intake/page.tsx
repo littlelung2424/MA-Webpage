@@ -269,6 +269,7 @@ export default function IntakePage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     clearStatusMessage();
 
     const name = fields.name.trim();
@@ -318,7 +319,7 @@ export default function IntakePage() {
       setFields(initialFields);
       setCurrentFiles([]);
       setSuccessFiles([]);
-      event.currentTarget.reset();
+      form.reset();
       setFormState("success");
     } catch (error) {
       showError(error instanceof Error && error.message ? error.message : GENERIC_INTAKE_ERROR);
