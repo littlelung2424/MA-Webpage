@@ -5,9 +5,7 @@ const nextConfig: NextConfig = {
     "/": ["./index.html"],
     "/[...path]": [
       "./02.png",
-      "./05.png",
       "./MA_wavingmascot-hat.png",
-      "./MissionAtlasXD_Mascot.png",
       "./MissionAtlasXD_Mascot_02.png",
       "./apple-touch-icon.png",
       "./apps/index.html",
