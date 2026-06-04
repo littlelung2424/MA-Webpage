@@ -6,6 +6,9 @@ export const runtime = "nodejs";
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 const MAX_FILE_COUNT = 12;
 const ACCEPTED_EXTENSIONS = new Set(["png", "jpg", "jpeg", "pdf", "doc", "docx", "xls", "xlsx", "csv"]);
+const ACCEPTED_FILE_TYPES_LABEL = "PNG, JPG, PDF, Word, Excel, or CSV";
+const GENERIC_INTAKE_ERROR =
+  "Something went wrong while sending your request. Please try again, or email us directly if it keeps happening.";
 
 type UploadedFile = {
   name: string;
@@ -14,6 +17,10 @@ type UploadedFile = {
 
 function clean(value: FormDataEntryValue | null) {
   return typeof value === "string" ? value.trim() : "";
+}
+
+function errorResponse(message: string, status = 400) {
+  return Response.json({ error: message }, { status });
 }
 
 function isValidEmail(email: string) {
@@ -120,23 +127,27 @@ export async function POST(request: Request) {
       .getAll("successFiles")
       .filter((entry): entry is File => entry instanceof File && entry.size > 0);
 
-    if (!name || !email || !isValidEmail(email)) {
-      return Response.json({ error: "Missing or invalid required fields." }, { status: 400 });
+    if (!name || !email) {
+      return errorResponse("Please enter your name and email address so we know who to contact.");
+    }
+
+    if (!isValidEmail(email)) {
+      return errorResponse("Please enter a valid email address, like name@example.com.");
     }
 
     for (const fileSet of [files, successFiles]) {
       if (fileSet.length > MAX_FILE_COUNT) {
-        return Response.json({ error: `Please keep each section to ${MAX_FILE_COUNT} files or fewer.` }, { status: 400 });
+        return errorResponse(`Please keep each file section to ${MAX_FILE_COUNT} files or fewer.`);
       }
     }
 
     for (const file of [...files, ...successFiles]) {
       if (file.size > MAX_FILE_SIZE_BYTES) {
-        return Response.json({ error: `${file.name} is over the 10MB limit.` }, { status: 400 });
+        return errorResponse(`“${file.name}” is over the 10MB limit. Please choose a smaller file and try again.`);
       }
 
       if (!ACCEPTED_EXTENSIONS.has(extensionFor(file.name))) {
-        return Response.json({ error: `${file.name} is not a supported file type.` }, { status: 400 });
+        return errorResponse(`“${file.name}” is not a supported file type. Please upload a ${ACCEPTED_FILE_TYPES_LABEL} file.`);
       }
     }
 
@@ -147,7 +158,8 @@ export async function POST(request: Request) {
     const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
 
     if (!resendApiKey || !notifyEmail || !blobToken) {
-      return Response.json({ error: "Intake notification environment variables are not configured." }, { status: 500 });
+      console.error("Intake notification environment variables are not configured");
+      return errorResponse(GENERIC_INTAKE_ERROR, 500);
     }
 
     async function uploadFiles(filesToUpload: File[], folder: string) {
@@ -183,6 +195,6 @@ export async function POST(request: Request) {
     return Response.json({ ok: true });
   } catch (error) {
     console.error("Intake submission failed", error);
-    return Response.json({ error: "Something went wrong. Please try again or email me directly." }, { status: 500 });
+    return errorResponse(GENERIC_INTAKE_ERROR, 500);
   }
 }

@@ -60,6 +60,26 @@ const initialFields: IntakeFields = {
   anythingElse: "",
 };
 
+const GENERIC_INTAKE_ERROR = "Something went wrong while sending your request. Please try again, or email us directly if it keeps happening.";
+
+function readableDictationError(error?: string) {
+  switch (error) {
+    case "not-allowed":
+    case "service-not-allowed":
+      return "Microphone access is blocked. Please allow microphone access in your browser settings, or type your response instead.";
+    case "no-speech":
+      return "We didn’t hear anything. Please try dictating again, or type your response instead.";
+    case "audio-capture":
+      return "We couldn’t find a working microphone. Please check your microphone, or type your response instead.";
+    case "network":
+      return "Dictation lost its connection. Please try again, or type your response instead.";
+    case "aborted":
+      return "Dictation was stopped before we could capture anything. You can try again or type your response.";
+    default:
+      return "Voice dictation stopped before we could capture your response. Please try again, or type your response instead.";
+  }
+}
+
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -110,6 +130,16 @@ export default function IntakePage() {
     setFields((current) => ({ ...current, [field]: value }));
   }
 
+  function showError(message: string) {
+    setErrorMessage(message);
+    setFormState("error");
+  }
+
+  function clearStatusMessage() {
+    setErrorMessage("");
+    setFormState((currentState) => (currentState === "error" || currentState === "success" ? "idle" : currentState));
+  }
+
   function appendDictation(field: DictationField, transcript: string) {
     setFields((current) => {
       const existingText = current[field].trim();
@@ -127,8 +157,7 @@ export default function IntakePage() {
     const SpeechRecognition = getSpeechRecognitionConstructor();
 
     if (!SpeechRecognition) {
-      setErrorMessage("Voice dictation is not supported in this browser. You can still type or paste your response.");
-      setFormState("error");
+      showError("Voice dictation is not supported in this browser. You can still type or paste your response.");
       return;
     }
 
@@ -150,12 +179,7 @@ export default function IntakePage() {
     };
 
     recognition.onerror = (event) => {
-      setErrorMessage(
-        event.error === "not-allowed"
-          ? "Microphone access was blocked. Please allow microphone access or type your response."
-          : "Voice dictation stopped. Please try again or type your response.",
-      );
-      setFormState("error");
+      showError(readableDictationError(event.error));
     };
 
     recognition.onend = () => {
@@ -165,9 +189,15 @@ export default function IntakePage() {
 
     recognitionRef.current = recognition;
     setListeningField(field);
-    setErrorMessage("");
-    if (formState === "error") setFormState("idle");
-    recognition.start();
+    clearStatusMessage();
+
+    try {
+      recognition.start();
+    } catch {
+      recognitionRef.current = null;
+      setListeningField(null);
+      showError("Dictation could not start. Please try again, or type your response instead.");
+    }
   }
 
   function validateFiles(filesToValidate: File[]) {
@@ -192,14 +222,12 @@ export default function IntakePage() {
       const validationError = validateFiles(nextFiles);
 
       if (validationError) {
-        setErrorMessage(validationError);
-        setFormState("error");
+        showError(validationError);
         if (inputToReset) inputToReset.value = "";
         return existingFiles;
       }
 
-      setErrorMessage("");
-      if (formState === "error") setFormState("idle");
+      clearStatusMessage();
       return nextFiles;
     });
   }
@@ -231,7 +259,7 @@ export default function IntakePage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setErrorMessage("");
+    clearStatusMessage();
 
     const name = fields.name.trim();
     const email = fields.email.trim();
@@ -239,22 +267,19 @@ export default function IntakePage() {
     const success = fields.success.trim();
 
     if (!name || !email) {
-      setErrorMessage("Please enter your name and email address.");
-      setFormState("error");
+      showError("Please enter your name and email address so we know who to contact.");
       return;
     }
 
     if (!isValidEmail(email)) {
-      setErrorMessage("Please enter a valid email address.");
-      setFormState("error");
+      showError("Please enter a valid email address, like name@example.com.");
       return;
     }
 
     const currentFilesError = validateFiles(currentFiles);
     const successFilesError = validateFiles(successFiles);
     if (currentFilesError || successFilesError) {
-      setErrorMessage(currentFilesError || successFilesError);
-      setFormState("error");
+      showError(currentFilesError || successFilesError);
       return;
     }
 
@@ -274,9 +299,10 @@ export default function IntakePage() {
         method: "POST",
         body,
       });
+      const result = (await response.json().catch(() => ({}))) as { error?: string };
 
       if (!response.ok) {
-        throw new Error("Intake submission failed");
+        throw new Error(result.error || GENERIC_INTAKE_ERROR);
       }
 
       setFields(initialFields);
@@ -284,9 +310,8 @@ export default function IntakePage() {
       setSuccessFiles([]);
       event.currentTarget.reset();
       setFormState("success");
-    } catch {
-      setErrorMessage("Something went wrong. Please try again or email me directly.");
-      setFormState("error");
+    } catch (error) {
+      showError(error instanceof Error && error.message ? error.message : GENERIC_INTAKE_ERROR);
     }
   }
 
@@ -432,8 +457,22 @@ export default function IntakePage() {
           </button>
 
           <div className="status" aria-live="polite">
-            {formState === "success" && <p className="success">Got it — thanks for sending this over.</p>}
-            {formState === "error" && <p className="error">{errorMessage || "Something went wrong. Please try again or email me directly."}</p>}
+            {formState === "success" && (
+              <div className="status-message success" role="status">
+                <p>Got it — thanks for sending this over.</p>
+                <button type="button" aria-label="Dismiss success message" onClick={clearStatusMessage}>
+                  ×
+                </button>
+              </div>
+            )}
+            {formState === "error" && (
+              <div className="status-message error" role="alert">
+                <p>{errorMessage || GENERIC_INTAKE_ERROR}</p>
+                <button type="button" aria-label="Dismiss error message" onClick={clearStatusMessage}>
+                  ×
+                </button>
+              </div>
+            )}
           </div>
         </form>
       </section>
