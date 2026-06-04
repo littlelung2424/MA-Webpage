@@ -1,3 +1,4 @@
+import { del } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import {
   getSupabaseConfig,
@@ -223,6 +224,51 @@ function displayFiles(files: IntakeFile[]): DisplayFile[] {
   });
 }
 
+function normalizeIntakeBlobPath(pathname: string | null) {
+  const normalized = pathname?.trim().replace(/^\/+/, "") ?? "";
+
+  if (
+    !normalized ||
+    normalized.includes("..") ||
+    !normalized.startsWith("intake/")
+  ) {
+    return null;
+  }
+
+  return normalized;
+}
+
+function blobPathnamesForDelete(submission: IntakeSubmission) {
+  const pathnames = [
+    ...parseFiles(submission.current_process_files),
+    ...parseFiles(submission.desired_output_files),
+  ].flatMap((file) => {
+    const originalUrl = stringValue(file.url) ?? stringValue(file.downloadUrl);
+    const pathname =
+      stringValue(file.blob_file_path) ??
+      stringValue(file.pathname) ??
+      (originalUrl ? pathnameFromBlobUrl(originalUrl) || null : null);
+    const normalizedPathname = normalizeIntakeBlobPath(pathname);
+
+    return normalizedPathname ? [normalizedPathname] : [];
+  });
+
+  return Array.from(new Set(pathnames));
+}
+
+function blobTokenOptions() {
+  const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
+  return token ? { token } : {};
+}
+
+function deleteErrorMessage(
+  action: string,
+  status: number,
+  responseText: string,
+) {
+  return `Supabase intake admin ${action} failed with status ${status}:${supabaseResponseDetail(responseText)}`;
+}
+
 function formatDate(value?: string | null) {
   if (!value) return "Unknown date";
 
@@ -297,6 +343,95 @@ async function updateSubmission(formData: FormData) {
   if (!response.ok) {
     throw new Error(
       `Supabase intake admin update failed with status ${response.status}: ${await response.text()}`,
+    );
+  }
+
+  revalidatePath("/admin/intake");
+}
+
+async function deleteSubmission(formData: FormData) {
+  "use server";
+
+  const id = String(formData.get("id") ?? "").trim();
+  const confirmation = String(formData.get("confirm_delete") ?? "").trim();
+
+  if (!id) {
+    throw new Error("Missing submission id.");
+  }
+
+  if (confirmation !== "delete") {
+    throw new Error(
+      "Check the confirmation box before permanently deleting this submission.",
+    );
+  }
+
+  const { supabaseUrl } = getSupabaseConfig();
+  const readinessError = supabaseReadinessError();
+
+  if (readinessError) {
+    throw new Error(readinessError);
+  }
+
+  const rowParams = new URLSearchParams({
+    select: "id,current_process_files,desired_output_files",
+    limit: "1",
+    id: `eq.${id}`,
+  });
+  const rowResponse = await fetch(
+    `${supabaseUrl}/rest/v1/${SUPABASE_INTAKE_TABLE}?${rowParams}`,
+    {
+      headers: supabaseHeaders(),
+      cache: "no-store",
+    },
+  );
+
+  if (!rowResponse.ok) {
+    throw new Error(
+      deleteErrorMessage(
+        "delete lookup",
+        rowResponse.status,
+        await rowResponse.text(),
+      ),
+    );
+  }
+
+  const [submission] = (await rowResponse.json()) as IntakeSubmission[];
+
+  if (!submission) {
+    throw new Error("This submission was already deleted or could not be found.");
+  }
+
+  const blobPathnames = blobPathnamesForDelete(submission);
+
+  if (blobPathnames.length > 0) {
+    try {
+      await del(blobPathnames, blobTokenOptions());
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Unknown Vercel Blob delete error.";
+      throw new Error(
+        `Could not delete the uploaded files from Vercel Blob, so the Supabase row was kept for retry: ${message}`,
+      );
+    }
+  }
+
+  const deleteResponse = await fetch(
+    `${supabaseUrl}/rest/v1/${SUPABASE_INTAKE_TABLE}?id=eq.${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+      headers: supabaseHeaders("return=minimal"),
+    },
+  );
+
+  if (!deleteResponse.ok) {
+    throw new Error(
+      deleteErrorMessage(
+        "delete",
+        deleteResponse.status,
+        await deleteResponse.text(),
+      ),
     );
   }
 
@@ -391,9 +526,10 @@ export default async function AdminIntakePage() {
           <h1>Submission Dashboard</h1>
           <p className="intro-copy">
             Review active requests, securely download private uploads through
-            fresh server-generated Blob links, and keep status and internal
-            notes up to date. Done submissions stay saved in Supabase but leave
-            this dashboard.
+            fresh server-generated Blob links, keep status and internal notes up
+            to date, or permanently delete a submission and its Vercel Blob
+            uploads. Done submissions stay saved in Supabase but leave this
+            dashboard.
           </p>
         </div>
 
@@ -532,6 +668,31 @@ export default async function AdminIntakePage() {
                       type="submit"
                     >
                       Save updates
+                    </button>
+                  </form>
+
+                  <form className="admin-delete-form" action={deleteSubmission}>
+                    <input type="hidden" name="id" value={submission.id} />
+                    <div>
+                      <strong>Delete this submission permanently</strong>
+                      <p>
+                        Removes the dashboard row from Supabase and deletes the
+                        uploaded files stored for this request in Vercel Blob.
+                        This cannot be undone.
+                      </p>
+                    </div>
+                    <label className="admin-delete-confirmation">
+                      <input
+                        type="checkbox"
+                        name="confirm_delete"
+                        value="delete"
+                      />
+                      <span>
+                        I understand this permanently deletes the request.
+                      </span>
+                    </label>
+                    <button className="admin-delete-button" type="submit">
+                      Delete submission
                     </button>
                   </form>
                 </article>
