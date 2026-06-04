@@ -6,6 +6,7 @@ const LEGACY_ASSET_CONTENT_TYPES: Record<string, string> = {
   "05.png": "image/png",
   "MA_wavingmascot-hat.png": "image/png",
   "MissionAtlasXD_Mascot.png": "image/png",
+  "MissionAtlasXD_Mascot_02.png": "image/png",
   "apple-touch-icon.png": "image/png",
   "favicon-16x16.png": "image/png",
   "favicon-180x180.png": "image/png",
