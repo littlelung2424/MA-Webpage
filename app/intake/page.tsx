@@ -7,6 +7,7 @@ const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 const MAX_FILE_COUNT = 12;
 const ACCEPTED_EXTENSIONS = ["png", "jpg", "jpeg", "pdf", "doc", "docx", "xls", "xlsx", "csv"];
 const ACCEPTED_TYPES = ".png,.jpg,.jpeg,.pdf,.doc,.docx,.xls,.xlsx,.csv";
+const ACCEPTED_FILES_LABEL = "Accepted files: PNG, JPG, JPEG, PDF, DOC, DOCX, XLS, XLSX, CSV.";
 
 type FormState = "idle" | "loading" | "success" | "error";
 type DictationField = "task" | "success";
@@ -106,6 +107,16 @@ function getSpeechRecognitionConstructor() {
   };
 
   return speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition ?? null;
+}
+
+function UploadCloudIcon() {
+  return (
+    <svg className="upload-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+      <path d="M12 16V7" />
+      <path d="m8.5 10.5 3.5-3.5 3.5 3.5" />
+      <path d="M8 17.5H7.25a4.25 4.25 0 0 1-.66-8.45 5.75 5.75 0 0 1 10.95-1.52A4.75 4.75 0 0 1 17.5 17.5H16" />
+    </svg>
+  );
 }
 
 export default function IntakePage() {
@@ -378,8 +389,21 @@ export default function IntakePage() {
 
           <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "current")}>
             <span>Show us how you do it today (Input)</span>
-            <input name="files" type="file" multiple accept={ACCEPTED_TYPES} onChange={(event) => handleFiles(event, "current")} />
+            <input
+              id="current-files"
+              className="visually-hidden-file-input"
+              name="files"
+              type="file"
+              multiple
+              accept={ACCEPTED_TYPES}
+              onChange={(event) => handleFiles(event, "current")}
+            />
+            <label className="file-picker" htmlFor="current-files">
+              <UploadCloudIcon />
+              <span>Choose files</span>
+            </label>
             <small>Upload files or paste screenshots here. Up to 10MB each.</small>
+            <small>{ACCEPTED_FILES_LABEL}</small>
             <em>{currentFilesLabel}</em>
             {currentFiles.length > 0 && (
               <ul className="selected-file-list" aria-label="Current process screenshots and files">
@@ -420,13 +444,20 @@ export default function IntakePage() {
           <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "success")}>
             <span>Show us your final product (Output)</span>
             <input
+              id="success-files"
+              className="visually-hidden-file-input"
               name="successFiles"
               type="file"
               multiple
               accept={ACCEPTED_TYPES}
               onChange={(event) => handleFiles(event, "success")}
             />
+            <label className="file-picker" htmlFor="success-files">
+              <UploadCloudIcon />
+              <span>Choose files</span>
+            </label>
             <small>Upload files or paste screenshots here. Up to 10MB each.</small>
+            <small>{ACCEPTED_FILES_LABEL}</small>
             <em>{successFilesLabel}</em>
             {successFiles.length > 0 && (
               <ul className="selected-file-list" aria-label="Desired output screenshots and files">
