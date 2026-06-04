@@ -34,24 +34,18 @@ The `vercel.json` file configures the Next.js build and sets explicit content ty
 
 ### Intake form environment variables
 
-The `/api/intake` route can deliver submissions in either of these ways:
+The `/api/intake` route now uses **Supabase only** for intake delivery. Resend/email delivery is intentionally removed.
 
-1. **Supabase database insert** using `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
-2. **Resend email notification** using `RESEND_API_KEY` and `INTAKE_NOTIFY_EMAIL`.
-
-Configure at least one delivery option in **Vercel Project Settings > Environment Variables** for the environment you are testing, then redeploy the project. Vercel does not add newly-created environment variables to deployments that are already running, so trigger a fresh production deployment after saving the variables.
+Configure the variables below in **Vercel Project Settings > Environment Variables** for the environment you are testing, then redeploy the project. Vercel does not add newly-created environment variables to deployments that are already running, so trigger a fresh production deployment after saving the variables.
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `SUPABASE_URL` | Required for Supabase delivery | Supabase project URL, for example `https://abcdefghijklmnop.supabase.co`. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Required for Supabase delivery | Server-only Supabase key used by the API route to insert intake rows. Keep it secret and never expose it to client code. |
+| `SUPABASE_URL` | Yes | Supabase project URL, for example `https://abcdefghijklmnop.supabase.co`. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Server-only Supabase key used by the API route to insert intake rows. Keep it secret and never expose it to client code. |
 | `SUPABASE_INTAKE_TABLE` | No | Supabase table name. Defaults to `intake_submissions`. |
-| `RESEND_API_KEY` | Required for email delivery | API key from Resend, used to send the notification email. |
-| `INTAKE_NOTIFY_EMAIL` | Required for email delivery | Recipient email address for new intake submissions. The API also accepts `INTAKE_NOTIFICATION_EMAIL` or `NOTIFICATION_EMAIL` as fallback names, but `INTAKE_NOTIFY_EMAIL` is preferred. |
-| `INTAKE_FROM_EMAIL` | No | Sender address for Resend email delivery. For production, use a sender on a domain verified in Resend. Defaults to `Mission Atlas Intake <onboarding@resend.dev>` if omitted. |
-| `BLOB_READ_WRITE_TOKEN` | No | Enables Vercel Blob uploads so submitted files are linked in Supabase/email. If omitted, Supabase stores file names only and Resend attaches files directly up to the app's attachment size limit. |
+| `BLOB_READ_WRITE_TOKEN` | Required for files/screenshots | Vercel Blob read/write token used to upload attached files and screenshots before saving their public URLs in Supabase. |
 
-Use `.env.example` as the template for local development. Do not commit real API keys or tokens.
+Use `.env.example` as the template for local development if one is present. Do not commit real API keys or tokens.
 
 #### Supabase table
 
@@ -73,12 +67,23 @@ create table public.intake_submissions (
 
 The API uses `SUPABASE_SERVICE_ROLE_KEY` from the server-side route, so it can insert even when Row Level Security is enabled. Do not add the service-role key to any `NEXT_PUBLIC_` variable.
 
+#### File and screenshot uploads
+
+Attached files and pasted screenshots are stored in **Vercel Blob**, then the Blob URLs are saved in the Supabase JSONB columns above. If you plan to submit with files/screenshots, create and connect Vercel Blob before testing:
+
+1. In Vercel, open the project and go to **Storage**.
+2. Create or connect a **Blob** store for the project.
+3. Ensure Vercel adds `BLOB_READ_WRITE_TOKEN` to the same environment you are testing (**Production** for the production domain, **Preview** for preview deployments, and/or **Development** for local Vercel dev).
+4. Redeploy after the token is present.
+
+You do **not** need a Supabase Storage bucket for the current implementation; Supabase only stores the form fields plus JSON arrays of Vercel Blob file URLs.
+
 If the error persists after redeploying:
 
 1. Open the latest Vercel deployment logs for `/api/intake`.
-2. Look for `Intake delivery environment variables are not configured`.
-3. Add either the missing Supabase variables or the missing Resend variables to the same Vercel environment that receives the request. For example, submissions from the production domain need variables enabled for **Production**, while preview URLs need variables enabled for **Preview**.
-4. Redeploy again after saving the variable.
+2. Look for `Supabase intake delivery environment variables are not configured`, `Vercel Blob is not configured for intake file uploads`, `Supabase intake insert failed`, or `Intake submission failed`.
+3. Confirm `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and—when submitting files/screenshots—`BLOB_READ_WRITE_TOKEN` are all enabled for the same Vercel environment that receives the request. For example, submissions from the production domain need variables enabled for **Production**, while preview URLs need variables enabled for **Preview**.
+4. Confirm the Supabase table exists with the exact columns in the SQL above, then redeploy again after saving any Vercel variable changes.
 
 After deployment, verify these URLs:
 
