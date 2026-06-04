@@ -213,11 +213,19 @@
       border: 2px solid var(--navy);
     }
     
+/* Keep the clouds anchored to the mascot instead of the wider hero column so browser zoom scales them together. */
+.mascot-scene {
+  position: relative;
+  z-index: 2;
+  width: min(500px, 80%);
+  max-width: 100%;
+}
+
 .hero-mascot-img {
   position: relative;
   z-index: 2;
-  width: 500px;
-  max-width: 80%;
+  width: 100%;
+  max-width: 100%;
   display: block;
   filter: drop-shadow(0 18px 18px rgba(6,25,74,0.14));
 }
@@ -247,8 +255,9 @@
 
     .cloud {
   position: absolute;
-  width: 150px;
-  height: 48px;
+  width: 30%;
+  aspect-ratio: 150 / 48;
+  height: auto;
   background: white;
   border-radius: 999px;
   opacity: 0.9;
@@ -259,34 +268,36 @@
 .cloud::before {
   content: "";
   position: absolute;
-  width: 72px;
-  height: 72px;
+  width: 48%;
+  aspect-ratio: 1;
+  height: auto;
   background: white;
   border-radius: 50%;
-  left: 22px;
-  bottom: 12px;
+  left: 14.667%;
+  bottom: 25%;
 }
 
 .cloud::after {
   content: "";
   position: absolute;
-  width: 92px;
-  height: 92px;
+  width: 61.333%;
+  aspect-ratio: 1;
+  height: auto;
   background: white;
   border-radius: 50%;
-  right: 18px;
-  bottom: 8px;
+  right: 12%;
+  bottom: 16.667%;
 }
 
 .cloud.left {
-  left: 18%;
-  top: 48%;
+  left: -13%;
+  top: 43%;
   transform: scale(0.78);
 }
 
 .cloud.right {
-  right: 20%;
-  top: 58%;
+  right: -10%;
+  top: 53%;
   transform: scale(0.88);
 }
 
@@ -494,8 +505,8 @@
 
     @media (max-width: 600px) {
       .cloud {
-        width: 116px;
-        height: 34px;
+        width: 32%;
+        height: auto;
         opacity: 0.82;
         border-radius: 999px;
         background: #fff;
@@ -505,28 +516,28 @@
       }
 
       .cloud::before {
-        width: 50px;
-        height: 50px;
-        left: 14px;
-        bottom: 14px;
+        width: 43%;
+        height: auto;
+        left: 12%;
+        bottom: 41%;
       }
 
       .cloud::after {
-        width: 58px;
-        height: 58px;
-        right: 16px;
-        bottom: 10px;
+        width: 50%;
+        height: auto;
+        right: 13.8%;
+        bottom: 29%;
       }
 
       .cloud.left {
-        left: 3%;
-        top: 34%;
+        left: -10%;
+        top: 41%;
         transform: scale(0.75);
       }
 
       .cloud.right {
-        right: 3%;
-        top: 42%;
+        right: -8%;
+        top: 51%;
         transform: scale(0.8);
       }
     }
@@ -543,19 +554,19 @@
 
     @media (min-width: 601px) and (max-width: 1000px) {
       .cloud {
-        width: 120px;
+        width: 30%;
         opacity: 0.8;
       }
 
       .cloud.left {
-        left: 8%;
-        top: 38%;
+        left: -11%;
+        top: 42%;
         transform: scale(0.75);
       }
 
       .cloud.right {
-        right: 6%;
-        top: 46%;
+        right: -9%;
+        top: 52%;
         transform: scale(0.85);
       }
     }
@@ -636,19 +647,18 @@
         height: 320px;
       }
 
-      .hero-mascot-img {
+      .mascot-scene {
         width: min(360px, 86vw);
-        max-width: 100%;
       }
 
       .cloud.left {
-        left: 4%;
-        top: 49%;
+        left: -9%;
+        top: 44%;
       }
 
       .cloud.right {
-        right: 7%;
-        top: 60%;
+        right: -7%;
+        top: 54%;
       }
 
       .mission {
@@ -807,14 +817,16 @@
 <div class="hero-art">
   <div class="hero-globe"></div>
 
-  <div class="cloud left"></div>
-  <div class="cloud right"></div>
+  <div class="mascot-scene">
+    <div class="cloud left"></div>
+    <div class="cloud right"></div>
 
-  <img
-    class="hero-mascot-img"
-    src="MissionAtlasXD_Mascot.png"
-    alt="Mission Atlas xD Mascot"
-  >
+    <img
+      class="hero-mascot-img"
+      src="MissionAtlasXD_Mascot.png"
+      alt="Mission Atlas xD Mascot"
+    >
+  </div>
 
 </div>
 
