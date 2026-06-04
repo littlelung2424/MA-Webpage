@@ -41,6 +41,7 @@ type IntakeSubmission = {
   name: string;
   email: string;
   toolsOrSystems: string[];
+  processInvolvement: string;
   task: string;
   success: string;
   anythingElse: string;
@@ -88,6 +89,7 @@ async function saveIntakeSubmissionToSupabase({
         name: submission.name,
         email: submission.email,
         tools_or_systems: submission.toolsOrSystems,
+        process_involvement: submission.processInvolvement || null,
         task: submission.task || null,
         success: submission.success || null,
         anything_else: submission.anythingElse || null,
@@ -116,6 +118,7 @@ export async function POST(request: Request) {
       .filter((entry): entry is string => typeof entry === "string")
       .map((entry) => entry.trim())
       .filter(Boolean);
+    const processInvolvement = clean(formData.get("processInvolvement"));
     const task = clean(formData.get("task"));
     const success = clean(formData.get("success"));
     const anythingElse = clean(formData.get("anythingElse"));
@@ -220,6 +223,7 @@ export async function POST(request: Request) {
       name,
       email,
       toolsOrSystems,
+      processInvolvement,
       task,
       success,
       anythingElse,
