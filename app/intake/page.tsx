@@ -51,6 +51,7 @@ type IntakeFields = {
   name: string;
   email: string;
   toolsOrSystems: string[];
+  processInvolvement: string;
   task: string;
   success: string;
   anythingElse: string;
@@ -60,6 +61,7 @@ const initialFields: IntakeFields = {
   name: "",
   email: "",
   toolsOrSystems: [],
+  processInvolvement: "",
   task: "",
   success: "",
   anythingElse: "",
@@ -317,6 +319,7 @@ export default function IntakePage() {
     body.append("name", name);
     body.append("email", email);
     fields.toolsOrSystems.forEach((tool) => body.append("toolsOrSystems", tool));
+    body.append("processInvolvement", fields.processInvolvement.trim());
     body.append("task", task);
     body.append("success", success);
     body.append("anythingElse", fields.anythingElse.trim());
@@ -400,6 +403,17 @@ export default function IntakePage() {
               ))}
             </div>
           </fieldset>
+
+          <label>
+            <span>Anything else involved in the process?</span>
+            <textarea
+              name="processInvolvement"
+              rows={3}
+              placeholder="Add any other apps, handoffs, approvals, people, files, or steps involved."
+              value={fields.processInvolvement}
+              onChange={(event) => updateField("processInvolvement", event.target.value)}
+            />
+          </label>
 
           <label>
             <span>What are you trying to do?</span>

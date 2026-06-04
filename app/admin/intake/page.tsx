@@ -32,6 +32,7 @@ type IntakeSubmission = {
   name?: string | null;
   email?: string | null;
   tools_or_systems?: unknown;
+  process_involvement?: string | null;
   task?: string | null;
   success?: string | null;
   anything_else?: string | null;
@@ -242,6 +243,7 @@ function isKnownDisplayField(key: string) {
     "name",
     "email",
     "tools_or_systems",
+    "process_involvement",
     "task",
     "success",
     "anything_else",
@@ -445,6 +447,13 @@ export default async function AdminIntakePage() {
                       <p>
                         {stringListValue(submission.tools_or_systems).join(", ") ||
                           "No tools or systems selected."}
+                      </p>
+                    </section>
+                    <section>
+                      <h3>Anything else involved in the process?</h3>
+                      <p>
+                        {submission.process_involvement ||
+                          "No additional process details provided."}
                       </p>
                     </section>
                     <section>
