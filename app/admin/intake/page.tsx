@@ -42,11 +42,14 @@ function getSupabaseConfig() {
   const supabaseUrl = process.env.SUPABASE_URL?.trim().replace(/\/+$/, "") ?? "";
   const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() ?? "";
 
-  if (!supabaseUrl || !supabaseServiceRoleKey) {
-    throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY.");
-  }
-
-  return { supabaseUrl, supabaseServiceRoleKey };
+  return {
+    supabaseUrl,
+    supabaseServiceRoleKey,
+    missing: [
+      ...(!supabaseUrl ? ["SUPABASE_URL"] : []),
+      ...(!supabaseServiceRoleKey ? ["SUPABASE_SERVICE_ROLE_KEY"] : []),
+    ],
+  };
 }
 
 function supabaseHeaders(prefer?: string) {
@@ -61,23 +64,46 @@ function supabaseHeaders(prefer?: string) {
 }
 
 async function fetchSubmissions() {
-  const { supabaseUrl } = getSupabaseConfig();
+  const { supabaseUrl, missing } = getSupabaseConfig();
+
+  if (missing.length > 0) {
+    return {
+      submissions: [],
+      error: `Missing required Supabase environment variable${missing.length === 1 ? "" : "s"}: ${missing.join(", ")}.`,
+    };
+  }
+
   const searchParams = new URLSearchParams({
     select: "*",
     order: "created_at.desc",
     limit: "100",
   });
 
-  const response = await fetch(`${supabaseUrl}/rest/v1/${SUPABASE_INTAKE_TABLE}?${searchParams}`, {
-    headers: supabaseHeaders(),
-    cache: "no-store",
-  });
+  try {
+    const response = await fetch(`${supabaseUrl}/rest/v1/${SUPABASE_INTAKE_TABLE}?${searchParams}`, {
+      headers: supabaseHeaders(),
+      cache: "no-store",
+    });
 
-  if (!response.ok) {
-    throw new Error(`Supabase intake admin fetch failed with status ${response.status}: ${await response.text()}`);
+    if (!response.ok) {
+      const responseText = await response.text();
+      console.error("Supabase intake admin fetch failed", { status: response.status, responseText });
+
+      return {
+        submissions: [],
+        error: `Could not load intake submissions from Supabase. Status ${response.status}.`,
+      };
+    }
+
+    return { submissions: (await response.json()) as IntakeSubmission[], error: null };
+  } catch (error) {
+    console.error("Supabase intake admin fetch threw", error);
+
+    return {
+      submissions: [],
+      error: "Could not connect to Supabase to load intake submissions.",
+    };
   }
-
-  return (await response.json()) as IntakeSubmission[];
 }
 
 function parseFiles(value: unknown): IntakeFile[] {
@@ -195,6 +221,16 @@ async function updateSubmission(formData: FormData) {
   revalidatePath("/admin/intake");
 }
 
+function AdminErrorCard({ message }: { message: string }) {
+  return (
+    <div className="admin-error-card" role="status">
+      <strong>Admin dashboard could not load submissions.</strong>
+      <p>{message}</p>
+      <p>Check the Vercel environment variables for this deployment, confirm the Supabase table exists, then redeploy if you changed settings.</p>
+    </div>
+  );
+}
+
 function FileList({ files }: { files: DisplayFile[] }) {
   if (files.length === 0) {
     return <p className="admin-empty">No files uploaded.</p>;
@@ -219,15 +255,17 @@ function FileList({ files }: { files: DisplayFile[] }) {
 }
 
 export default async function AdminIntakePage() {
-  const submissions = await fetchSubmissions();
+  const { submissions, error } = await fetchSubmissions();
 
-  const submissionsWithFiles = await Promise.all(
-    submissions.map(async (submission) => ({
-      submission,
-      currentFiles: await displayFiles(parseFiles(submission.current_process_files)),
-      desiredFiles: await displayFiles(parseFiles(submission.desired_output_files)),
-    })),
-  );
+  const submissionsWithFiles = error
+    ? []
+    : await Promise.all(
+        submissions.map(async (submission) => ({
+          submission,
+          currentFiles: await displayFiles(parseFiles(submission.current_process_files)),
+          desiredFiles: await displayFiles(parseFiles(submission.desired_output_files)),
+        })),
+      );
 
   return (
     <main className="intake-page admin-page">
@@ -240,12 +278,16 @@ export default async function AdminIntakePage() {
           </p>
         </div>
 
-        <div className="admin-toolbar">
-          <strong>{submissions.length}</strong> submission{submissions.length === 1 ? "" : "s"} shown, newest first.
-        </div>
+        {error ? (
+          <AdminErrorCard message={error} />
+        ) : (
+          <div className="admin-toolbar">
+            <strong>{submissions.length}</strong> submission{submissions.length === 1 ? "" : "s"} shown, newest first.
+          </div>
+        )}
 
         <div className="admin-submission-list">
-          {submissionsWithFiles.length === 0 && <p className="admin-empty-card">No intake submissions yet.</p>}
+          {!error && submissionsWithFiles.length === 0 && <p className="admin-empty-card">No intake submissions yet.</p>}
 
           {submissionsWithFiles.map(({ submission, currentFiles, desiredFiles }) => {
             const extraDetails = extraDetailsFor(submission);
