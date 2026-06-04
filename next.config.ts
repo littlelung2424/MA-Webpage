@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
       "./05.png",
       "./MA_wavingmascot-hat.png",
       "./MissionAtlasXD_Mascot.png",
+      "./MissionAtlasXD_Mascot_02.png",
       "./apple-touch-icon.png",
       "./apps/index.html",
       "./favicon-16x16.png",
