@@ -435,7 +435,8 @@ body {
 }
 
 .admin-submission-card,
-.admin-empty-card {
+.admin-empty-card,
+.admin-error-card {
   display: grid;
   gap: 22px;
   padding: clamp(20px, 3vw, 30px);
@@ -448,6 +449,25 @@ body {
 .admin-empty-card {
   color: var(--intake-muted);
   font-weight: 800;
+}
+
+.admin-error-card {
+  margin-bottom: 22px;
+  border-color: rgba(194, 63, 63, 0.28);
+  background: rgba(255, 245, 245, 0.9);
+  color: var(--intake-text);
+}
+
+.admin-error-card strong {
+  color: #8f1f1f;
+  font-size: 1.05rem;
+}
+
+.admin-error-card p {
+  margin: 0;
+  color: var(--intake-muted);
+  font-weight: 700;
+  line-height: 1.55;
 }
 
 .admin-submission-header {
