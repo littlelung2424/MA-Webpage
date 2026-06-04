@@ -69,22 +69,22 @@ The API uses `SUPABASE_SERVICE_ROLE_KEY` from the server-side route, so it can i
 
 #### File and screenshot uploads
 
-Attached files and pasted screenshots are stored in **Vercel Blob**, then the Blob URLs are saved in the Supabase JSONB columns above. If you plan to submit with files/screenshots, create and connect Vercel Blob before testing:
+Attached files and pasted screenshots are stored in a **private Vercel Blob** store, then the private Blob URLs are saved in the Supabase JSONB columns above. If you plan to submit with files/screenshots, create and connect Vercel Blob before testing:
 
 1. In Vercel, open this project and go to **Storage**.
-2. Create a **Blob** store from that project, or connect an existing Blob store to that project. Choose the environments that should be allowed to use the store, especially **Production** for `missionatlasxd.com` and **Preview** for preview URLs.
+2. Create a **private Blob** store from that project, or connect an existing private Blob store to that project. Choose the environments that should be allowed to use the store, especially **Production** for `missionatlasxd.com` and **Preview** for preview URLs.
 3. For new connected Blob stores, Vercel Blob can authenticate the deployment automatically. If your store uses the older read-write-token flow, confirm Vercel added `BLOB_READ_WRITE_TOKEN` to the same environment you are testing.
 4. Redeploy after creating/connecting the store or changing environment access. Existing deployments do not pick up newly connected storage or new environment variables.
 5. For local testing, run `vercel link` and `vercel env pull` so `.env.local` receives the Blob credentials for the linked project.
 
-You do **not** need a Supabase Storage bucket for the current implementation; Supabase only stores the form fields plus JSON arrays of Vercel Blob file URLs.
+You do **not** need a Supabase Storage bucket for the current implementation; Supabase only stores the form fields plus JSON arrays of private Vercel Blob file URLs. Private Blob URLs still require authenticated Vercel Blob access to read the file contents.
 
 If the error persists after redeploying:
 
 1. Open the latest Vercel deployment logs for `/api/intake`.
 2. Look for `Supabase intake delivery environment variables are not configured`, `Supabase intake insert failed`, or `Intake submission failed`.
 3. Confirm `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are enabled for the same Vercel environment that receives the request. For example, submissions from the production domain need variables/storage access enabled for **Production**, while preview URLs need them enabled for **Preview**.
-4. Confirm the Blob store is connected to this exact Vercel project and environment. If the store uses read-write tokens instead of automatic project authentication, confirm `BLOB_READ_WRITE_TOKEN` is present in that environment.
+4. Confirm the private Blob store is connected to this exact Vercel project and environment. If the store uses read-write tokens instead of automatic project authentication, confirm `BLOB_READ_WRITE_TOKEN` is present in that environment.
 5. Confirm the Supabase table exists with the exact columns in the SQL above, then redeploy again after saving any Vercel storage or variable changes.
 
 After deployment, verify these URLs:
