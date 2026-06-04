@@ -90,7 +90,6 @@ function extensionFor(file: File) {
 }
 
 function formatFileLabel(files: File[]) {
-  if (files.length === 0) return "No screenshots or files selected yet.";
   return files.map((file) => `${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)`).join(", ");
 }
 
@@ -404,7 +403,7 @@ export default function IntakePage() {
             </label>
             <small>Upload files or paste screenshots here. Up to 10MB each.</small>
             <small>{ACCEPTED_FILES_LABEL}</small>
-            <em>{currentFilesLabel}</em>
+            {currentFiles.length > 0 && <em>{currentFilesLabel}</em>}
             {currentFiles.length > 0 && (
               <ul className="selected-file-list" aria-label="Current process screenshots and files">
                 {currentFiles.map((file, index) => (
@@ -458,7 +457,7 @@ export default function IntakePage() {
             </label>
             <small>Upload files or paste screenshots here. Up to 10MB each.</small>
             <small>{ACCEPTED_FILES_LABEL}</small>
-            <em>{successFilesLabel}</em>
+            {successFiles.length > 0 && <em>{successFilesLabel}</em>}
             {successFiles.length > 0 && (
               <ul className="selected-file-list" aria-label="Desired output screenshots and files">
                 {successFiles.map((file, index) => (
