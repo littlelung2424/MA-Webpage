@@ -597,7 +597,8 @@ body {
 }
 
 .admin-content-grid h3,
-.admin-update-form label span {
+.admin-update-form label span,
+.admin-delete-form strong {
   margin: 0;
   color: var(--intake-navy);
   font-size: 0.88rem;
@@ -710,6 +711,61 @@ body {
   padding-inline: 18px;
 }
 
+.admin-delete-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid rgba(194, 63, 63, 0.28);
+  border-radius: 12px;
+  background: rgba(255, 245, 245, 0.78);
+}
+
+.admin-delete-form p {
+  margin: 8px 0 0;
+  color: var(--intake-muted);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.admin-delete-confirmation {
+  display: flex;
+  grid-column: 1 / -1;
+  gap: 9px;
+  align-items: center;
+  color: #8f1f1f;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.admin-delete-confirmation input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #8f1f1f;
+}
+
+.admin-delete-button {
+  grid-column: 2;
+  grid-row: 1;
+  min-height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: #8f1f1f;
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 900;
+  padding: 12px 18px;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.admin-delete-button:hover {
+  background: #6f1717;
+  transform: translateY(-1px);
+}
+
 @media (max-width: 900px) {
   .admin-submission-header,
   .admin-update-form {
@@ -729,7 +785,18 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .admin-update-form {
+  .admin-update-form,
+  .admin-delete-form {
     align-items: stretch;
+  }
+
+  .admin-delete-form {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-delete-button {
+    grid-column: auto;
+    grid-row: auto;
+    justify-self: start;
   }
 }
