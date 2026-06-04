@@ -184,10 +184,9 @@ export default function IntakePage() {
       <section className="intake-card" aria-labelledby="intake-title">
         <div className="intro-block">
           <p className="eyebrow">Quick automation idea</p>
-          <h1 id="intake-title">What are you working on?</h1>
+          <h1 id="intake-title">How Can We Help</h1>
           <p className="intro-copy">
-            Have a repetitive task, messy spreadsheet, annoying workflow, or process you wish was easier? Send me a
-            quick example of what you’re dealing with.
+            Have a repetitive task, messy spreadsheet, annoying workflow, or process you wish was easier? Share your pain point(s).
           </p>
         </div>
 
@@ -222,7 +221,7 @@ export default function IntakePage() {
             <textarea
               name="task"
               rows={5}
-              placeholder="Describe the task, process, report, spreadsheet, email workflow, or repetitive thing that takes too much time."
+              placeholder="Describe the task, process, report, spreadsheet, workflow, or repetitive thing that takes too long. Don't have time to describe, show us below."
               value={fields.task}
               onChange={(event) => updateField("task", event.target.value)}
             />
