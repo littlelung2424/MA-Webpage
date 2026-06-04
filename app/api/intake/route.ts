@@ -13,6 +13,7 @@ const SUPABASE_INTAKE_TABLE = process.env.SUPABASE_INTAKE_TABLE?.trim() || "inta
 type UploadedFile = {
   name: string;
   url?: string;
+  pathname?: string;
 };
 
 type IntakeSubmission = {
@@ -102,6 +103,8 @@ async function saveIntakeSubmissionToSupabase({
       anything_else: submission.anythingElse || null,
       current_process_files: submission.uploadedFiles,
       desired_output_files: submission.uploadedSuccessFiles,
+      status: "New",
+      internal_notes: null,
     }),
   });
 
@@ -171,7 +174,7 @@ export async function POST(request: Request) {
           ...(blobToken ? { token: blobToken } : {}),
         });
 
-        uploaded.push({ name: file.name, url: blob.url });
+        uploaded.push({ name: file.name, url: blob.url, pathname: blob.pathname });
       }
 
       return uploaded;
