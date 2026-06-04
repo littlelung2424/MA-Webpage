@@ -47,7 +47,7 @@ function adminFetchErrorMessage(status: number, responseText: string) {
   const detail = supabaseResponseDetail(responseText);
 
   if (status === 401 || status === 403) {
-    return `Could not load intake submissions from Supabase. Status ${status}.${detail} Row Level Security is expected on this table, but it should not block a real Supabase service_role/sb_secret key. Confirm the deployment is running this latest code, confirm SUPABASE_SERVICE_ROLE_KEY is the legacy service_role key or SUPABASE_SECRET_KEY is an sb_secret key for this Supabase project, not the anon/publishable key, confirm the ${SUPABASE_INTAKE_TABLE} table exists, and re-run the intake migration so service_role has table grants.`;
+    return `Could not load intake submissions from Supabase. Status ${status}.${detail} Row Level Security is expected on this table, but it should not block a real Supabase service_role/sb_secret key. Confirm the deployment is running this latest code, confirm SUPABASE_SERVICE_ROLE_KEY is the legacy service_role key or SUPABASE_SECRET_KEY is an sb_secret key for this Supabase project, not the anon/publishable key, confirm the ${SUPABASE_INTAKE_TABLE} table exists, and apply supabase/migrations/20260604010000_grant_intake_service_role_access.sql so service_role has table grants.`;
   }
 
   if (status === 404) {
