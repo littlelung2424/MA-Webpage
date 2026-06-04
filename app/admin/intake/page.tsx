@@ -35,6 +35,7 @@ type IntakeSubmission = {
 type DisplayFile = {
   name: string;
   signedUrl: string | null;
+  signedUrlError: string | null;
   originalUrl: string | null;
 };
 
@@ -114,11 +115,35 @@ function pathnameFromBlobUrl(url: string) {
   }
 }
 
+function signedFileErrorMessage(error: unknown) {
+  const message = error instanceof Error ? error.message : "Unknown Vercel Blob signing error.";
+
+  if (message.includes("No blob credentials found") || message.includes("No read-write token found")) {
+    return "Missing Vercel Blob credentials. Connect the Blob store to this Vercel environment, or set BLOB_READ_WRITE_TOKEN.";
+  }
+
+  if (message.includes("no storeId was found")) {
+    return "Missing BLOB_STORE_ID for Vercel Blob OIDC signing. Connect the Blob store to this Vercel environment or set BLOB_STORE_ID.";
+  }
+
+  if (message.includes("Blob path does not match")) {
+    return "Saved Blob pathname does not match the signing scope. Re-upload the file, or verify the stored pathname.";
+  }
+
+  if (message.includes("HMAC is not available")) {
+    return "Vercel Blob signing needs Node 20+ crypto support. Set the deployment runtime to Node.js 20 or newer.";
+  }
+
+  return "Vercel Blob rejected the signing request. Check the function logs for the detailed Blob error.";
+}
+
 async function signedFileUrl(file: IntakeFile) {
   const url = typeof file.url === "string" ? file.url : typeof file.downloadUrl === "string" ? file.downloadUrl : "";
   const pathname = typeof file.pathname === "string" ? file.pathname : pathnameFromBlobUrl(url);
 
-  if (!pathname) return null;
+  if (!pathname) {
+    return { url: null, error: "Saved file is missing a Vercel Blob pathname." };
+  }
 
   try {
     const validUntil = Date.now() + SIGNED_URL_TTL_MS;
@@ -129,10 +154,11 @@ async function signedFileUrl(file: IntakeFile) {
       ...(process.env.BLOB_READ_WRITE_TOKEN?.trim() ? { token: process.env.BLOB_READ_WRITE_TOKEN.trim() } : {}),
     });
     const { presignedUrl } = await presignUrl(signedToken, { access: "private", operation: "get", pathname, validUntil });
-    return presignedUrl;
+    return { url: presignedUrl, error: null };
   } catch (error) {
-    console.error("Failed to sign private Blob URL", { pathname, error });
-    return null;
+    const signedUrlError = signedFileErrorMessage(error);
+    console.error("Failed to sign private Blob URL", { pathname, signedUrlError, error });
+    return { url: null, error: signedUrlError };
   }
 }
 
@@ -142,10 +168,13 @@ async function displayFiles(files: IntakeFile[]): Promise<DisplayFile[]> {
       const originalUrl = typeof file.url === "string" ? file.url : typeof file.downloadUrl === "string" ? file.downloadUrl : null;
       const name = typeof file.name === "string" && file.name.trim() ? file.name : pathnameFromBlobUrl(originalUrl ?? "") || "Uploaded file";
 
+      const signedLink = await signedFileUrl(file);
+
       return {
         name,
         originalUrl,
-        signedUrl: await signedFileUrl(file),
+        signedUrl: signedLink.url,
+        signedUrlError: signedLink.error,
       };
     }),
   );
@@ -250,7 +279,7 @@ function FileList({ files }: { files: DisplayFile[] }) {
           ) : (
             <span>{file.name}</span>
           )}
-          <small>{file.signedUrl ? "Private signed link, expires in 15 minutes" : "Could not create signed link"}</small>
+          <small>{file.signedUrl ? "Private signed link, expires in 15 minutes" : file.signedUrlError}</small>
         </li>
       ))}
     </ul>
