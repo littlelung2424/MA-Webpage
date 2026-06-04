@@ -4,6 +4,7 @@ import { Resend } from "resend";
 export const runtime = "nodejs";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+const MAX_FILE_COUNT = 12;
 const ACCEPTED_EXTENSIONS = new Set(["png", "jpg", "jpeg", "pdf", "doc", "docx", "xls", "xlsx", "csv"]);
 
 type UploadedFile = {
@@ -47,6 +48,7 @@ function buildEmailHtml({
   success,
   anythingElse,
   uploadedFiles,
+  uploadedSuccessFiles,
 }: {
   name: string;
   email: string;
@@ -54,12 +56,14 @@ function buildEmailHtml({
   success: string;
   anythingElse: string;
   uploadedFiles: UploadedFile[];
+  uploadedSuccessFiles: UploadedFile[];
 }) {
-  const fileList = uploadedFiles.length
-    ? `<ul>${uploadedFiles
-        .map((file) => `<li><a href="${escapeHtml(file.url)}">${escapeHtml(file.name)}</a></li>`)
-        .join("")}</ul>`
-    : "<p>No files attached.</p>";
+  const buildFileList = (files: UploadedFile[]) =>
+    files.length
+      ? `<ul>${files
+          .map((file) => `<li><a href="${escapeHtml(file.url)}">${escapeHtml(file.name)}</a></li>`)
+          .join("")}</ul>`
+      : "<p>No files attached.</p>";
 
   return `
     <div style="font-family: Arial, sans-serif; color: #263246; line-height: 1.55;">
@@ -69,9 +73,11 @@ function buildEmailHtml({
       <h2 style="color: #06194a;">What are they trying to do?</h2>
       <p>${formatText(task)}</p>
       <h2 style="color: #06194a;">How they do it today</h2>
-      ${fileList}
+      ${buildFileList(uploadedFiles)}
       <h2 style="color: #06194a;">What success would look like</h2>
       <p>${formatText(success)}</p>
+      <h2 style="color: #06194a;">Desired output files/screenshots</h2>
+      ${buildFileList(uploadedSuccessFiles)}
       <h2 style="color: #06194a;">Anything else?</h2>
       <p>${formatText(anythingElse)}</p>
     </div>
@@ -85,6 +91,7 @@ function buildEmailText({
   success,
   anythingElse,
   uploadedFiles,
+  uploadedSuccessFiles,
 }: {
   name: string;
   email: string;
@@ -92,12 +99,12 @@ function buildEmailText({
   success: string;
   anythingElse: string;
   uploadedFiles: UploadedFile[];
+  uploadedSuccessFiles: UploadedFile[];
 }) {
-  const fileLines = uploadedFiles.length
-    ? uploadedFiles.map((file) => `- ${file.name}: ${file.url}`).join("\n")
-    : "No files attached.";
+  const buildFileLines = (files: UploadedFile[]) =>
+    files.length ? files.map((file) => `- ${file.name}: ${file.url}`).join("\n") : "No files attached.";
 
-  return `New intake submission\n\nName: ${name}\nEmail Address: ${email}\n\nWhat are they trying to do?\n${task}\n\nHow they do it today\n${fileLines}\n\nWhat success would look like\n${success}\n\nAnything else?\n${anythingElse || "Not provided"}`;
+  return `New intake submission\n\nName: ${name}\nEmail Address: ${email}\n\nWhat are they trying to do?\n${task || "Not provided"}\n\nHow they do it today\n${buildFileLines(uploadedFiles)}\n\nWhat success would look like\n${success || "Not provided"}\n\nDesired output files/screenshots\n${buildFileLines(uploadedSuccessFiles)}\n\nAnything else?\n${anythingElse || "Not provided"}`;
 }
 
 export async function POST(request: Request) {
@@ -109,12 +116,21 @@ export async function POST(request: Request) {
     const success = clean(formData.get("success"));
     const anythingElse = clean(formData.get("anythingElse"));
     const files = formData.getAll("files").filter((entry): entry is File => entry instanceof File && entry.size > 0);
+    const successFiles = formData
+      .getAll("successFiles")
+      .filter((entry): entry is File => entry instanceof File && entry.size > 0);
 
-    if (!name || !email || !task || !success || !isValidEmail(email)) {
+    if (!name || !email || !isValidEmail(email)) {
       return Response.json({ error: "Missing or invalid required fields." }, { status: 400 });
     }
 
-    for (const file of files) {
+    for (const fileSet of [files, successFiles]) {
+      if (fileSet.length > MAX_FILE_COUNT) {
+        return Response.json({ error: `Please keep each section to ${MAX_FILE_COUNT} files or fewer.` }, { status: 400 });
+      }
+    }
+
+    for (const file of [...files, ...successFiles]) {
       if (file.size > MAX_FILE_SIZE_BYTES) {
         return Response.json({ error: `${file.name} is over the 10MB limit.` }, { status: 400 });
       }
@@ -134,18 +150,25 @@ export async function POST(request: Request) {
       return Response.json({ error: "Intake notification environment variables are not configured." }, { status: 500 });
     }
 
-    const uploadedFiles: UploadedFile[] = [];
+    async function uploadFiles(filesToUpload: File[], folder: string) {
+      const uploaded: UploadedFile[] = [];
 
-    for (const file of files) {
-      const blob = await put(`intake/${Date.now()}-${safeFileName(file.name)}`, file, {
-        access: "public",
-        addRandomSuffix: true,
-        // Uses BLOB_READ_WRITE_TOKEN from the Vercel environment. Do not hardcode this secret.
-        token: blobToken,
-      });
+      for (const file of filesToUpload) {
+        const blob = await put(`intake/${folder}/${Date.now()}-${safeFileName(file.name)}`, file, {
+          access: "public",
+          addRandomSuffix: true,
+          // Uses BLOB_READ_WRITE_TOKEN from the Vercel environment. Do not hardcode this secret.
+          token: blobToken,
+        });
 
-      uploadedFiles.push({ name: file.name, url: blob.url });
+        uploaded.push({ name: file.name, url: blob.url });
+      }
+
+      return uploaded;
     }
+
+    const uploadedFiles = await uploadFiles(files, "current-process");
+    const uploadedSuccessFiles = await uploadFiles(successFiles, "desired-output");
 
     const resend = new Resend(resendApiKey);
     await resend.emails.send({
@@ -153,8 +176,8 @@ export async function POST(request: Request) {
       to: notifyEmail,
       replyTo: email,
       subject: `New intake submission from ${name}`,
-      html: buildEmailHtml({ name, email, task, success, anythingElse, uploadedFiles }),
-      text: buildEmailText({ name, email, task, success, anythingElse, uploadedFiles }),
+      html: buildEmailHtml({ name, email, task, success, anythingElse, uploadedFiles, uploadedSuccessFiles }),
+      text: buildEmailText({ name, email, task, success, anythingElse, uploadedFiles, uploadedSuccessFiles }),
     });
 
     return Response.json({ ok: true });
