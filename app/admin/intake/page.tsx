@@ -14,6 +14,8 @@ type IntakeFile = {
   name?: unknown;
   url?: unknown;
   pathname?: unknown;
+  blob_file_path?: unknown;
+  blob_file_name?: unknown;
   downloadUrl?: unknown;
 };
 
@@ -37,6 +39,8 @@ type DisplayFile = {
   signedUrl: string | null;
   signedUrlError: string | null;
   originalUrl: string | null;
+  blobFilePath: string | null;
+  blobFileName: string | null;
 };
 
 type SignedFileLink = {
@@ -78,6 +82,7 @@ async function fetchSubmissions() {
     select: "*",
     order: "created_at.desc",
     limit: "100",
+    status: "neq.Done",
   });
 
   try {
@@ -174,7 +179,9 @@ async function recoverBlobPathnameFromName(file: IntakeFile, folderPrefix: strin
 
 async function resolveBlobPathname(file: IntakeFile, folderPrefix: string) {
   const url = typeof file.url === "string" ? file.url : typeof file.downloadUrl === "string" ? file.downloadUrl : "";
-  const directPathname = typeof file.pathname === "string" && file.pathname.trim() ? file.pathname.trim() : pathnameFromBlobUrl(url);
+  const savedBlobPath = typeof file.blob_file_path === "string" && file.blob_file_path.trim() ? file.blob_file_path.trim() : "";
+  const directPathname =
+    savedBlobPath || (typeof file.pathname === "string" && file.pathname.trim() ? file.pathname.trim() : pathnameFromBlobUrl(url));
 
   if (directPathname) return directPathname;
 
@@ -243,13 +250,22 @@ async function displayFiles(files: IntakeFile[], folderPrefix: string): Promise<
   return Promise.all(
     files.map(async (file) => {
       const originalUrl = typeof file.url === "string" ? file.url : typeof file.downloadUrl === "string" ? file.downloadUrl : null;
-      const name = typeof file.name === "string" && file.name.trim() ? file.name : pathnameFromBlobUrl(originalUrl ?? "") || "Uploaded file";
+      const blobFilePath = typeof file.blob_file_path === "string" && file.blob_file_path.trim() ? file.blob_file_path.trim() : null;
+      const legacyPathname = typeof file.pathname === "string" && file.pathname.trim() ? file.pathname.trim() : null;
+      const fallbackPathname = pathnameFromBlobUrl(originalUrl ?? "") || null;
+      const resolvedStoredPath = blobFilePath ?? legacyPathname ?? fallbackPathname;
+      const savedBlobFileName =
+        typeof file.blob_file_name === "string" && file.blob_file_name.trim() ? file.blob_file_name.trim() : null;
+      const blobFileName = savedBlobFileName ?? (resolvedStoredPath ? blobBasename(resolvedStoredPath) : null);
+      const name = typeof file.name === "string" && file.name.trim() ? file.name : (blobFileName ?? "Uploaded file");
 
       const signedLink = await signedFileUrl(file, folderPrefix);
 
       return {
         name,
         originalUrl,
+        blobFilePath: resolvedStoredPath,
+        blobFileName,
         signedUrl: signedLink.url,
         signedUrlError: signedLink.error,
       };
@@ -357,6 +373,16 @@ function FileList({ files }: { files: DisplayFile[] }) {
             <span>{file.name}</span>
           )}
           <small>{file.signedUrl ? "Private signed link, expires in 15 minutes" : file.signedUrlError}</small>
+          {file.blobFilePath && (
+            <small>
+              Vercel Blob path: <code>{file.blobFilePath}</code>
+            </small>
+          )}
+          {file.blobFileName && (
+            <small>
+              Vercel Blob file: <code>{file.blobFileName}</code>
+            </small>
+          )}
         </li>
       ))}
     </ul>
@@ -383,7 +409,7 @@ export default async function AdminIntakePage() {
           <p className="eyebrow">Private admin</p>
           <h1>Intake submissions</h1>
           <p className="intro-copy">
-            Review incoming requests, securely open private Blob uploads with temporary signed links, and keep status and internal notes up to date.
+            Review active requests, securely open private Blob uploads with temporary signed links, and keep status and internal notes up to date. Done submissions stay saved in Supabase but leave this dashboard.
           </p>
         </div>
 
@@ -391,12 +417,12 @@ export default async function AdminIntakePage() {
           <AdminErrorCard message={error} />
         ) : (
           <div className="admin-toolbar">
-            <strong>{submissions.length}</strong> submission{submissions.length === 1 ? "" : "s"} shown, newest first.
+            <strong>{submissions.length}</strong> active submission{submissions.length === 1 ? "" : "s"} shown, newest first. Done submissions are hidden.
           </div>
         )}
 
         <div className="admin-submission-list">
-          {!error && submissionsWithFiles.length === 0 && <p className="admin-empty-card">No intake submissions yet.</p>}
+          {!error && submissionsWithFiles.length === 0 && <p className="admin-empty-card">No active intake submissions yet.</p>}
 
           {submissionsWithFiles.map(({ submission, currentFiles, desiredFiles }) => {
             const extraDetails = extraDetailsFor(submission);

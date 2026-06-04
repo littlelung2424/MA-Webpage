@@ -14,6 +14,8 @@ type UploadedFile = {
   name: string;
   url?: string;
   pathname?: string;
+  blob_file_path: string;
+  blob_file_name: string;
 };
 
 type IntakeSubmission = {
@@ -44,6 +46,10 @@ function extensionFor(fileName: string) {
 
 function safeFileName(fileName: string) {
   return fileName.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/-+/g, "-");
+}
+
+function blobFileName(pathname: string) {
+  return pathname.split("/").pop() || pathname;
 }
 
 async function saveIntakeSubmissionToSupabase({
@@ -135,7 +141,13 @@ export async function POST(request: Request) {
           ...(blobToken ? { token: blobToken } : {}),
         });
 
-        uploaded.push({ name: file.name, url: blob.url, pathname: blob.pathname });
+        uploaded.push({
+          name: file.name,
+          url: blob.url,
+          pathname: blob.pathname,
+          blob_file_path: blob.pathname,
+          blob_file_name: blobFileName(blob.pathname),
+        });
       }
 
       return uploaded;
