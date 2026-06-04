@@ -75,7 +75,7 @@ function buildEmailHtml({
       <h2 style="color: #06194a;">How they do it today</h2>
       ${buildFileList(uploadedFiles)}
       <h2 style="color: #06194a;">What success would look like</h2>
-      <p>${formatText(success || "Provided as output files/screenshots.")}</p>
+      <p>${formatText(success)}</p>
       <h2 style="color: #06194a;">Desired output files/screenshots</h2>
       ${buildFileList(uploadedSuccessFiles)}
       <h2 style="color: #06194a;">Anything else?</h2>
@@ -104,7 +104,7 @@ function buildEmailText({
   const buildFileLines = (files: UploadedFile[]) =>
     files.length ? files.map((file) => `- ${file.name}: ${file.url}`).join("\n") : "No files attached.";
 
-  return `New intake submission\n\nName: ${name}\nEmail Address: ${email}\n\nWhat are they trying to do?\n${task}\n\nHow they do it today\n${buildFileLines(uploadedFiles)}\n\nWhat success would look like\n${success || "Provided as output files/screenshots."}\n\nDesired output files/screenshots\n${buildFileLines(uploadedSuccessFiles)}\n\nAnything else?\n${anythingElse || "Not provided"}`;
+  return `New intake submission\n\nName: ${name}\nEmail Address: ${email}\n\nWhat are they trying to do?\n${task || "Not provided"}\n\nHow they do it today\n${buildFileLines(uploadedFiles)}\n\nWhat success would look like\n${success || "Not provided"}\n\nDesired output files/screenshots\n${buildFileLines(uploadedSuccessFiles)}\n\nAnything else?\n${anythingElse || "Not provided"}`;
 }
 
 export async function POST(request: Request) {
@@ -120,7 +120,7 @@ export async function POST(request: Request) {
       .getAll("successFiles")
       .filter((entry): entry is File => entry instanceof File && entry.size > 0);
 
-    if (!name || !email || !task || (!success && successFiles.length === 0) || !isValidEmail(email)) {
+    if (!name || !email || !isValidEmail(email)) {
       return Response.json({ error: "Missing or invalid required fields." }, { status: 400 });
     }
 

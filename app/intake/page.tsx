@@ -125,8 +125,8 @@ export default function IntakePage() {
     const task = fields.task.trim();
     const success = fields.success.trim();
 
-    if (!name || !email || !task || (!success && successFiles.length === 0)) {
-      setErrorMessage("Please fill out the required fields.");
+    if (!name || !email) {
+      setErrorMessage("Please enter your name and email address.");
       setFormState("error");
       return;
     }
@@ -217,10 +217,9 @@ export default function IntakePage() {
           </div>
 
           <label>
-            <span>What are you trying to do? <strong aria-hidden="true">*</strong></span>
+            <span>What are you trying to do?</span>
             <textarea
               name="task"
-              required
               rows={5}
               placeholder="Describe the task, process, report, spreadsheet, workflow, or repetitive thing that takes too long. Don't have time to describe, show us below."
               value={fields.task}
@@ -229,9 +228,9 @@ export default function IntakePage() {
           </label>
 
           <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "current")}>
-            <span>Show us how you do it</span>
+            <span>Show me how you do it today</span>
             <input name="files" type="file" multiple accept={ACCEPTED_TYPES} onChange={(event) => handleFiles(event, "current")} />
-            <small>Upload files or paste screenshots here. Up to 10MB each.</small>
+            <small>Optional. Upload files or paste screenshots here with Ctrl+V / Cmd+V. Up to 10MB each.</small>
             <em>{currentFilesLabel}</em>
             {currentFiles.length > 0 && (
               <ul className="selected-file-list" aria-label="Current process screenshots and files">
@@ -248,18 +247,18 @@ export default function IntakePage() {
           </div>
 
           <label>
-            <span>What does success look like? <strong aria-hidden="true">*</strong></span>
+            <span>What would success look like?</span>
             <textarea
               name="success"
               rows={5}
-              placeholder="Describe the final outcome and or output you want to see. Don't have time to describe, show us below."
+              placeholder="Describe the task, process, report, spreadsheet, email workflow, or repetitive thing that takes too much time."
               value={fields.success}
               onChange={(event) => updateField("success", event.target.value)}
             />
           </label>
 
           <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "success")}>
-            <span>Show us your final product</span>
+            <span>Upload or paste the output file/screenshots</span>
             <input
               name="successFiles"
               type="file"
@@ -267,7 +266,7 @@ export default function IntakePage() {
               accept={ACCEPTED_TYPES}
               onChange={(event) => handleFiles(event, "success")}
             />
-            <small>Upload files or paste screenshots here. Up to 10MB each.</small>
+            <small>Optional. Add the final report, spreadsheet, email, or screenshots you want back.</small>
             <em>{successFilesLabel}</em>
             {successFiles.length > 0 && (
               <ul className="selected-file-list" aria-label="Desired output screenshots and files">
@@ -294,7 +293,7 @@ export default function IntakePage() {
           </label>
 
           <button className="submit-button" type="submit" disabled={isLoading}>
-            {isLoading ? "Sending…" : "Submit"}
+            {isLoading ? "Sending…" : "Send it over"}
           </button>
 
           <div className="status" aria-live="polite">
