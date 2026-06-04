@@ -297,10 +297,9 @@ export default function IntakePage() {
       <section className="intake-card" aria-labelledby="intake-title">
         <div className="intro-block">
           <p className="eyebrow">Quick automation idea</p>
-          <h1 id="intake-title">What are you working on?</h1>
+          <h1 id="intake-title">How Can We Help</h1>
           <p className="intro-copy">
-            Have a repetitive task, messy spreadsheet, annoying workflow, or process you wish was easier? Send me a
-            quick example of what you’re dealing with.
+            Have a repetitive task, messy spreadsheet, annoying workflow, or process you wish was easier? Share your pain.
           </p>
         </div>
 
@@ -429,7 +428,7 @@ export default function IntakePage() {
           </label>
 
           <button className="submit-button" type="submit" disabled={isLoading}>
-            {isLoading ? "Sending…" : "Send it over"}
+            {isLoading ? "Sending…" : "Submit"}
           </button>
 
           <div className="status" aria-live="polite">
