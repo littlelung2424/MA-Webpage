@@ -93,14 +93,18 @@ export function getSupabaseConfig(): SupabaseConfig {
 }
 
 export function supabaseHeaders(prefer?: string) {
-  const { supabaseElevatedKey } = getSupabaseConfig();
-
-  return {
+  const { supabaseElevatedKey, keyDetails } = getSupabaseConfig();
+  const headers: Record<string, string> = {
     apikey: supabaseElevatedKey,
-    Authorization: `Bearer ${supabaseElevatedKey}`,
     "Content-Type": "application/json",
     ...(prefer ? { Prefer: prefer } : {}),
   };
+
+  if (keyDetails.kind !== "secret") {
+    headers.Authorization = `Bearer ${supabaseElevatedKey}`;
+  }
+
+  return headers;
 }
 
 export function supabaseReadinessError() {
