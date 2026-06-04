@@ -1,31 +1,18 @@
 import { put } from "@vercel/blob";
-import { Resend } from "resend";
 
 export const runtime = "nodejs";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 const MAX_FILE_COUNT = 12;
-const MAX_EMAIL_ATTACHMENT_BYTES = 35 * 1024 * 1024;
 const ACCEPTED_EXTENSIONS = new Set(["png", "jpg", "jpeg", "pdf", "doc", "docx", "xls", "xlsx", "csv"]);
 const ACCEPTED_FILE_TYPES_LABEL = "PNG, JPG, PDF, Word, Excel, or CSV";
 const GENERIC_INTAKE_ERROR =
   "Something went wrong while sending your request. Please try again, or email us directly if it keeps happening.";
-const INTAKE_NOTIFY_EMAIL_ENV_NAMES = [
-  "INTAKE_NOTIFY_EMAIL",
-  "INTAKE_NOTIFICATION_EMAIL",
-  "NOTIFICATION_EMAIL",
-] as const;
 const SUPABASE_INTAKE_TABLE = process.env.SUPABASE_INTAKE_TABLE?.trim() || "intake_submissions";
 
 type UploadedFile = {
   name: string;
   url?: string;
-};
-
-type EmailAttachment = {
-  filename: string;
-  content: string;
-  contentType: string;
 };
 
 type IntakeSubmission = {
@@ -38,54 +25,16 @@ type IntakeSubmission = {
   uploadedSuccessFiles: UploadedFile[];
 };
 
-function getConfiguredEnvValue(names: readonly string[]) {
-  for (const name of names) {
-    const value = process.env[name]?.trim();
-
-    if (value) {
-      return value;
-    }
-  }
-
-  return "";
-}
-
 function getIntakeDeliveryConfig() {
-  const resendApiKey = process.env.RESEND_API_KEY?.trim() ?? "";
-  const notifyEmail = getConfiguredEnvValue(INTAKE_NOTIFY_EMAIL_ENV_NAMES);
   const supabaseUrl = process.env.SUPABASE_URL?.trim().replace(/\/+$/, "") ?? "";
   const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() ?? "";
 
   return {
-    resendApiKey,
-    notifyEmail,
-    fromEmail: process.env.INTAKE_FROM_EMAIL?.trim() || "Mission Atlas Intake <onboarding@resend.dev>",
     blobToken: process.env.BLOB_READ_WRITE_TOKEN?.trim() ?? "",
     supabaseUrl,
     supabaseServiceRoleKey,
-    hasEmailDelivery: Boolean(resendApiKey && notifyEmail),
     hasSupabaseDelivery: Boolean(supabaseUrl && supabaseServiceRoleKey),
   };
-}
-
-function missingIntakeEmailConfig({
-  resendApiKey,
-  notifyEmail,
-}: {
-  resendApiKey: string;
-  notifyEmail: string;
-}) {
-  const missing: string[] = [];
-
-  if (!resendApiKey) {
-    missing.push("RESEND_API_KEY");
-  }
-
-  if (!notifyEmail) {
-    missing.push(INTAKE_NOTIFY_EMAIL_ENV_NAMES.join(" or "));
-  }
-
-  return missing;
 }
 
 function missingSupabaseConfig({
@@ -126,108 +75,6 @@ function extensionFor(fileName: string) {
 
 function safeFileName(fileName: string) {
   return fileName.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/-+/g, "-");
-}
-
-function totalFileSize(files: File[]) {
-  return files.reduce((total, file) => total + file.size, 0);
-}
-
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-function formatText(value: string) {
-  return escapeHtml(value || "Not provided").replace(/\n/g, "<br />");
-}
-
-function buildEmailHtml({
-  name,
-  email,
-  task,
-  success,
-  anythingElse,
-  uploadedFiles,
-  uploadedSuccessFiles,
-}: IntakeSubmission) {
-  const buildFileList = (files: UploadedFile[]) =>
-    files.length
-      ? `<ul>${files
-          .map((file) =>
-            file.url
-              ? `<li><a href="${escapeHtml(file.url)}">${escapeHtml(file.name)}</a></li>`
-              : `<li>${escapeHtml(file.name)} (attached to this email)</li>`,
-          )
-          .join("")}</ul>`
-      : "<p>No files attached.</p>";
-
-  return `
-    <div style="font-family: Arial, sans-serif; color: #263246; line-height: 1.55;">
-      <h1 style="color: #06194a;">New intake submission</h1>
-      <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-      <p><strong>Email Address:</strong> <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>
-      <h2 style="color: #06194a;">What are they trying to do?</h2>
-      <p>${formatText(task)}</p>
-      <h2 style="color: #06194a;">How they do it today</h2>
-      ${buildFileList(uploadedFiles)}
-      <h2 style="color: #06194a;">What success would look like</h2>
-      <p>${formatText(success)}</p>
-      <h2 style="color: #06194a;">Desired output files/screenshots</h2>
-      ${buildFileList(uploadedSuccessFiles)}
-      <h2 style="color: #06194a;">Anything else?</h2>
-      <p>${formatText(anythingElse)}</p>
-    </div>
-  `;
-}
-
-function buildEmailText({
-  name,
-  email,
-  task,
-  success,
-  anythingElse,
-  uploadedFiles,
-  uploadedSuccessFiles,
-}: IntakeSubmission) {
-  const buildFileLines = (files: UploadedFile[]) =>
-    files.length
-      ? files.map((file) => `- ${file.name}: ${file.url ?? "attached to this email"}`).join("\n")
-      : "No files attached.";
-
-  return `New intake submission\n\nName: ${name}\nEmail Address: ${email}\n\nWhat are they trying to do?\n${task || "Not provided"}\n\nHow they do it today\n${buildFileLines(uploadedFiles)}\n\nWhat success would look like\n${success || "Not provided"}\n\nDesired output files/screenshots\n${buildFileLines(uploadedSuccessFiles)}\n\nAnything else?\n${anythingElse || "Not provided"}`;
-}
-
-async function sendIntakeEmail({
-  resendApiKey,
-  notifyEmail,
-  fromEmail,
-  submission,
-  attachments,
-}: {
-  resendApiKey: string;
-  notifyEmail: string;
-  fromEmail: string;
-  submission: IntakeSubmission;
-  attachments: EmailAttachment[];
-}) {
-  const resend = new Resend(resendApiKey);
-  const emailResponse = await resend.emails.send({
-    from: fromEmail,
-    to: notifyEmail,
-    replyTo: submission.email,
-    subject: `New intake submission from ${submission.name}`,
-    html: buildEmailHtml(submission),
-    text: buildEmailText(submission),
-    attachments,
-  });
-
-  if (emailResponse.error) {
-    throw emailResponse.error;
-  }
 }
 
 async function saveIntakeSubmissionToSupabase({
@@ -300,28 +147,28 @@ export async function POST(request: Request) {
       }
     }
 
-    // Configure either Supabase or Resend delivery in Vercel Project Settings > Environment Variables.
-    // Supabase delivery needs SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.
-    // Email delivery needs RESEND_API_KEY and INTAKE_NOTIFY_EMAIL.
-    // BLOB_READ_WRITE_TOKEN is optional: when present, files are uploaded to Vercel Blob and linked in each delivery.
-    const {
-      resendApiKey,
-      notifyEmail,
-      fromEmail,
-      blobToken,
-      supabaseUrl,
-      supabaseServiceRoleKey,
-      hasEmailDelivery,
-      hasSupabaseDelivery,
-    } = getIntakeDeliveryConfig();
+    // Configure Supabase delivery in Vercel Project Settings > Environment Variables.
+    // SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required for every submission.
+    // BLOB_READ_WRITE_TOKEN is required when the visitor attaches files or screenshots.
+    const { blobToken, supabaseUrl, supabaseServiceRoleKey, hasSupabaseDelivery } = getIntakeDeliveryConfig();
 
-    if (!hasEmailDelivery && !hasSupabaseDelivery) {
-      console.error("Intake delivery environment variables are not configured", {
-        missingEmailConfig: missingIntakeEmailConfig({ resendApiKey, notifyEmail }),
+    if (!hasSupabaseDelivery) {
+      console.error("Supabase intake delivery environment variables are not configured", {
         missingSupabaseConfig: missingSupabaseConfig({ supabaseUrl, supabaseServiceRoleKey }),
-        expectedRecipientVariables: INTAKE_NOTIFY_EMAIL_ENV_NAMES,
       });
       return errorResponse(GENERIC_INTAKE_ERROR, 500);
+    }
+
+    const allFiles = [...files, ...successFiles];
+
+    if (allFiles.length > 0 && !blobToken) {
+      console.error("Vercel Blob is not configured for intake file uploads", {
+        missingBlobConfig: ["BLOB_READ_WRITE_TOKEN"],
+      });
+      return errorResponse(
+        "File uploads need storage to be configured before this form can send files or screenshots. Please email the files directly for now.",
+        500,
+      );
     }
 
     async function uploadFiles(filesToUpload: File[], folder: string) {
@@ -340,60 +187,11 @@ export async function POST(request: Request) {
       return uploaded;
     }
 
-    async function attachFiles(filesToAttach: File[]) {
-      const attachments: EmailAttachment[] = [];
-
-      for (const file of filesToAttach) {
-        const content = Buffer.from(await file.arrayBuffer()).toString("base64");
-        attachments.push({
-          filename: safeFileName(file.name),
-          content,
-          contentType: file.type || "application/octet-stream",
-        });
-      }
-
-      return attachments;
-    }
-
-    const allFiles = [...files, ...successFiles];
-    const shouldUseBlobUploads = Boolean(blobToken);
-
-    if (hasEmailDelivery && !shouldUseBlobUploads && totalFileSize(allFiles) > MAX_EMAIL_ATTACHMENT_BYTES) {
-      return errorResponse("Please keep the combined upload size under 35MB, or send the larger files by email.");
-    }
-
-    const uploadedFiles = shouldUseBlobUploads
-      ? await uploadFiles(files, "current-process")
-      : files.map((file) => ({ name: file.name }));
-    const uploadedSuccessFiles = shouldUseBlobUploads
-      ? await uploadFiles(successFiles, "desired-output")
-      : successFiles.map((file) => ({ name: file.name }));
-    const attachments = hasEmailDelivery && !shouldUseBlobUploads ? await attachFiles(allFiles) : [];
+    const uploadedFiles = await uploadFiles(files, "current-process");
+    const uploadedSuccessFiles = await uploadFiles(successFiles, "desired-output");
     const submission = { name, email, task, success, anythingElse, uploadedFiles, uploadedSuccessFiles };
 
-    let delivered = false;
-
-    if (hasSupabaseDelivery) {
-      try {
-        await saveIntakeSubmissionToSupabase({ supabaseUrl, supabaseServiceRoleKey, submission });
-        delivered = true;
-      } catch (error) {
-        console.error("Supabase intake submission insert failed", error);
-      }
-    }
-
-    if (hasEmailDelivery) {
-      try {
-        await sendIntakeEmail({ resendApiKey, notifyEmail, fromEmail, submission, attachments });
-        delivered = true;
-      } catch (error) {
-        console.error("Intake notification email failed", error);
-      }
-    }
-
-    if (!delivered) {
-      return errorResponse(GENERIC_INTAKE_ERROR, 500);
-    }
+    await saveIntakeSubmissionToSupabase({ supabaseUrl, supabaseServiceRoleKey, submission });
 
     return Response.json({ ok: true });
   } catch (error) {

@@ -13,8 +13,7 @@
     "@vercel/blob": "latest",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest",
-    "resend": "latest"
+    "react-dom": "latest"
   },
   "devDependencies": {
     "@types/node": "latest",
