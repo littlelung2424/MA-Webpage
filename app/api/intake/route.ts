@@ -5,6 +5,7 @@ export const runtime = "nodejs";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 const MAX_FILE_COUNT = 12;
+const MAX_EMAIL_ATTACHMENT_BYTES = 35 * 1024 * 1024;
 const ACCEPTED_EXTENSIONS = new Set(["png", "jpg", "jpeg", "pdf", "doc", "docx", "xls", "xlsx", "csv"]);
 const ACCEPTED_FILE_TYPES_LABEL = "PNG, JPG, PDF, Word, Excel, or CSV";
 const GENERIC_INTAKE_ERROR =
@@ -12,7 +13,13 @@ const GENERIC_INTAKE_ERROR =
 
 type UploadedFile = {
   name: string;
-  url: string;
+  url?: string;
+};
+
+type EmailAttachment = {
+  filename: string;
+  content: string;
+  contentType: string;
 };
 
 function clean(value: FormDataEntryValue | null) {
@@ -33,6 +40,10 @@ function extensionFor(fileName: string) {
 
 function safeFileName(fileName: string) {
   return fileName.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/-+/g, "-");
+}
+
+function totalFileSize(files: File[]) {
+  return files.reduce((total, file) => total + file.size, 0);
 }
 
 function escapeHtml(value: string) {
@@ -68,7 +79,11 @@ function buildEmailHtml({
   const buildFileList = (files: UploadedFile[]) =>
     files.length
       ? `<ul>${files
-          .map((file) => `<li><a href="${escapeHtml(file.url)}">${escapeHtml(file.name)}</a></li>`)
+          .map((file) =>
+            file.url
+              ? `<li><a href="${escapeHtml(file.url)}">${escapeHtml(file.name)}</a></li>`
+              : `<li>${escapeHtml(file.name)} (attached to this email)</li>`,
+          )
           .join("")}</ul>`
       : "<p>No files attached.</p>";
 
@@ -109,7 +124,9 @@ function buildEmailText({
   uploadedSuccessFiles: UploadedFile[];
 }) {
   const buildFileLines = (files: UploadedFile[]) =>
-    files.length ? files.map((file) => `- ${file.name}: ${file.url}`).join("\n") : "No files attached.";
+    files.length
+      ? files.map((file) => `- ${file.name}: ${file.url ?? "attached to this email"}`).join("\n")
+      : "No files attached.";
 
   return `New intake submission\n\nName: ${name}\nEmail Address: ${email}\n\nWhat are they trying to do?\n${task || "Not provided"}\n\nHow they do it today\n${buildFileLines(uploadedFiles)}\n\nWhat success would look like\n${success || "Not provided"}\n\nDesired output files/screenshots\n${buildFileLines(uploadedSuccessFiles)}\n\nAnything else?\n${anythingElse || "Not provided"}`;
 }
@@ -151,14 +168,15 @@ export async function POST(request: Request) {
       }
     }
 
-    // Configure these in Vercel Project Settings > Environment Variables:
-    // RESEND_API_KEY, BLOB_READ_WRITE_TOKEN, and INTAKE_NOTIFY_EMAIL.
+    // Configure RESEND_API_KEY and INTAKE_NOTIFY_EMAIL in Vercel Project Settings > Environment Variables.
+    // BLOB_READ_WRITE_TOKEN is optional: when present, files are uploaded to Vercel Blob and linked in the email.
+    // Without it, files are attached directly to the notification email.
     const resendApiKey = process.env.RESEND_API_KEY;
     const notifyEmail = process.env.INTAKE_NOTIFY_EMAIL;
     const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
 
-    if (!resendApiKey || !notifyEmail || !blobToken) {
-      console.error("Intake notification environment variables are not configured");
+    if (!resendApiKey || !notifyEmail) {
+      console.error("Intake notification email environment variables are not configured");
       return errorResponse(GENERIC_INTAKE_ERROR, 500);
     }
 
@@ -169,7 +187,6 @@ export async function POST(request: Request) {
         const blob = await put(`intake/${folder}/${Date.now()}-${safeFileName(file.name)}`, file, {
           access: "public",
           addRandomSuffix: true,
-          // Uses BLOB_READ_WRITE_TOKEN from the Vercel environment. Do not hardcode this secret.
           token: blobToken,
         });
 
@@ -179,18 +196,51 @@ export async function POST(request: Request) {
       return uploaded;
     }
 
-    const uploadedFiles = await uploadFiles(files, "current-process");
-    const uploadedSuccessFiles = await uploadFiles(successFiles, "desired-output");
+    async function attachFiles(filesToAttach: File[]) {
+      const attachments: EmailAttachment[] = [];
+
+      for (const file of filesToAttach) {
+        const content = Buffer.from(await file.arrayBuffer()).toString("base64");
+        attachments.push({
+          filename: safeFileName(file.name),
+          content,
+          contentType: file.type || "application/octet-stream",
+        });
+      }
+
+      return attachments;
+    }
+
+    const allFiles = [...files, ...successFiles];
+    const shouldUseBlobUploads = Boolean(blobToken);
+
+    if (!shouldUseBlobUploads && totalFileSize(allFiles) > MAX_EMAIL_ATTACHMENT_BYTES) {
+      return errorResponse("Please keep the combined upload size under 35MB, or send the larger files by email.");
+    }
+
+    const uploadedFiles = shouldUseBlobUploads
+      ? await uploadFiles(files, "current-process")
+      : files.map((file) => ({ name: file.name }));
+    const uploadedSuccessFiles = shouldUseBlobUploads
+      ? await uploadFiles(successFiles, "desired-output")
+      : successFiles.map((file) => ({ name: file.name }));
+    const attachments = shouldUseBlobUploads ? [] : await attachFiles(allFiles);
 
     const resend = new Resend(resendApiKey);
-    await resend.emails.send({
-      from: "Mission Atlas Intake <onboarding@resend.dev>",
+    const emailResponse = await resend.emails.send({
+      from: process.env.INTAKE_FROM_EMAIL || "Mission Atlas Intake <onboarding@resend.dev>",
       to: notifyEmail,
       replyTo: email,
       subject: `New intake submission from ${name}`,
       html: buildEmailHtml({ name, email, task, success, anythingElse, uploadedFiles, uploadedSuccessFiles }),
       text: buildEmailText({ name, email, task, success, anythingElse, uploadedFiles, uploadedSuccessFiles }),
+      attachments,
     });
+
+    if (emailResponse.error) {
+      console.error("Intake notification email failed", emailResponse.error);
+      return errorResponse(GENERIC_INTAKE_ERROR, 500);
+    }
 
     return Response.json({ ok: true });
   } catch (error) {
