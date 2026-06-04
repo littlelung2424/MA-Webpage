@@ -209,13 +209,15 @@ body {
   justify-content: center;
   justify-self: start;
   gap: 10px;
+  min-width: 178px;
   border: 0;
   border-radius: 999px;
-  background: #ffffff;
+  background: var(--intake-gold);
   color: var(--intake-navy);
   cursor: pointer;
   font-weight: 900;
-  padding: 10px 14px;
+  padding: 10px 20px;
+  white-space: nowrap;
   transition: background 0.18s ease, transform 0.18s ease;
 }
 
@@ -223,6 +225,7 @@ body {
 .file-picker:focus-within,
 .visually-hidden-file-input:focus-visible + .file-picker {
   background: #102b69;
+  color: #ffffff;
   transform: translateY(-1px);
 }
 
