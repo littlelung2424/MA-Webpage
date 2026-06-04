@@ -51,8 +51,8 @@ body {
   top: 0;
   right: 0;
   left: 0;
-  height: 10px;
-  background: linear-gradient(90deg, var(--intake-gold) 0%, var(--intake-orange) 48%, var(--intake-coral) 100%);
+  height: 8px;
+  background: var(--intake-gold);
   content: "";
 }
 
@@ -84,7 +84,7 @@ body {
   width: 52px;
   height: 4px;
   margin-top: 16px;
-  background: linear-gradient(90deg, var(--intake-gold), var(--intake-coral));
+  background: var(--intake-gold);
   content: "";
 }
 
