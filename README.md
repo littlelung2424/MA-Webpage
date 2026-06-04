@@ -72,13 +72,13 @@ create table public.intake_submissions (
 
 The API uses `SUPABASE_SERVICE_ROLE_KEY` from the server-side route, so it can insert even when Row Level Security is enabled. Do not add the service-role key to any `NEXT_PUBLIC_` variable.
 
-If the table already exists, apply `supabase/migrations/20260604000000_add_intake_admin_fields.sql` before using the admin page. It adds `status` (`New`, `Reviewing`, `Done`) and `internal_notes` without dropping existing submissions.
+Apply `supabase/migrations/20260604000000_add_intake_admin_fields.sql` before using the admin page. The migration creates `public.intake_submissions` when it is missing, and it adds `status` (`New`, `Reviewing`, `Done`) and `internal_notes` without dropping existing submissions when the table already exists.
 
 #### Private intake admin
 
 The `/admin/intake` page and `/api/admin/*` paths are protected by Basic Auth in `proxy.ts`. Set `ADMIN_USERNAME` and `ADMIN_PASSWORD` in every Vercel environment where the admin page should work. If either value is missing, admin routes return a locked configuration error instead of becoming public.
 
-The admin page reads submissions newest first through Supabase REST using the server-only service role key. It updates only `status` and `internal_notes` through a server action.
+The admin page reads submissions newest first through Supabase REST using the server-only service role key. It updates only `status` and `internal_notes` through a server action. If the dashboard shows a Supabase 401/403, confirm `SUPABASE_SERVICE_ROLE_KEY` is the Supabase `service_role` key for the same project as `SUPABASE_URL`; the anon/public key can insert only if policies allow it, but it cannot read the admin list when Row Level Security blocks selects.
 
 For private Vercel Blob attachments, the admin page does not expose permanent private URLs as download links. It converts each stored Blob `pathname`/URL into a short-lived signed `GET` URL, currently valid for 15 minutes. New uploads store both the Blob `url` and `pathname`; older rows that only have `url` are supported by deriving the pathname from the saved Blob URL.
 
