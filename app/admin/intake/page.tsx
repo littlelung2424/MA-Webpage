@@ -38,17 +38,21 @@ type DisplayFile = {
   originalUrl: string | null;
 };
 
+function supabaseResponseDetail(responseText: string) {
+  const compactResponseText = responseText.replace(/\s+/g, " ").trim();
+  return compactResponseText ? ` Supabase response: ${compactResponseText.slice(0, 240)}` : "";
+}
+
 function adminFetchErrorMessage(status: number, responseText: string) {
+  const detail = supabaseResponseDetail(responseText);
+
   if (status === 401 || status === 403) {
-    return `Could not load intake submissions from Supabase. Status ${status}. Confirm SUPABASE_SERVICE_ROLE_KEY is the legacy service_role key or SUPABASE_SECRET_KEY is an sb_secret key for this Supabase project, not the anon/publishable key, and confirm the ${SUPABASE_INTAKE_TABLE} table exists.`;
+    return `Could not load intake submissions from Supabase. Status ${status}.${detail} Row Level Security is expected on this table, but it should not block a real Supabase service_role/sb_secret key. Confirm the deployment is running this latest code, confirm SUPABASE_SERVICE_ROLE_KEY is the legacy service_role key or SUPABASE_SECRET_KEY is an sb_secret key for this Supabase project, not the anon/publishable key, confirm the ${SUPABASE_INTAKE_TABLE} table exists, and re-run the intake migration so service_role has table grants.`;
   }
 
   if (status === 404) {
-    return `Could not load intake submissions from Supabase. Status 404. Confirm the ${SUPABASE_INTAKE_TABLE} table exists in the public schema, or update SUPABASE_INTAKE_TABLE to the deployed table name.`;
+    return `Could not load intake submissions from Supabase. Status 404.${detail} Confirm the ${SUPABASE_INTAKE_TABLE} table exists in the public schema, or update SUPABASE_INTAKE_TABLE to the deployed table name.`;
   }
-
-  const compactResponseText = responseText.replace(/\s+/g, " ").trim();
-  const detail = compactResponseText ? ` Supabase response: ${compactResponseText.slice(0, 240)}` : "";
 
   return `Could not load intake submissions from Supabase. Status ${status}.${detail}`;
 }
@@ -224,6 +228,7 @@ function AdminErrorCard({ message }: { message: string }) {
       <strong>Admin dashboard could not load submissions.</strong>
       <p>{message}</p>
       <p>Check the Vercel environment variables for this deployment, confirm the Supabase table exists, then redeploy if you changed settings.</p>
+      <p>Open <a href="/api/admin/intake/debug">/api/admin/intake/debug</a> while signed in with admin Basic Auth to see safe runtime diagnostics for the deployed Supabase URL, key type, and REST probe status.</p>
       <p>Table configured for this deployment: <code>{SUPABASE_INTAKE_TABLE}</code>.</p>
     </div>
   );
