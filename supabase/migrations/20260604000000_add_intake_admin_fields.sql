@@ -3,6 +3,7 @@ create table if not exists public.intake_submissions (
   created_at timestamptz not null default now(),
   name text not null,
   email text not null,
+  tools_or_systems jsonb not null default '[]'::jsonb,
   task text,
   success text,
   anything_else text,
@@ -11,6 +12,7 @@ create table if not exists public.intake_submissions (
 );
 
 alter table public.intake_submissions
+  add column if not exists tools_or_systems jsonb not null default '[]'::jsonb,
   add column if not exists status text not null default 'New',
   add column if not exists internal_notes text;
 

@@ -12,6 +12,8 @@ const ACCEPTED_FILES_LABEL = "Accepted files: PNG, JPG, JPEG, PDF, DOC, DOCX, XL
 type FormState = "idle" | "loading" | "success" | "error";
 type DictationField = "task" | "success";
 
+const TOOL_OPTIONS = ["Google Sheets", "Salesforce", "NetSuite", "SAP", "Other"] as const;
+
 type IntakeSpeechRecognitionResult = {
   readonly length: number;
   item(index: number): { transcript: string } | undefined;
@@ -48,6 +50,7 @@ type IntakeSpeechRecognitionConstructor = new () => IntakeSpeechRecognition;
 type IntakeFields = {
   name: string;
   email: string;
+  toolsOrSystems: string[];
   task: string;
   success: string;
   anythingElse: string;
@@ -56,6 +59,7 @@ type IntakeFields = {
 const initialFields: IntakeFields = {
   name: "",
   email: "",
+  toolsOrSystems: [],
   task: "",
   success: "",
   anythingElse: "",
@@ -136,8 +140,21 @@ export default function IntakePage() {
     };
   }, []);
 
-  function updateField(field: keyof IntakeFields, value: string) {
+  function updateField(
+    field: Exclude<keyof IntakeFields, "toolsOrSystems">,
+    value: string,
+  ) {
     setFields((current) => ({ ...current, [field]: value }));
+  }
+
+  function toggleToolOrSystem(tool: string) {
+    setFields((current) => {
+      const toolsOrSystems = current.toolsOrSystems.includes(tool)
+        ? current.toolsOrSystems.filter((selectedTool) => selectedTool !== tool)
+        : [...current.toolsOrSystems, tool];
+
+      return { ...current, toolsOrSystems };
+    });
   }
 
   function showError(message: string) {
@@ -299,6 +316,7 @@ export default function IntakePage() {
     const body = new FormData();
     body.append("name", name);
     body.append("email", email);
+    fields.toolsOrSystems.forEach((tool) => body.append("toolsOrSystems", tool));
     body.append("task", task);
     body.append("success", success);
     body.append("anythingElse", fields.anythingElse.trim());
@@ -364,6 +382,24 @@ export default function IntakePage() {
               />
             </label>
           </div>
+
+          <fieldset className="checkbox-field">
+            <legend>What tools or systems are involved?</legend>
+            <div className="checkbox-options">
+              {TOOL_OPTIONS.map((tool) => (
+                <label key={tool} className="checkbox-option">
+                  <input
+                    type="checkbox"
+                    name="toolsOrSystems"
+                    value={tool}
+                    checked={fields.toolsOrSystems.includes(tool)}
+                    onChange={() => toggleToolOrSystem(tool)}
+                  />
+                  <span>{tool}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
 
           <label>
             <span>What are you trying to do?</span>
