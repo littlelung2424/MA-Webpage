@@ -184,7 +184,7 @@ export default function IntakePage() {
       <section className="intake-card" aria-labelledby="intake-title">
         <div className="intro-block">
           <p className="eyebrow">Quick automation idea</p>
-          <h1 id="intake-title">How Can We Help You?</h1>
+          <h1 id="intake-title">How Can We Help</h1>
           <p className="intro-copy">
             Have a repetitive task, messy spreadsheet, annoying workflow, or process you wish was easier? Send us an
             example of what you’re working with.
@@ -223,16 +223,16 @@ export default function IntakePage() {
               name="task"
               required
               rows={5}
-              placeholder="Describe the task, process, report, spreadsheet, email workflow, or repetitive thing that takes too much time."
+              placeholder="Describe the task, process, report, spreadsheet, workflow, or repetitive thing that takes too long. Don't have time to describe, show us below."
               value={fields.task}
               onChange={(event) => updateField("task", event.target.value)}
             />
           </label>
 
           <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "current")}>
-            <span>Show us how you do it today</span>
+            <span>Show us how you do it</span>
             <input name="files" type="file" multiple accept={ACCEPTED_TYPES} onChange={(event) => handleFiles(event, "current")} />
-            <small>Optional. Upload files or paste screenshots here with Ctrl+V / Cmd+V. Up to 10MB each.</small>
+            <small>Upload files or paste screenshots here. Up to 10MB each.</small>
             <em>{currentFilesLabel}</em>
             {currentFiles.length > 0 && (
               <ul className="selected-file-list" aria-label="Current process screenshots and files">
@@ -249,11 +249,11 @@ export default function IntakePage() {
           </div>
 
           <label>
-            <span>What would success look like? <strong aria-hidden="true">*</strong></span>
+            <span>What does success look like? <strong aria-hidden="true">*</strong></span>
             <textarea
               name="success"
               rows={5}
-              placeholder="Describe the task, process, report, spreadsheet, email workflow, or repetitive thing that takes too much time."
+              placeholder="Describe the final outcome or output you would like to see."
               value={fields.success}
               onChange={(event) => updateField("success", event.target.value)}
             />
@@ -268,7 +268,7 @@ export default function IntakePage() {
               accept={ACCEPTED_TYPES}
               onChange={(event) => handleFiles(event, "success")}
             />
-            <small>Required if you do not describe success above. Add the final report, spreadsheet, email, or screenshots you want back.</small>
+            <small>Add the final report, spreadsheet, workflow, screenshots or output desired.</small>
             <em>{successFilesLabel}</em>
             {successFiles.length > 0 && (
               <ul className="selected-file-list" aria-label="Desired output screenshots and files">
