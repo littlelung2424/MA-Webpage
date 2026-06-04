@@ -12,6 +12,7 @@ This repository is a Next.js site that serves the static marketing pages and the
 | `/apps/` | `apps/index.html` via `app/[...path]/route.ts` | Apps landing page |
 | `/intake` | `app/intake/page.tsx` | Intake form |
 | `/api/intake` | `app/api/intake/route.ts` | Intake form submission endpoint |
+| `/admin/intake` | `app/admin/intake/page.tsx` | Private admin review page for intake submissions |
 | `/sitemap.xml` | `sitemap.xml` | XML sitemap |
 | `/robots.txt` | `robots.txt` | Search crawler rules |
 
@@ -44,6 +45,8 @@ Configure the variables below in **Vercel Project Settings > Environment Variabl
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes | Server-only Supabase key used by the API route to insert intake rows. Keep it secret and never expose it to client code. |
 | `SUPABASE_INTAKE_TABLE` | No | Supabase table name. Defaults to `intake_submissions`. |
 | `BLOB_READ_WRITE_TOKEN` | Usually no on Vercel; yes for local/manual-token setups | Vercel Blob read/write token. New connected Blob stores can authenticate project deployments automatically; local development still needs this value from `vercel env pull` or the Blob store settings. |
+| `ADMIN_USERNAME` | Yes for `/admin/*` | Basic Auth username for the private intake admin page. |
+| `ADMIN_PASSWORD` | Yes for `/admin/*` | Basic Auth password for the private intake admin page. Use a long random value and keep it secret. |
 
 Use `.env.example` as the template for local development if one is present. Do not commit real API keys or tokens.
 
@@ -61,11 +64,24 @@ create table public.intake_submissions (
   success text,
   anything_else text,
   current_process_files jsonb not null default '[]'::jsonb,
-  desired_output_files jsonb not null default '[]'::jsonb
+  desired_output_files jsonb not null default '[]'::jsonb,
+  status text not null default 'New' check (status in ('New', 'Reviewing', 'Done')),
+  internal_notes text
 );
 ```
 
 The API uses `SUPABASE_SERVICE_ROLE_KEY` from the server-side route, so it can insert even when Row Level Security is enabled. Do not add the service-role key to any `NEXT_PUBLIC_` variable.
+
+If the table already exists, apply `supabase/migrations/20260604000000_add_intake_admin_fields.sql` before using the admin page. It adds `status` (`New`, `Reviewing`, `Done`) and `internal_notes` without dropping existing submissions.
+
+#### Private intake admin
+
+The `/admin/intake` page and `/api/admin/*` paths are protected by Basic Auth in `proxy.ts`. Set `ADMIN_USERNAME` and `ADMIN_PASSWORD` in every Vercel environment where the admin page should work. If either value is missing, admin routes return a locked configuration error instead of becoming public.
+
+The admin page reads submissions newest first through Supabase REST using the server-only service role key. It updates only `status` and `internal_notes` through a server action.
+
+For private Vercel Blob attachments, the admin page does not expose permanent private URLs as download links. It converts each stored Blob `pathname`/URL into a short-lived signed `GET` URL, currently valid for 15 minutes. New uploads store both the Blob `url` and `pathname`; older rows that only have `url` are supported by deriving the pathname from the saved Blob URL.
+
 
 #### File and screenshot uploads
 
