@@ -1,4 +1,5 @@
 import { put } from "@vercel/blob";
+import { getSupabaseConfig, SUPABASE_INTAKE_TABLE, supabaseHeaders, supabaseReadinessError } from "../../../lib/intakeSupabase";
 
 export const runtime = "nodejs";
 
@@ -8,7 +9,6 @@ const ACCEPTED_EXTENSIONS = new Set(["png", "jpg", "jpeg", "pdf", "doc", "docx",
 const ACCEPTED_FILE_TYPES_LABEL = "PNG, JPG, PDF, Word, Excel, or CSV";
 const GENERIC_INTAKE_ERROR =
   "Something went wrong while sending your request. Please try again, or email us directly if it keeps happening.";
-const SUPABASE_INTAKE_TABLE = process.env.SUPABASE_INTAKE_TABLE?.trim() || "intake_submissions";
 
 type UploadedFile = {
   name: string;
@@ -25,38 +25,6 @@ type IntakeSubmission = {
   uploadedFiles: UploadedFile[];
   uploadedSuccessFiles: UploadedFile[];
 };
-
-function getIntakeDeliveryConfig() {
-  const supabaseUrl = process.env.SUPABASE_URL?.trim().replace(/\/+$/, "") ?? "";
-  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() ?? "";
-
-  return {
-    blobToken: process.env.BLOB_READ_WRITE_TOKEN?.trim() ?? "",
-    supabaseUrl,
-    supabaseServiceRoleKey,
-    hasSupabaseDelivery: Boolean(supabaseUrl && supabaseServiceRoleKey),
-  };
-}
-
-function missingSupabaseConfig({
-  supabaseUrl,
-  supabaseServiceRoleKey,
-}: {
-  supabaseUrl: string;
-  supabaseServiceRoleKey: string;
-}) {
-  const missing: string[] = [];
-
-  if (!supabaseUrl) {
-    missing.push("SUPABASE_URL");
-  }
-
-  if (!supabaseServiceRoleKey) {
-    missing.push("SUPABASE_SERVICE_ROLE_KEY");
-  }
-
-  return missing;
-}
 
 function clean(value: FormDataEntryValue | null) {
   return typeof value === "string" ? value.trim() : "";
@@ -80,21 +48,14 @@ function safeFileName(fileName: string) {
 
 async function saveIntakeSubmissionToSupabase({
   supabaseUrl,
-  supabaseServiceRoleKey,
   submission,
 }: {
   supabaseUrl: string;
-  supabaseServiceRoleKey: string;
   submission: IntakeSubmission;
 }) {
   const response = await fetch(`${supabaseUrl}/rest/v1/${SUPABASE_INTAKE_TABLE}`, {
     method: "POST",
-    headers: {
-      apikey: supabaseServiceRoleKey,
-      Authorization: `Bearer ${supabaseServiceRoleKey}`,
-      "Content-Type": "application/json",
-      Prefer: "return=minimal",
-    },
+    headers: supabaseHeaders("return=minimal"),
     body: JSON.stringify({
       name: submission.name,
       email: submission.email,
@@ -151,16 +112,16 @@ export async function POST(request: Request) {
     }
 
     // Configure Supabase delivery in Vercel Project Settings > Environment Variables.
-    // SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required for every submission.
+    // SUPABASE_URL and either SUPABASE_SERVICE_ROLE_KEY or SUPABASE_SECRET_KEY are required for every submission.
     // Vercel Blob uploads are intentionally private so attachments require authenticated access.
     // Vercel Blob uses project-level authentication on Vercel; BLOB_READ_WRITE_TOKEN is only
     // needed for local development or stores not connected to this project.
-    const { blobToken, supabaseUrl, supabaseServiceRoleKey, hasSupabaseDelivery } = getIntakeDeliveryConfig();
+    const blobToken = process.env.BLOB_READ_WRITE_TOKEN?.trim() ?? "";
+    const { supabaseUrl } = getSupabaseConfig();
+    const readinessError = supabaseReadinessError();
 
-    if (!hasSupabaseDelivery) {
-      console.error("Supabase intake delivery environment variables are not configured", {
-        missingSupabaseConfig: missingSupabaseConfig({ supabaseUrl, supabaseServiceRoleKey }),
-      });
+    if (readinessError) {
+      console.error("Supabase intake delivery is not ready", { readinessError });
       return errorResponse(GENERIC_INTAKE_ERROR, 500);
     }
 
@@ -184,7 +145,7 @@ export async function POST(request: Request) {
     const uploadedSuccessFiles = await uploadFiles(successFiles, "desired-output");
     const submission = { name, email, task, success, anythingElse, uploadedFiles, uploadedSuccessFiles };
 
-    await saveIntakeSubmissionToSupabase({ supabaseUrl, supabaseServiceRoleKey, submission });
+    await saveIntakeSubmissionToSupabase({ supabaseUrl, submission });
 
     return Response.json({ ok: true });
   } catch (error) {

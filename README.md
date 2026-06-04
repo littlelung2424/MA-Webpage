@@ -42,7 +42,8 @@ Configure the variables below in **Vercel Project Settings > Environment Variabl
 | Variable | Required | Purpose |
 | --- | --- | --- |
 | `SUPABASE_URL` | Yes | Supabase project URL, for example `https://abcdefghijklmnop.supabase.co`. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Server-only Supabase key used by the API route to insert intake rows. Keep it secret and never expose it to client code. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Yes, unless `SUPABASE_SECRET_KEY` is set | Legacy server-only Supabase `service_role` JWT used by the API route to insert and administer intake rows. Keep it secret and never expose it to client code. |
+| `SUPABASE_SECRET_KEY` | Yes, unless `SUPABASE_SERVICE_ROLE_KEY` is set | New server-only Supabase `sb_secret_...` key. Prefer this for new Supabase projects; never use an `sb_publishable_...` key for the admin dashboard. |
 | `SUPABASE_INTAKE_TABLE` | No | Supabase table name. Defaults to `intake_submissions`. |
 | `BLOB_READ_WRITE_TOKEN` | Usually no on Vercel; yes for local/manual-token setups | Vercel Blob read/write token. New connected Blob stores can authenticate project deployments automatically; local development still needs this value from `vercel env pull` or the Blob store settings. |
 | `ADMIN_USERNAME` | Yes for `/admin/*` | Basic Auth username for the private intake admin page. |
@@ -70,7 +71,7 @@ create table public.intake_submissions (
 );
 ```
 
-The API uses `SUPABASE_SERVICE_ROLE_KEY` from the server-side route, so it can insert even when Row Level Security is enabled. Do not add the service-role key to any `NEXT_PUBLIC_` variable.
+The API uses an elevated server-only Supabase key from the server-side route (`SUPABASE_SECRET_KEY` for new `sb_secret_...` keys or `SUPABASE_SERVICE_ROLE_KEY` for the legacy `service_role` JWT), so it can insert even when Row Level Security is enabled. Do not add elevated keys to any `NEXT_PUBLIC_` variable.
 
 Apply `supabase/migrations/20260604000000_add_intake_admin_fields.sql` before using the admin page. The migration creates `public.intake_submissions` when it is missing, and it adds `status` (`New`, `Reviewing`, `Done`) and `internal_notes` without dropping existing submissions when the table already exists.
 
@@ -78,7 +79,7 @@ Apply `supabase/migrations/20260604000000_add_intake_admin_fields.sql` before us
 
 The `/admin/intake` page and `/api/admin/*` paths are protected by Basic Auth in `proxy.ts`. Set `ADMIN_USERNAME` and `ADMIN_PASSWORD` in every Vercel environment where the admin page should work. If either value is missing, admin routes return a locked configuration error instead of becoming public.
 
-The admin page reads submissions newest first through Supabase REST using the server-only service role key. It updates only `status` and `internal_notes` through a server action. If the dashboard shows a Supabase 401/403, confirm `SUPABASE_SERVICE_ROLE_KEY` is the Supabase `service_role` key for the same project as `SUPABASE_URL`; the anon/public key can insert only if policies allow it, but it cannot read the admin list when Row Level Security blocks selects.
+The admin page reads submissions newest first through Supabase REST using the elevated server-only key. It updates only `status` and `internal_notes` through a server action. If the dashboard shows a Supabase 401/403, confirm `SUPABASE_SECRET_KEY` is a Supabase `sb_secret_...` key or `SUPABASE_SERVICE_ROLE_KEY` is the legacy `service_role` JWT for the same project as `SUPABASE_URL`; anon/public/publishable keys can insert only if policies allow them, but they cannot read the admin list when Row Level Security blocks selects.
 
 For private Vercel Blob attachments, the admin page does not expose permanent private URLs as download links. It converts each stored Blob `pathname`/URL into a short-lived signed `GET` URL, currently valid for 15 minutes. New uploads store both the Blob `url` and `pathname`; older rows that only have `url` are supported by deriving the pathname from the saved Blob URL.
 
@@ -99,7 +100,7 @@ If the error persists after redeploying:
 
 1. Open the latest Vercel deployment logs for `/api/intake`.
 2. Look for `Supabase intake delivery environment variables are not configured`, `Supabase intake insert failed`, or `Intake submission failed`.
-3. Confirm `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are enabled for the same Vercel environment that receives the request. For example, submissions from the production domain need variables/storage access enabled for **Production**, while preview URLs need them enabled for **Preview**.
+3. Confirm `SUPABASE_URL` and an elevated Supabase key (`SUPABASE_SECRET_KEY=sb_secret_...` or legacy `SUPABASE_SERVICE_ROLE_KEY`) are enabled for the same Vercel environment that receives the request. For example, submissions from the production domain need variables/storage access enabled for **Production**, while preview URLs need them enabled for **Preview**.
 4. Confirm the private Blob store is connected to this exact Vercel project and environment. If the store uses read-write tokens instead of automatic project authentication, confirm `BLOB_READ_WRITE_TOKEN` is present in that environment.
 5. Confirm the Supabase table exists with the exact columns in the SQL above, then redeploy again after saving any Vercel storage or variable changes.
 

@@ -1,10 +1,10 @@
 import { issueSignedToken, presignUrl } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
+import { getSupabaseConfig, SUPABASE_INTAKE_TABLE, supabaseHeaders, supabaseReadinessError } from "../../../lib/intakeSupabase";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const SUPABASE_INTAKE_TABLE = process.env.SUPABASE_INTAKE_TABLE?.trim() || "intake_submissions";
 const STATUS_OPTIONS = ["New", "Reviewing", "Done"] as const;
 const SIGNED_URL_TTL_MS = 1000 * 60 * 15;
 
@@ -38,76 +38,9 @@ type DisplayFile = {
   originalUrl: string | null;
 };
 
-type SupabaseKeyDetails = {
-  role: string | null;
-  looksLikeJwt: boolean;
-};
-
-function decodeSupabaseKeyDetails(key: string): SupabaseKeyDetails {
-  const [, payload] = key.split(".");
-
-  if (!payload) {
-    return { role: null, looksLikeJwt: false };
-  }
-
-  try {
-    const normalizedPayload = payload.replace(/-/g, "+").replace(/_/g, "/");
-    const decodedPayload = JSON.parse(Buffer.from(normalizedPayload, "base64").toString("utf8")) as { role?: unknown };
-
-    return {
-      role: typeof decodedPayload.role === "string" ? decodedPayload.role : null,
-      looksLikeJwt: true,
-    };
-  } catch {
-    return { role: null, looksLikeJwt: true };
-  }
-}
-
-function getSupabaseConfig() {
-  const supabaseUrl = process.env.SUPABASE_URL?.trim().replace(/\/+$/, "") ?? "";
-  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() ?? "";
-
-  const keyDetails = decodeSupabaseKeyDetails(supabaseServiceRoleKey);
-
-  return {
-    supabaseUrl,
-    supabaseServiceRoleKey,
-    keyDetails,
-    missing: [
-      ...(!supabaseUrl ? ["SUPABASE_URL"] : []),
-      ...(!supabaseServiceRoleKey ? ["SUPABASE_SERVICE_ROLE_KEY"] : []),
-    ],
-  };
-}
-
-function supabaseHeaders(prefer?: string) {
-  const { supabaseServiceRoleKey } = getSupabaseConfig();
-
-  return {
-    apikey: supabaseServiceRoleKey,
-    Authorization: `Bearer ${supabaseServiceRoleKey}`,
-    "Content-Type": "application/json",
-    ...(prefer ? { Prefer: prefer } : {}),
-  };
-}
-
-function supabaseReadinessError() {
-  const { missing, keyDetails } = getSupabaseConfig();
-
-  if (missing.length > 0) {
-    return `Missing required Supabase environment variable${missing.length === 1 ? "" : "s"}: ${missing.join(", ")}.`;
-  }
-
-  if (keyDetails.looksLikeJwt && keyDetails.role && keyDetails.role !== "service_role") {
-    return `SUPABASE_SERVICE_ROLE_KEY is currently a Supabase ${keyDetails.role} key. The admin dashboard must use the server-only service_role key so it can read submissions when Row Level Security is enabled.`;
-  }
-
-  return null;
-}
-
 function adminFetchErrorMessage(status: number, responseText: string) {
   if (status === 401 || status === 403) {
-    return `Could not load intake submissions from Supabase. Status ${status}. Confirm SUPABASE_SERVICE_ROLE_KEY is the server-only service_role key for this Supabase project, not the anon/public key, and confirm the ${SUPABASE_INTAKE_TABLE} table exists.`;
+    return `Could not load intake submissions from Supabase. Status ${status}. Confirm SUPABASE_SERVICE_ROLE_KEY is the legacy service_role key or SUPABASE_SECRET_KEY is an sb_secret key for this Supabase project, not the anon/publishable key, and confirm the ${SUPABASE_INTAKE_TABLE} table exists.`;
   }
 
   if (status === 404) {
