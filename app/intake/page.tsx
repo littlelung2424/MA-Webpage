@@ -1,9 +1,10 @@
 "use client";
 
-import type { ChangeEvent, FormEvent } from "react";
+import type { ChangeEvent, ClipboardEvent, FormEvent, SetStateAction } from "react";
 import { useMemo, useState } from "react";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+const MAX_FILE_COUNT = 12;
 const ACCEPTED_EXTENSIONS = ["png", "jpg", "jpeg", "pdf", "doc", "docx", "xls", "xlsx", "csv"];
 const ACCEPTED_TYPES = ".png,.jpg,.jpeg,.pdf,.doc,.docx,.xls,.xlsx,.csv";
 
@@ -33,43 +34,86 @@ function extensionFor(file: File) {
   return file.name.split(".").pop()?.toLowerCase() ?? "";
 }
 
+function formatFileLabel(files: File[]) {
+  if (files.length === 0) return "No screenshots or files selected yet.";
+  return files.map((file) => `${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)`).join(", ");
+}
+
+function pastedScreenshotName(index: number) {
+  return `pasted-screenshot-${new Date().toISOString().replace(/[:.]/g, "-")}-${index + 1}.png`;
+}
+
 export default function IntakePage() {
   const [fields, setFields] = useState<IntakeFields>(initialFields);
-  const [files, setFiles] = useState<File[]>([]);
+  const [currentFiles, setCurrentFiles] = useState<File[]>([]);
+  const [successFiles, setSuccessFiles] = useState<File[]>([]);
   const [formState, setFormState] = useState<FormState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const selectedFilesLabel = useMemo(() => {
-    if (files.length === 0) return "No files selected yet.";
-    return files.map((file) => `${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)`).join(", ");
-  }, [files]);
+  const currentFilesLabel = useMemo(() => formatFileLabel(currentFiles), [currentFiles]);
+  const successFilesLabel = useMemo(() => formatFileLabel(successFiles), [successFiles]);
 
   function updateField(field: keyof IntakeFields, value: string) {
     setFields((current) => ({ ...current, [field]: value }));
   }
 
-  function handleFiles(event: ChangeEvent<HTMLInputElement>) {
-    const chosenFiles = Array.from(event.target.files ?? []);
-    const unsupportedFile = chosenFiles.find((file) => !ACCEPTED_EXTENSIONS.includes(extensionFor(file)));
-    const oversizedFile = chosenFiles.find((file) => file.size > MAX_FILE_SIZE_BYTES);
+  function validateFiles(filesToValidate: File[]) {
+    const unsupportedFile = filesToValidate.find((file) => !ACCEPTED_EXTENSIONS.includes(extensionFor(file)));
+    const oversizedFile = filesToValidate.find((file) => file.size > MAX_FILE_SIZE_BYTES);
 
-    if (unsupportedFile) {
-      setErrorMessage(`“${unsupportedFile.name}” is not a supported file type.`);
-      setFormState("error");
-      event.target.value = "";
-      return;
-    }
+    if (unsupportedFile) return `“${unsupportedFile.name}” is not a supported file type.`;
+    if (oversizedFile) return `“${oversizedFile.name}” is over the 10MB limit.`;
+    if (filesToValidate.length > MAX_FILE_COUNT) return `Please keep each section to ${MAX_FILE_COUNT} files or fewer.`;
+    return "";
+  }
 
-    if (oversizedFile) {
-      setErrorMessage(`“${oversizedFile.name}” is over the 10MB limit.`);
-      setFormState("error");
-      event.target.value = "";
-      return;
-    }
+  function applyFiles(
+    incomingFiles: File[],
+    updateFiles: (value: SetStateAction<File[]>) => void,
+    inputToReset?: HTMLInputElement,
+  ) {
+    if (incomingFiles.length === 0) return;
 
-    setFiles(chosenFiles);
-    setErrorMessage("");
-    if (formState === "error") setFormState("idle");
+    updateFiles((existingFiles) => {
+      const nextFiles = [...existingFiles, ...incomingFiles];
+      const validationError = validateFiles(nextFiles);
+
+      if (validationError) {
+        setErrorMessage(validationError);
+        setFormState("error");
+        if (inputToReset) inputToReset.value = "";
+        return existingFiles;
+      }
+
+      setErrorMessage("");
+      if (formState === "error") setFormState("idle");
+      return nextFiles;
+    });
+  }
+
+  function handleFiles(event: ChangeEvent<HTMLInputElement>, kind: "current" | "success") {
+    const updateFiles = kind === "current" ? setCurrentFiles : setSuccessFiles;
+    applyFiles(Array.from(event.target.files ?? []), updateFiles, event.target);
+  }
+
+  function handlePaste(event: ClipboardEvent<HTMLDivElement>, kind: "current" | "success") {
+    const pastedImages = Array.from(event.clipboardData.items)
+      .filter((item) => item.kind === "file" && item.type.startsWith("image/"))
+      .map((item, index) => {
+        const file = item.getAsFile();
+        return file ? new File([file], pastedScreenshotName(index), { type: file.type || "image/png" }) : null;
+      })
+      .filter((file): file is File => Boolean(file));
+
+    if (pastedImages.length === 0) return;
+
+    event.preventDefault();
+    applyFiles(pastedImages, kind === "current" ? setCurrentFiles : setSuccessFiles);
+  }
+
+  function removeFile(kind: "current" | "success", indexToRemove: number) {
+    const updateFiles = kind === "current" ? setCurrentFiles : setSuccessFiles;
+    updateFiles((existingFiles) => existingFiles.filter((_, index) => index !== indexToRemove));
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -81,7 +125,7 @@ export default function IntakePage() {
     const task = fields.task.trim();
     const success = fields.success.trim();
 
-    if (!name || !email || !task || !success) {
+    if (!name || !email || !task || (!success && successFiles.length === 0)) {
       setErrorMessage("Please fill out the required fields.");
       setFormState("error");
       return;
@@ -93,9 +137,10 @@ export default function IntakePage() {
       return;
     }
 
-    const oversizedFile = files.find((file) => file.size > MAX_FILE_SIZE_BYTES);
-    if (oversizedFile) {
-      setErrorMessage(`“${oversizedFile.name}” is over the 10MB limit.`);
+    const currentFilesError = validateFiles(currentFiles);
+    const successFilesError = validateFiles(successFiles);
+    if (currentFilesError || successFilesError) {
+      setErrorMessage(currentFilesError || successFilesError);
       setFormState("error");
       return;
     }
@@ -108,7 +153,8 @@ export default function IntakePage() {
     body.append("task", task);
     body.append("success", success);
     body.append("anythingElse", fields.anythingElse.trim());
-    files.forEach((file) => body.append("files", file));
+    currentFiles.forEach((file) => body.append("files", file));
+    successFiles.forEach((file) => body.append("successFiles", file));
 
     try {
       const response = await fetch("/api/intake", {
@@ -121,7 +167,8 @@ export default function IntakePage() {
       }
 
       setFields(initialFields);
-      setFiles([]);
+      setCurrentFiles([]);
+      setSuccessFiles([]);
       event.currentTarget.reset();
       setFormState("success");
     } catch {
@@ -182,24 +229,60 @@ export default function IntakePage() {
             />
           </label>
 
-          <label className="file-field">
+          <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "current")}>
             <span>Show me how you do it today</span>
-            <input name="files" type="file" multiple accept={ACCEPTED_TYPES} onChange={handleFiles} />
-            <small>Optional. Upload screenshots or files up to 10MB each.</small>
-            <em>{selectedFilesLabel}</em>
-          </label>
+            <input name="files" type="file" multiple accept={ACCEPTED_TYPES} onChange={(event) => handleFiles(event, "current")} />
+            <small>Optional. Upload files or paste screenshots here with Ctrl+V / Cmd+V. Up to 10MB each.</small>
+            <em>{currentFilesLabel}</em>
+            {currentFiles.length > 0 && (
+              <ul className="selected-file-list" aria-label="Current process screenshots and files">
+                {currentFiles.map((file, index) => (
+                  <li key={`${file.name}-${index}`}>
+                    <span>{file.name}</span>
+                    <button type="button" onClick={() => removeFile("current", index)}>
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
           <label>
             <span>What would success look like? <strong aria-hidden="true">*</strong></span>
             <textarea
               name="success"
-              required
-              rows={4}
-              placeholder="If a magic button existed, what would it do?"
+              rows={5}
+              placeholder="Describe the task, process, report, spreadsheet, email workflow, or repetitive thing that takes too much time."
               value={fields.success}
               onChange={(event) => updateField("success", event.target.value)}
             />
           </label>
+
+          <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "success")}>
+            <span>Upload or paste the output file/screenshots</span>
+            <input
+              name="successFiles"
+              type="file"
+              multiple
+              accept={ACCEPTED_TYPES}
+              onChange={(event) => handleFiles(event, "success")}
+            />
+            <small>Required if you do not describe success above. Add the final report, spreadsheet, email, or screenshots you want back.</small>
+            <em>{successFilesLabel}</em>
+            {successFiles.length > 0 && (
+              <ul className="selected-file-list" aria-label="Desired output screenshots and files">
+                {successFiles.map((file, index) => (
+                  <li key={`${file.name}-${index}`}>
+                    <span>{file.name}</span>
+                    <button type="button" onClick={() => removeFile("success", index)}>
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
           <label>
             <span>Anything else?</span>
@@ -211,7 +294,7 @@ export default function IntakePage() {
             />
           </label>
 
-          <button type="submit" disabled={isLoading}>
+          <button className="submit-button" type="submit" disabled={isLoading}>
             {isLoading ? "Sending…" : "Send it over"}
           </button>
 
