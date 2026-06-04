@@ -335,7 +335,7 @@ export default function IntakePage() {
               <textarea
                 name="task"
                 rows={5}
-                placeholder="Describe the task, process, report, spreadsheet, email workflow, or repetitive thing that takes too much time."
+                placeholder="Describe the task, process, report, spreadsheet, workflow, or repetitive thing that takes too long. Don't have time to describe, show us below."
                 value={fields.task}
                 onChange={(event) => updateField("task", event.target.value)}
               />
@@ -352,9 +352,9 @@ export default function IntakePage() {
           </label>
 
           <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "current")}>
-            <span>Show me how you do it today</span>
+            <span>Show us how you do it today (Input)</span>
             <input name="files" type="file" multiple accept={ACCEPTED_TYPES} onChange={(event) => handleFiles(event, "current")} />
-            <small>Optional. Upload files or paste screenshots here with Ctrl+V / Cmd+V. Up to 10MB each.</small>
+            <small>Upload files or paste screenshots here. Up to 10MB each.</small>
             <em>{currentFilesLabel}</em>
             {currentFiles.length > 0 && (
               <ul className="selected-file-list" aria-label="Current process screenshots and files">
@@ -371,12 +371,12 @@ export default function IntakePage() {
           </div>
 
           <label>
-            <span>What would success look like?</span>
+            <span>What does success look like?</span>
             <div className="textarea-with-action">
               <textarea
                 name="success"
                 rows={5}
-                placeholder="Describe the task, process, report, spreadsheet, email workflow, or repetitive thing that takes too much time."
+                placeholder="Describe the final outcome and or output you want to see. Don't have time to describe, show us below."
                 value={fields.success}
                 onChange={(event) => updateField("success", event.target.value)}
               />
@@ -393,7 +393,7 @@ export default function IntakePage() {
           </label>
 
           <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "success")}>
-            <span>Upload or paste the output file/screenshots</span>
+            <span>Show us your final product (Output)</span>
             <input
               name="successFiles"
               type="file"
@@ -401,7 +401,7 @@ export default function IntakePage() {
               accept={ACCEPTED_TYPES}
               onChange={(event) => handleFiles(event, "success")}
             />
-            <small>Optional. Add the final report, spreadsheet, email, or screenshots you want back.</small>
+            <small>Upload files or paste screenshots here. Up to 10MB each.</small>
             <em>{successFilesLabel}</em>
             {successFiles.length > 0 && (
               <ul className="selected-file-list" aria-label="Desired output screenshots and files">
