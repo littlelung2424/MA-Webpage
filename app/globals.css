@@ -1,10 +1,9 @@
 :root {
   --intake-navy: #071841;
-  --intake-gold: #f7b500;
-  --intake-orange: #ff9d4d;
-  --intake-coral: #ff5a4e;
+  --intake-gold: #f6aa00;
+  --intake-orange: #ff8a00;
   --intake-cream: #fff8e8;
-  --intake-sky: #eaf5ff;
+  --intake-sky: #f8fbff;
   --intake-text: #15213c;
   --intake-muted: #5c6882;
   --intake-border: #cdd6e6;
@@ -23,11 +22,11 @@ body {
   min-height: 100vh;
   padding: 40px 16px;
   background:
-    radial-gradient(circle at 12% 12%, rgba(247, 181, 0, 0.24), transparent 28%),
-    radial-gradient(circle at 88% 5%, rgba(255, 90, 78, 0.18), transparent 30%),
-    radial-gradient(circle at 78% 88%, rgba(255, 157, 77, 0.22), transparent 34%),
+    radial-gradient(circle at 12% 10%, rgba(246, 170, 0, 0.42), transparent 30%),
+    radial-gradient(circle at 88% 8%, rgba(255, 138, 0, 0.34), transparent 31%),
+    radial-gradient(circle at 82% 86%, rgba(7, 24, 65, 0.11), transparent 36%),
     radial-gradient(circle at 7px 7px, rgba(7, 24, 65, 0.055) 1px, transparent 1.5px) 0 0 / 20px 20px,
-    linear-gradient(135deg, var(--intake-cream) 0%, #ffffff 45%, var(--intake-sky) 100%);
+    linear-gradient(135deg, #fff2c6 0%, #ffffff 48%, var(--intake-sky) 100%);
   color: var(--intake-text);
   font-family: Lato, Arial, Helvetica, sans-serif;
 }
@@ -198,11 +197,9 @@ body {
   display: grid;
   gap: 9px;
   padding: 20px 22px;
-  border: 1.5px dashed rgba(255, 90, 78, 0.62);
-  border-radius: 14px;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(255, 248, 232, 0.92)),
-    linear-gradient(135deg, rgba(247, 181, 0, 0.2), rgba(255, 90, 78, 0.14));
+  border: 1.5px dashed rgba(7, 24, 65, 0.72);
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.96));
 }
 
 .file-picker {
@@ -211,22 +208,20 @@ body {
   justify-content: center;
   justify-self: start;
   gap: 10px;
-  border: 1.5px solid rgba(6, 25, 74, 0.16);
+  border: 0;
   border-radius: 999px;
   background: #ffffff;
   color: var(--intake-navy);
   cursor: pointer;
   font-weight: 900;
-  padding: 11px 16px;
-  box-shadow: 0 8px 20px rgba(6, 25, 74, 0.08);
-  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+  padding: 10px 14px;
+  transition: background 0.18s ease, transform 0.18s ease;
 }
 
 .file-picker:hover,
 .file-picker:focus-within,
 .visually-hidden-file-input:focus-visible + .file-picker {
-  border-color: var(--intake-gold);
-  box-shadow: 0 10px 24px rgba(6, 25, 74, 0.12);
+  background: #102b69;
   transform: translateY(-1px);
 }
 
@@ -234,7 +229,7 @@ body {
   width: 24px;
   height: 24px;
   fill: none;
-  stroke: var(--intake-navy);
+  stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 2;
