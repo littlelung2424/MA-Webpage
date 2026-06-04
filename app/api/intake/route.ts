@@ -149,7 +149,8 @@ export async function POST(request: Request) {
 
     // Configure Supabase delivery in Vercel Project Settings > Environment Variables.
     // SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required for every submission.
-    // BLOB_READ_WRITE_TOKEN is required when the visitor attaches files or screenshots.
+    // Vercel Blob uploads use project-level Blob authentication on Vercel.
+    // BLOB_READ_WRITE_TOKEN is only needed for local development or stores not connected to this project.
     const { blobToken, supabaseUrl, supabaseServiceRoleKey, hasSupabaseDelivery } = getIntakeDeliveryConfig();
 
     if (!hasSupabaseDelivery) {
@@ -159,18 +160,6 @@ export async function POST(request: Request) {
       return errorResponse(GENERIC_INTAKE_ERROR, 500);
     }
 
-    const allFiles = [...files, ...successFiles];
-
-    if (allFiles.length > 0 && !blobToken) {
-      console.error("Vercel Blob is not configured for intake file uploads", {
-        missingBlobConfig: ["BLOB_READ_WRITE_TOKEN"],
-      });
-      return errorResponse(
-        "File uploads need storage to be configured before this form can send files or screenshots. Please email the files directly for now.",
-        500,
-      );
-    }
-
     async function uploadFiles(filesToUpload: File[], folder: string) {
       const uploaded: UploadedFile[] = [];
 
@@ -178,7 +167,7 @@ export async function POST(request: Request) {
         const blob = await put(`intake/${folder}/${Date.now()}-${safeFileName(file.name)}`, file, {
           access: "public",
           addRandomSuffix: true,
-          token: blobToken,
+          ...(blobToken ? { token: blobToken } : {}),
         });
 
         uploaded.push({ name: file.name, url: blob.url });

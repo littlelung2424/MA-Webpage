@@ -43,7 +43,7 @@ Configure the variables below in **Vercel Project Settings > Environment Variabl
 | `SUPABASE_URL` | Yes | Supabase project URL, for example `https://abcdefghijklmnop.supabase.co`. |
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes | Server-only Supabase key used by the API route to insert intake rows. Keep it secret and never expose it to client code. |
 | `SUPABASE_INTAKE_TABLE` | No | Supabase table name. Defaults to `intake_submissions`. |
-| `BLOB_READ_WRITE_TOKEN` | Required for files/screenshots | Vercel Blob read/write token used to upload attached files and screenshots before saving their public URLs in Supabase. |
+| `BLOB_READ_WRITE_TOKEN` | Usually no on Vercel; yes for local/manual-token setups | Vercel Blob read/write token. New connected Blob stores can authenticate project deployments automatically; local development still needs this value from `vercel env pull` or the Blob store settings. |
 
 Use `.env.example` as the template for local development if one is present. Do not commit real API keys or tokens.
 
@@ -71,19 +71,21 @@ The API uses `SUPABASE_SERVICE_ROLE_KEY` from the server-side route, so it can i
 
 Attached files and pasted screenshots are stored in **Vercel Blob**, then the Blob URLs are saved in the Supabase JSONB columns above. If you plan to submit with files/screenshots, create and connect Vercel Blob before testing:
 
-1. In Vercel, open the project and go to **Storage**.
-2. Create or connect a **Blob** store for the project.
-3. Ensure Vercel adds `BLOB_READ_WRITE_TOKEN` to the same environment you are testing (**Production** for the production domain, **Preview** for preview deployments, and/or **Development** for local Vercel dev).
-4. Redeploy after the token is present.
+1. In Vercel, open this project and go to **Storage**.
+2. Create a **Blob** store from that project, or connect an existing Blob store to that project. Choose the environments that should be allowed to use the store, especially **Production** for `missionatlasxd.com` and **Preview** for preview URLs.
+3. For new connected Blob stores, Vercel Blob can authenticate the deployment automatically. If your store uses the older read-write-token flow, confirm Vercel added `BLOB_READ_WRITE_TOKEN` to the same environment you are testing.
+4. Redeploy after creating/connecting the store or changing environment access. Existing deployments do not pick up newly connected storage or new environment variables.
+5. For local testing, run `vercel link` and `vercel env pull` so `.env.local` receives the Blob credentials for the linked project.
 
 You do **not** need a Supabase Storage bucket for the current implementation; Supabase only stores the form fields plus JSON arrays of Vercel Blob file URLs.
 
 If the error persists after redeploying:
 
 1. Open the latest Vercel deployment logs for `/api/intake`.
-2. Look for `Supabase intake delivery environment variables are not configured`, `Vercel Blob is not configured for intake file uploads`, `Supabase intake insert failed`, or `Intake submission failed`.
-3. Confirm `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and—when submitting files/screenshots—`BLOB_READ_WRITE_TOKEN` are all enabled for the same Vercel environment that receives the request. For example, submissions from the production domain need variables enabled for **Production**, while preview URLs need variables enabled for **Preview**.
-4. Confirm the Supabase table exists with the exact columns in the SQL above, then redeploy again after saving any Vercel variable changes.
+2. Look for `Supabase intake delivery environment variables are not configured`, `Supabase intake insert failed`, or `Intake submission failed`.
+3. Confirm `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are enabled for the same Vercel environment that receives the request. For example, submissions from the production domain need variables/storage access enabled for **Production**, while preview URLs need them enabled for **Preview**.
+4. Confirm the Blob store is connected to this exact Vercel project and environment. If the store uses read-write tokens instead of automatic project authentication, confirm `BLOB_READ_WRITE_TOKEN` is present in that environment.
+5. Confirm the Supabase table exists with the exact columns in the SQL above, then redeploy again after saving any Vercel storage or variable changes.
 
 After deployment, verify these URLs:
 
