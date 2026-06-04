@@ -1,21 +1,40 @@
 import { put } from "@vercel/blob";
-import { getSupabaseConfig, SUPABASE_INTAKE_TABLE, supabaseHeaders, supabaseReadinessError } from "../../../lib/intakeSupabase";
+import {
+  getSupabaseConfig,
+  SUPABASE_INTAKE_TABLE,
+  supabaseHeaders,
+  supabaseReadinessError,
+} from "../../../lib/intakeSupabase";
 
 export const runtime = "nodejs";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 const MAX_FILE_COUNT = 12;
-const ACCEPTED_EXTENSIONS = new Set(["png", "jpg", "jpeg", "pdf", "doc", "docx", "xls", "xlsx", "csv"]);
+const ACCEPTED_EXTENSIONS = new Set([
+  "png",
+  "jpg",
+  "jpeg",
+  "pdf",
+  "doc",
+  "docx",
+  "xls",
+  "xlsx",
+  "csv",
+]);
 const ACCEPTED_FILE_TYPES_LABEL = "PNG, JPG, PDF, Word, Excel, or CSV";
 const GENERIC_INTAKE_ERROR =
   "Something went wrong while sending your request. Please try again, or email us directly if it keeps happening.";
 
 type UploadedFile = {
   name: string;
-  url?: string;
-  pathname?: string;
+  filename: string;
+  pathname: string;
+  size: number;
+  content_type: string;
   blob_file_path: string;
   blob_file_name: string;
+  blob_file_size: number;
+  blob_file_content_type: string;
 };
 
 type IntakeSubmission = {
@@ -59,24 +78,29 @@ async function saveIntakeSubmissionToSupabase({
   supabaseUrl: string;
   submission: IntakeSubmission;
 }) {
-  const response = await fetch(`${supabaseUrl}/rest/v1/${SUPABASE_INTAKE_TABLE}`, {
-    method: "POST",
-    headers: supabaseHeaders("return=minimal"),
-    body: JSON.stringify({
-      name: submission.name,
-      email: submission.email,
-      task: submission.task || null,
-      success: submission.success || null,
-      anything_else: submission.anythingElse || null,
-      current_process_files: submission.uploadedFiles,
-      desired_output_files: submission.uploadedSuccessFiles,
-      status: "New",
-      internal_notes: null,
-    }),
-  });
+  const response = await fetch(
+    `${supabaseUrl}/rest/v1/${SUPABASE_INTAKE_TABLE}`,
+    {
+      method: "POST",
+      headers: supabaseHeaders("return=minimal"),
+      body: JSON.stringify({
+        name: submission.name,
+        email: submission.email,
+        task: submission.task || null,
+        success: submission.success || null,
+        anything_else: submission.anythingElse || null,
+        current_process_files: submission.uploadedFiles,
+        desired_output_files: submission.uploadedSuccessFiles,
+        status: "New",
+        internal_notes: null,
+      }),
+    },
+  );
 
   if (!response.ok) {
-    throw new Error(`Supabase intake insert failed with status ${response.status}: ${await response.text()}`);
+    throw new Error(
+      `Supabase intake insert failed with status ${response.status}: ${await response.text()}`,
+    );
   }
 }
 
@@ -88,32 +112,48 @@ export async function POST(request: Request) {
     const task = clean(formData.get("task"));
     const success = clean(formData.get("success"));
     const anythingElse = clean(formData.get("anythingElse"));
-    const files = formData.getAll("files").filter((entry): entry is File => entry instanceof File && entry.size > 0);
+    const files = formData
+      .getAll("files")
+      .filter(
+        (entry): entry is File => entry instanceof File && entry.size > 0,
+      );
     const successFiles = formData
       .getAll("successFiles")
-      .filter((entry): entry is File => entry instanceof File && entry.size > 0);
+      .filter(
+        (entry): entry is File => entry instanceof File && entry.size > 0,
+      );
 
     if (!name || !email) {
-      return errorResponse("Please enter your name and email address so we know who to contact.");
+      return errorResponse(
+        "Please enter your name and email address so we know who to contact.",
+      );
     }
 
     if (!isValidEmail(email)) {
-      return errorResponse("Please enter a valid email address, like name@example.com.");
+      return errorResponse(
+        "Please enter a valid email address, like name@example.com.",
+      );
     }
 
     for (const fileSet of [files, successFiles]) {
       if (fileSet.length > MAX_FILE_COUNT) {
-        return errorResponse(`Please keep each file section to ${MAX_FILE_COUNT} files or fewer.`);
+        return errorResponse(
+          `Please keep each file section to ${MAX_FILE_COUNT} files or fewer.`,
+        );
       }
     }
 
     for (const file of [...files, ...successFiles]) {
       if (file.size > MAX_FILE_SIZE_BYTES) {
-        return errorResponse(`“${file.name}” is over the 10MB limit. Please choose a smaller file and try again.`);
+        return errorResponse(
+          `“${file.name}” is over the 10MB limit. Please choose a smaller file and try again.`,
+        );
       }
 
       if (!ACCEPTED_EXTENSIONS.has(extensionFor(file.name))) {
-        return errorResponse(`“${file.name}” is not a supported file type. Please upload a ${ACCEPTED_FILE_TYPES_LABEL} file.`);
+        return errorResponse(
+          `“${file.name}” is not a supported file type. Please upload a ${ACCEPTED_FILE_TYPES_LABEL} file.`,
+        );
       }
     }
 
@@ -127,7 +167,9 @@ export async function POST(request: Request) {
     const readinessError = supabaseReadinessError();
 
     if (readinessError) {
-      console.error("Supabase intake delivery is not ready", { readinessError });
+      console.error("Supabase intake delivery is not ready", {
+        readinessError,
+      });
       return errorResponse(GENERIC_INTAKE_ERROR, 500);
     }
 
@@ -135,18 +177,27 @@ export async function POST(request: Request) {
       const uploaded: UploadedFile[] = [];
 
       for (const file of filesToUpload) {
-        const blob = await put(`intake/${folder}/${Date.now()}-${safeFileName(file.name)}`, file, {
-          access: "private",
-          addRandomSuffix: true,
-          ...(blobToken ? { token: blobToken } : {}),
-        });
+        const blob = await put(
+          `intake/${folder}/${Date.now()}-${safeFileName(file.name)}`,
+          file,
+          {
+            access: "private",
+            addRandomSuffix: true,
+            ...(blobToken ? { token: blobToken } : {}),
+          },
+        );
+        const contentType = file.type || "application/octet-stream";
 
         uploaded.push({
           name: file.name,
-          url: blob.url,
+          filename: file.name,
           pathname: blob.pathname,
+          size: file.size,
+          content_type: contentType,
           blob_file_path: blob.pathname,
           blob_file_name: blobFileName(blob.pathname),
+          blob_file_size: file.size,
+          blob_file_content_type: contentType,
         });
       }
 
@@ -154,8 +205,19 @@ export async function POST(request: Request) {
     }
 
     const uploadedFiles = await uploadFiles(files, "current-process");
-    const uploadedSuccessFiles = await uploadFiles(successFiles, "desired-output");
-    const submission = { name, email, task, success, anythingElse, uploadedFiles, uploadedSuccessFiles };
+    const uploadedSuccessFiles = await uploadFiles(
+      successFiles,
+      "desired-output",
+    );
+    const submission = {
+      name,
+      email,
+      task,
+      success,
+      anythingElse,
+      uploadedFiles,
+      uploadedSuccessFiles,
+    };
 
     await saveIntakeSubmissionToSupabase({ supabaseUrl, submission });
 
