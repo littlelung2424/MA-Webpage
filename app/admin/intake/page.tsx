@@ -407,9 +407,9 @@ export default async function AdminIntakePage() {
       <section className="intake-card admin-card">
         <div className="intro-block admin-intro">
           <p className="eyebrow">Private admin</p>
-          <h1>Intake submissions</h1>
+          <h1>Intake Submission Dashboard</h1>
           <p className="intro-copy">
-            Review active requests, securely open private Blob uploads with temporary signed links, and keep status and internal notes up to date. Done submissions stay saved in Supabase but leave this dashboard.
+            Review active requests, securely open uploads with temporary signed links, and keep status and internal notes up to date. Done submissions stay saved in Supabase but leave this dashboard.
           </p>
         </div>
 
