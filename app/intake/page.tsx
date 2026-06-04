@@ -186,8 +186,7 @@ export default function IntakePage() {
           <p className="eyebrow">Quick automation idea</p>
           <h1 id="intake-title">How Can We Help</h1>
           <p className="intro-copy">
-            Have a repetitive task, messy spreadsheet, annoying workflow, or process you wish was easier? Send us an
-            example of what you’re working with.
+            Have a repetitive task, messy spreadsheet, annoying workflow, or process you wish was easier? Share your pain point(s).
           </p>
         </div>
 
@@ -253,7 +252,7 @@ export default function IntakePage() {
             <textarea
               name="success"
               rows={5}
-              placeholder="Describe the final outcome or output you would like to see."
+              placeholder="Describe the final outcome and or output you want to see. Don't have time to describe, show us below."
               value={fields.success}
               onChange={(event) => updateField("success", event.target.value)}
             />
@@ -268,7 +267,7 @@ export default function IntakePage() {
               accept={ACCEPTED_TYPES}
               onChange={(event) => handleFiles(event, "success")}
             />
-            <small>Add the final report, spreadsheet, workflow, screenshots or output desired.</small>
+            <small>Upload files or paste screenshots here. Up to 10MB each.</small>
             <em>{successFilesLabel}</em>
             {successFiles.length > 0 && (
               <ul className="selected-file-list" aria-label="Desired output screenshots and files">
