@@ -4,12 +4,14 @@ Static website for Mission Atlas xD. The production domain is `missionatlasxd.co
 
 ## Site structure
 
-This repository is a plain static HTML site. Do not convert it to React, Next.js, or another framework unless the site requirements materially change.
+This repository is a Next.js site that serves the static marketing pages and the `/intake` form/API.
 
 | URL | Source file | Notes |
 | --- | --- | --- |
-| `/` | `index.html` | Homepage |
-| `/apps/` | `apps/index.html` | Apps landing page |
+| `/` | `index.html` via `app/route.ts` | Homepage |
+| `/apps/` | `apps/index.html` via `app/[...path]/route.ts` | Apps landing page |
+| `/intake` | `app/intake/page.tsx` | Intake form |
+| `/api/intake` | `app/api/intake/route.ts` | Intake form submission endpoint |
 | `/sitemap.xml` | `sitemap.xml` | XML sitemap |
 | `/robots.txt` | `robots.txt` | Search crawler rules |
 
@@ -19,16 +21,31 @@ Images and icons are committed at the repository root and referenced with relati
 
 Use these exact settings when importing the GitHub repository into Vercel:
 
-- **Framework Preset:** Other
+- **Framework Preset:** Next.js
 - **Root Directory:** `./`
-- **Build Command:** leave empty / None
-- **Output Directory:** `./`
-- **Install Command:** leave empty / None
-- **Development Command:** leave empty / None
-- **Node.js Version:** Vercel default is fine because there is no build step
-- **Environment Variables:** none required
+- **Build Command:** `npm run build`
+- **Output Directory:** leave empty / Vercel default
+- **Install Command:** `npm install`
+- **Development Command:** `npm run dev`
+- **Node.js Version:** Vercel default is fine
+- **Environment Variables:** configure the intake variables below
 
-The `vercel.json` file keeps static trailing-slash routes stable and sets explicit content types for `robots.txt` and `sitemap.xml`.
+The `vercel.json` file configures the Next.js build and sets explicit content types for `robots.txt`, `sitemap.xml`, and `site.webmanifest`.
+
+### Intake form environment variables
+
+The `/api/intake` route sends notification emails through Resend. If Vercel logs show `Intake notification email environment variables are not configured`, the deployment is missing one or both required email variables.
+
+Add these in **Vercel Project Settings > Environment Variables** for the environment you are testing, then redeploy the project:
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `RESEND_API_KEY` | Yes | API key from Resend, used to send the notification email. |
+| `INTAKE_NOTIFY_EMAIL` | Yes | Recipient email address for new intake submissions. |
+| `INTAKE_FROM_EMAIL` | No | Sender address for the intake email. For production, use a sender on a domain verified in Resend. Defaults to `Mission Atlas Intake <onboarding@resend.dev>` if omitted. |
+| `BLOB_READ_WRITE_TOKEN` | No | Enables Vercel Blob uploads so submitted files are linked in the email. If omitted, files are attached directly to the email up to the app's attachment size limit. |
+
+Use `.env.example` as the template for local development. Do not commit real API keys or tokens.
 
 After deployment, verify these URLs:
 
