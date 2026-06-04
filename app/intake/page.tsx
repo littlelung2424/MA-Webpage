@@ -228,7 +228,7 @@ export default function IntakePage() {
           </label>
 
           <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "current")}>
-            <span>Show us how you do it</span>
+            <span>Show us how you do it (Input)</span>
             <input name="files" type="file" multiple accept={ACCEPTED_TYPES} onChange={(event) => handleFiles(event, "current")} />
             <small>Upload files or paste screenshots here. Up to 10MB each.</small>
             <em>{currentFilesLabel}</em>
@@ -258,7 +258,7 @@ export default function IntakePage() {
           </label>
 
           <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "success")}>
-            <span>Show us your final product</span>
+            <span>Show us your final product (Output)</span>
             <input
               name="successFiles"
               type="file"
