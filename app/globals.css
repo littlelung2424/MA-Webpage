@@ -1,7 +1,10 @@
 :root {
   --intake-navy: #071841;
-  --intake-gold: #f6aa00;
-  --intake-sky: #f8fbff;
+  --intake-gold: #f7b500;
+  --intake-orange: #ff9d4d;
+  --intake-coral: #ff5a4e;
+  --intake-cream: #fff8e8;
+  --intake-sky: #eaf5ff;
   --intake-text: #15213c;
   --intake-muted: #5c6882;
   --intake-border: #cdd6e6;
@@ -20,21 +23,26 @@ body {
   min-height: 100vh;
   padding: 40px 16px;
   background:
+    radial-gradient(circle at 12% 12%, rgba(247, 181, 0, 0.24), transparent 28%),
+    radial-gradient(circle at 88% 5%, rgba(255, 90, 78, 0.18), transparent 30%),
+    radial-gradient(circle at 78% 88%, rgba(255, 157, 77, 0.22), transparent 34%),
     radial-gradient(circle at 7px 7px, rgba(7, 24, 65, 0.055) 1px, transparent 1.5px) 0 0 / 20px 20px,
-    linear-gradient(180deg, #ffffff 0%, var(--intake-sky) 100%);
+    linear-gradient(135deg, var(--intake-cream) 0%, #ffffff 45%, var(--intake-sky) 100%);
   color: var(--intake-text);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Lato, Arial, Helvetica, sans-serif;
 }
 
 .intake-card {
   position: relative;
-  width: min(900px, 100%);
+  width: min(1180px, 100%);
   margin: 0 auto;
   padding: clamp(28px, 5vw, 56px);
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(205, 214, 230, 0.9);
-  border-radius: 10px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(255, 255, 255, 0.94)),
+    linear-gradient(135deg, rgba(247, 181, 0, 0.16), rgba(255, 90, 78, 0.1));
+  border: 1px solid rgba(255, 157, 77, 0.34);
+  border-radius: 18px;
   box-shadow: var(--intake-shadow);
 }
 
@@ -43,8 +51,8 @@ body {
   top: 0;
   right: 0;
   left: 0;
-  height: 8px;
-  background: var(--intake-gold);
+  height: 10px;
+  background: linear-gradient(90deg, var(--intake-gold) 0%, var(--intake-orange) 48%, var(--intake-coral) 100%);
   content: "";
 }
 
@@ -76,7 +84,7 @@ body {
   width: 52px;
   height: 4px;
   margin-top: 16px;
-  background: var(--intake-gold);
+  background: linear-gradient(90deg, var(--intake-gold), var(--intake-coral));
   content: "";
 }
 
@@ -190,30 +198,56 @@ body {
   display: grid;
   gap: 9px;
   padding: 20px 22px;
-  border: 1.5px dashed rgba(7, 24, 65, 0.72);
-  border-radius: 10px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.96));
+  border: 1.5px dashed rgba(255, 90, 78, 0.62);
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(255, 248, 232, 0.92)),
+    linear-gradient(135deg, rgba(247, 181, 0, 0.2), rgba(255, 90, 78, 0.14));
 }
 
-.file-field input {
-  padding: 12px;
-  background: #ffffff;
-}
-
-.file-field input::file-selector-button {
-  margin-right: 12px;
-  border: 0;
+.file-picker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: start;
+  gap: 10px;
+  border: 1.5px solid rgba(6, 25, 74, 0.16);
   border-radius: 999px;
-  background: var(--intake-navy);
-  color: #ffffff;
+  background: #ffffff;
+  color: var(--intake-navy);
   cursor: pointer;
-  font: inherit;
   font-weight: 900;
-  padding: 10px 14px;
+  padding: 11px 16px;
+  box-shadow: 0 8px 20px rgba(6, 25, 74, 0.08);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 
-.file-field input::file-selector-button:hover {
-  background: #102b69;
+.file-picker:hover,
+.file-picker:focus-within,
+.visually-hidden-file-input:focus-visible + .file-picker {
+  border-color: var(--intake-gold);
+  box-shadow: 0 10px 24px rgba(6, 25, 74, 0.12);
+  transform: translateY(-1px);
+}
+
+.upload-icon {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: var(--intake-navy);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.visually-hidden-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .file-field small,
@@ -265,20 +299,21 @@ body {
 }
 
 .intake-form .submit-button {
-  justify-self: start;
+  width: 100%;
   border: 0;
-  border-radius: 999px;
-  background: var(--intake-navy);
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--intake-navy), #102b69);
   color: #ffffff;
   cursor: pointer;
   font: inherit;
   font-weight: 900;
-  padding: 15px 24px;
-  transition: transform 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+  padding: 16px 24px;
+  box-shadow: 0 12px 26px rgba(6, 25, 74, 0.22);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
 }
 
 .intake-form .submit-button:hover:not(:disabled) {
-  background: #102b69;
+  box-shadow: 0 16px 32px rgba(6, 25, 74, 0.28);
   transform: translateY(-1px);
 }
 
