@@ -409,7 +409,7 @@ export default function IntakePage() {
             <textarea
               name="processInvolvement"
               rows={3}
-              placeholder="Add any other apps, handoffs, approvals, people, files, or steps involved."
+              placeholder="Any any other tools, systems, or applications."
               value={fields.processInvolvement}
               onChange={(event) => updateField("processInvolvement", event.target.value)}
             />
