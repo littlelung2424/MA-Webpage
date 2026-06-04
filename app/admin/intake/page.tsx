@@ -38,13 +38,41 @@ type DisplayFile = {
   originalUrl: string | null;
 };
 
+type SupabaseKeyDetails = {
+  role: string | null;
+  looksLikeJwt: boolean;
+};
+
+function decodeSupabaseKeyDetails(key: string): SupabaseKeyDetails {
+  const [, payload] = key.split(".");
+
+  if (!payload) {
+    return { role: null, looksLikeJwt: false };
+  }
+
+  try {
+    const normalizedPayload = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const decodedPayload = JSON.parse(Buffer.from(normalizedPayload, "base64").toString("utf8")) as { role?: unknown };
+
+    return {
+      role: typeof decodedPayload.role === "string" ? decodedPayload.role : null,
+      looksLikeJwt: true,
+    };
+  } catch {
+    return { role: null, looksLikeJwt: true };
+  }
+}
+
 function getSupabaseConfig() {
   const supabaseUrl = process.env.SUPABASE_URL?.trim().replace(/\/+$/, "") ?? "";
   const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() ?? "";
 
+  const keyDetails = decodeSupabaseKeyDetails(supabaseServiceRoleKey);
+
   return {
     supabaseUrl,
     supabaseServiceRoleKey,
+    keyDetails,
     missing: [
       ...(!supabaseUrl ? ["SUPABASE_URL"] : []),
       ...(!supabaseServiceRoleKey ? ["SUPABASE_SERVICE_ROLE_KEY"] : []),
@@ -63,13 +91,43 @@ function supabaseHeaders(prefer?: string) {
   };
 }
 
-async function fetchSubmissions() {
-  const { supabaseUrl, missing } = getSupabaseConfig();
+function supabaseReadinessError() {
+  const { missing, keyDetails } = getSupabaseConfig();
 
   if (missing.length > 0) {
+    return `Missing required Supabase environment variable${missing.length === 1 ? "" : "s"}: ${missing.join(", ")}.`;
+  }
+
+  if (keyDetails.looksLikeJwt && keyDetails.role && keyDetails.role !== "service_role") {
+    return `SUPABASE_SERVICE_ROLE_KEY is currently a Supabase ${keyDetails.role} key. The admin dashboard must use the server-only service_role key so it can read submissions when Row Level Security is enabled.`;
+  }
+
+  return null;
+}
+
+function adminFetchErrorMessage(status: number, responseText: string) {
+  if (status === 401 || status === 403) {
+    return `Could not load intake submissions from Supabase. Status ${status}. Confirm SUPABASE_SERVICE_ROLE_KEY is the server-only service_role key for this Supabase project, not the anon/public key, and confirm the ${SUPABASE_INTAKE_TABLE} table exists.`;
+  }
+
+  if (status === 404) {
+    return `Could not load intake submissions from Supabase. Status 404. Confirm the ${SUPABASE_INTAKE_TABLE} table exists in the public schema, or update SUPABASE_INTAKE_TABLE to the deployed table name.`;
+  }
+
+  const compactResponseText = responseText.replace(/\s+/g, " ").trim();
+  const detail = compactResponseText ? ` Supabase response: ${compactResponseText.slice(0, 240)}` : "";
+
+  return `Could not load intake submissions from Supabase. Status ${status}.${detail}`;
+}
+
+async function fetchSubmissions() {
+  const { supabaseUrl } = getSupabaseConfig();
+  const readinessError = supabaseReadinessError();
+
+  if (readinessError) {
     return {
       submissions: [],
-      error: `Missing required Supabase environment variable${missing.length === 1 ? "" : "s"}: ${missing.join(", ")}.`,
+      error: readinessError,
     };
   }
 
@@ -91,7 +149,7 @@ async function fetchSubmissions() {
 
       return {
         submissions: [],
-        error: `Could not load intake submissions from Supabase. Status ${response.status}.`,
+        error: adminFetchErrorMessage(response.status, responseText),
       };
     }
 
@@ -205,6 +263,12 @@ async function updateSubmission(formData: FormData) {
   }
 
   const { supabaseUrl } = getSupabaseConfig();
+  const readinessError = supabaseReadinessError();
+
+  if (readinessError) {
+    throw new Error(readinessError);
+  }
+
   const response = await fetch(`${supabaseUrl}/rest/v1/${SUPABASE_INTAKE_TABLE}?id=eq.${encodeURIComponent(id)}`, {
     method: "PATCH",
     headers: supabaseHeaders("return=minimal"),
@@ -227,6 +291,7 @@ function AdminErrorCard({ message }: { message: string }) {
       <strong>Admin dashboard could not load submissions.</strong>
       <p>{message}</p>
       <p>Check the Vercel environment variables for this deployment, confirm the Supabase table exists, then redeploy if you changed settings.</p>
+      <p>Table configured for this deployment: <code>{SUPABASE_INTAKE_TABLE}</code>.</p>
     </div>
   );
 }
