@@ -184,10 +184,10 @@ export default function IntakePage() {
       <section className="intake-card" aria-labelledby="intake-title">
         <div className="intro-block">
           <p className="eyebrow">Quick automation idea</p>
-          <h1 id="intake-title">What are you working on?</h1>
+          <h1 id="intake-title">How Can We Help You?</h1>
           <p className="intro-copy">
-            Have a repetitive task, messy spreadsheet, annoying workflow, or process you wish was easier? Send me a
-            quick example of what you’re dealing with.
+            Have a repetitive task, messy spreadsheet, annoying workflow, or process you wish was easier? Send us an
+            example of what you’re working with.
           </p>
         </div>
 
@@ -230,7 +230,7 @@ export default function IntakePage() {
           </label>
 
           <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "current")}>
-            <span>Show me how you do it today</span>
+            <span>Show us how you do it today</span>
             <input name="files" type="file" multiple accept={ACCEPTED_TYPES} onChange={(event) => handleFiles(event, "current")} />
             <small>Optional. Upload files or paste screenshots here with Ctrl+V / Cmd+V. Up to 10MB each.</small>
             <em>{currentFilesLabel}</em>
@@ -260,7 +260,7 @@ export default function IntakePage() {
           </label>
 
           <div className="file-field" tabIndex={0} onPaste={(event) => handlePaste(event, "success")}>
-            <span>Upload or paste the output file/screenshots</span>
+            <span>Show us your final product</span>
             <input
               name="successFiles"
               type="file"
@@ -295,7 +295,7 @@ export default function IntakePage() {
           </label>
 
           <button className="submit-button" type="submit" disabled={isLoading}>
-            {isLoading ? "Sending…" : "Send it over"}
+            {isLoading ? "Sending…" : "Submit"}
           </button>
 
           <div className="status" aria-live="polite">
