@@ -31,6 +31,7 @@ type IntakeSubmission = {
   created_at?: string | null;
   name?: string | null;
   email?: string | null;
+  tools_or_systems?: unknown;
   task?: string | null;
   success?: string | null;
   anything_else?: string | null;
@@ -176,6 +177,15 @@ function stringValue(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
+function stringListValue(value: unknown) {
+  if (!Array.isArray(value)) return [];
+
+  return value.filter(
+    (entry): entry is string =>
+      typeof entry === "string" && Boolean(entry.trim()),
+  );
+}
+
 function displayFiles(files: IntakeFile[]): DisplayFile[] {
   return files.map((file) => {
     const originalUrl = stringValue(file.url) ?? stringValue(file.downloadUrl);
@@ -231,6 +241,7 @@ function isKnownDisplayField(key: string) {
     "created_at",
     "name",
     "email",
+    "tools_or_systems",
     "task",
     "success",
     "anything_else",
@@ -429,6 +440,13 @@ export default async function AdminIntakePage() {
                   </header>
 
                   <div className="admin-content-grid">
+                    <section>
+                      <h3>Tools or systems involved</h3>
+                      <p>
+                        {stringListValue(submission.tools_or_systems).join(", ") ||
+                          "No tools or systems selected."}
+                      </p>
+                    </section>
                     <section>
                       <h3>Task / problem description</h3>
                       <p>

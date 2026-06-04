@@ -40,6 +40,7 @@ type UploadedFile = {
 type IntakeSubmission = {
   name: string;
   email: string;
+  toolsOrSystems: string[];
   task: string;
   success: string;
   anythingElse: string;
@@ -86,6 +87,7 @@ async function saveIntakeSubmissionToSupabase({
       body: JSON.stringify({
         name: submission.name,
         email: submission.email,
+        tools_or_systems: submission.toolsOrSystems,
         task: submission.task || null,
         success: submission.success || null,
         anything_else: submission.anythingElse || null,
@@ -109,6 +111,11 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const name = clean(formData.get("name"));
     const email = clean(formData.get("email"));
+    const toolsOrSystems = formData
+      .getAll("toolsOrSystems")
+      .filter((entry): entry is string => typeof entry === "string")
+      .map((entry) => entry.trim())
+      .filter(Boolean);
     const task = clean(formData.get("task"));
     const success = clean(formData.get("success"));
     const anythingElse = clean(formData.get("anythingElse"));
@@ -212,6 +219,7 @@ export async function POST(request: Request) {
     const submission = {
       name,
       email,
+      toolsOrSystems,
       task,
       success,
       anythingElse,

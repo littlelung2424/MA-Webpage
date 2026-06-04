@@ -61,6 +61,7 @@ create table public.intake_submissions (
   created_at timestamptz not null default now(),
   name text not null,
   email text not null,
+  tools_or_systems jsonb not null default '[]'::jsonb,
   task text,
   success text,
   anything_else text,
@@ -73,7 +74,7 @@ create table public.intake_submissions (
 
 The API uses an elevated server-only Supabase key from the server-side route (`SUPABASE_SECRET_KEY` for new `sb_secret_...` keys or `SUPABASE_SERVICE_ROLE_KEY` for the legacy `service_role` JWT), so it can insert even when Row Level Security is enabled. Do not add elevated keys to any `NEXT_PUBLIC_` variable.
 
-Apply `supabase/migrations/20260604000000_add_intake_admin_fields.sql` before using the admin page. The migration creates `public.intake_submissions` when it is missing, adds `status` (`New`, `Reviewing`, `Done`) and `internal_notes` without dropping existing submissions when the table already exists, enables Row Level Security, and grants the Supabase `service_role` API role the schema/table/sequence privileges needed for server-side intake reads and writes. If that migration was already applied before the grants were added, Supabase will not re-run the edited file; apply `supabase/migrations/20260604010000_grant_intake_service_role_access.sql` as a follow-up migration. Apply `supabase/migrations/20260604020000_add_blob_file_path_name_to_intake_files.sql` to backfill existing uploaded-file JSON with `blob_file_path` and `blob_file_name`; new submissions write those fields automatically.
+Apply `supabase/migrations/20260604000000_add_intake_admin_fields.sql` before using the admin page. The migration creates `public.intake_submissions` when it is missing, adds `status` (`New`, `Reviewing`, `Done`) and `internal_notes` without dropping existing submissions when the table already exists, enables Row Level Security, and grants the Supabase `service_role` API role the schema/table/sequence privileges needed for server-side intake reads and writes. If that migration was already applied before the grants were added, Supabase will not re-run the edited file; apply `supabase/migrations/20260604010000_grant_intake_service_role_access.sql` as a follow-up migration. Apply `supabase/migrations/20260604020000_add_blob_file_path_name_to_intake_files.sql` to backfill existing uploaded-file JSON with `blob_file_path` and `blob_file_name`; new submissions write those fields automatically. Apply `supabase/migrations/20260604040000_add_tools_or_systems_to_intake_submissions.sql` to add the checked tools/systems list for intake submissions when the base table already exists.
 
 #### Private intake admin
 
