@@ -203,7 +203,7 @@ body {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.96));
 }
 
-.file-picker {
+.intake-form .file-picker {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -213,7 +213,7 @@ body {
   border: 0;
   border-radius: 999px;
   background: var(--intake-gold);
-  color: var(--intake-navy);
+  color: #ffffff;
   cursor: pointer;
   font-weight: 900;
   padding: 10px 20px;
@@ -221,10 +221,10 @@ body {
   transition: background 0.18s ease, transform 0.18s ease;
 }
 
-.file-picker:hover,
-.file-picker:focus-within,
+.intake-form .file-picker:hover,
+.intake-form .file-picker:focus-within,
 .visually-hidden-file-input:focus-visible + .file-picker {
-  background: #102b69;
+  background: #d99200;
   color: #ffffff;
   transform: translateY(-1px);
 }
