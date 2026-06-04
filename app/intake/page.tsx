@@ -299,7 +299,7 @@ export default function IntakePage() {
           <p className="eyebrow">Quick automation idea</p>
           <h1 id="intake-title">How Can We Help</h1>
           <p className="intro-copy">
-            Have a repetitive task, messy spreadsheet, annoying workflow, or process you wish was easier? Share your pain.
+            Tell us what's slowing you down. A few screenshots are all we need.
           </p>
         </div>
 
