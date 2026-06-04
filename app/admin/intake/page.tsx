@@ -1,4 +1,4 @@
-import { issueSignedToken, presignUrl } from "@vercel/blob";
+import { issueSignedToken, list, presignUrl } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { getSupabaseConfig, SUPABASE_INTAKE_TABLE, supabaseHeaders, supabaseReadinessError } from "../../../lib/intakeSupabase";
 
@@ -37,6 +37,11 @@ type DisplayFile = {
   signedUrl: string | null;
   signedUrlError: string | null;
   originalUrl: string | null;
+};
+
+type SignedFileLink = {
+  url: string | null;
+  error: string | null;
 };
 
 function supabaseResponseDetail(responseText: string) {
@@ -115,6 +120,67 @@ function pathnameFromBlobUrl(url: string) {
   }
 }
 
+function safeFileName(fileName: string) {
+  return fileName.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/-+/g, "-");
+}
+
+function blobListOptions() {
+  const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
+  return token ? { token } : {};
+}
+
+function blobBasename(pathname: string) {
+  const name = pathname.split("/").pop() ?? pathname;
+
+  try {
+    return decodeURIComponent(name);
+  } catch {
+    return name;
+  }
+}
+
+function blobNameMatches(blobPathname: string, originalName: string) {
+  const blobName = blobBasename(blobPathname);
+  const safeName = safeFileName(originalName);
+  const dotIndex = safeName.lastIndexOf(".");
+  const stem = dotIndex > 0 ? safeName.slice(0, dotIndex) : safeName;
+  const extension = dotIndex > 0 ? safeName.slice(dotIndex + 1) : "";
+
+  return (
+    blobName === safeName ||
+    blobName.endsWith(`-${safeName}`) ||
+    blobName.includes(safeName) ||
+    Boolean(stem && extension && blobName.includes(stem) && blobName.endsWith(`.${extension}`))
+  );
+}
+
+async function recoverBlobPathnameFromName(file: IntakeFile, folderPrefix: string) {
+  const name = typeof file.name === "string" ? file.name.trim() : "";
+
+  if (!name) return null;
+
+  const result = await list({
+    prefix: folderPrefix,
+    limit: 1000,
+    ...blobListOptions(),
+  });
+
+  return (
+    result.blobs
+      .filter((blob) => blobNameMatches(blob.pathname, name))
+      .sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime())[0]?.pathname ?? null
+  );
+}
+
+async function resolveBlobPathname(file: IntakeFile, folderPrefix: string) {
+  const url = typeof file.url === "string" ? file.url : typeof file.downloadUrl === "string" ? file.downloadUrl : "";
+  const directPathname = typeof file.pathname === "string" && file.pathname.trim() ? file.pathname.trim() : pathnameFromBlobUrl(url);
+
+  if (directPathname) return directPathname;
+
+  return recoverBlobPathnameFromName(file, folderPrefix);
+}
+
 function signedFileErrorMessage(error: unknown) {
   const message = error instanceof Error ? error.message : "Unknown Vercel Blob signing error.";
 
@@ -137,12 +203,23 @@ function signedFileErrorMessage(error: unknown) {
   return "Vercel Blob rejected the signing request. Check the function logs for the detailed Blob error.";
 }
 
-async function signedFileUrl(file: IntakeFile) {
-  const url = typeof file.url === "string" ? file.url : typeof file.downloadUrl === "string" ? file.downloadUrl : "";
-  const pathname = typeof file.pathname === "string" ? file.pathname : pathnameFromBlobUrl(url);
+async function signedFileUrl(file: IntakeFile, folderPrefix: string): Promise<SignedFileLink> {
+  let pathname: string | null = null;
+
+  try {
+    pathname = await resolveBlobPathname(file, folderPrefix);
+  } catch (error) {
+    const signedUrlError = signedFileErrorMessage(error);
+    console.error("Failed to recover private Blob pathname", { folderPrefix, fileName: file.name, signedUrlError, error });
+    return { url: null, error: signedUrlError };
+  }
 
   if (!pathname) {
-    return { url: null, error: "Saved file is missing a Vercel Blob pathname." };
+    return {
+      url: null,
+      error:
+        "Saved file is missing a Blob URL/pathname, and no matching private Blob could be found by file name. Please re-upload this file.",
+    };
   }
 
   try {
@@ -162,13 +239,13 @@ async function signedFileUrl(file: IntakeFile) {
   }
 }
 
-async function displayFiles(files: IntakeFile[]): Promise<DisplayFile[]> {
+async function displayFiles(files: IntakeFile[], folderPrefix: string): Promise<DisplayFile[]> {
   return Promise.all(
     files.map(async (file) => {
       const originalUrl = typeof file.url === "string" ? file.url : typeof file.downloadUrl === "string" ? file.downloadUrl : null;
       const name = typeof file.name === "string" && file.name.trim() ? file.name : pathnameFromBlobUrl(originalUrl ?? "") || "Uploaded file";
 
-      const signedLink = await signedFileUrl(file);
+      const signedLink = await signedFileUrl(file, folderPrefix);
 
       return {
         name,
@@ -294,8 +371,8 @@ export default async function AdminIntakePage() {
     : await Promise.all(
         submissions.map(async (submission) => ({
           submission,
-          currentFiles: await displayFiles(parseFiles(submission.current_process_files)),
-          desiredFiles: await displayFiles(parseFiles(submission.desired_output_files)),
+          currentFiles: await displayFiles(parseFiles(submission.current_process_files), "intake/current-process/"),
+          desiredFiles: await displayFiles(parseFiles(submission.desired_output_files), "intake/desired-output/"),
         })),
       );
 
