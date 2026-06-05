@@ -58,9 +58,9 @@ const LEGACY_ASSETS: Record<string, LegacyAsset> = {
     filePath: "sitemap.xml",
     contentType: "application/xml; charset=utf-8",
   },
-  apps: { filePath: "apps/index.html", contentType: "text/html; charset=utf-8" },
-  "apps/index.html": {
-    filePath: "apps/index.html",
+  tools: { filePath: "tools/index.html", contentType: "text/html; charset=utf-8" },
+  "tools/index.html": {
+    filePath: "tools/index.html",
     contentType: "text/html; charset=utf-8",
   },
 };
