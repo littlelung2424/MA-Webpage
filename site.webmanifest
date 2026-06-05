@@ -1,7 +1,7 @@
 {
   "name": "Mission Atlas xD",
   "short_name": "MissionAtlasXD",
-  "description": "Human-led, AI-enhanced commercial operations consulting and apps for biotech teams.",
+  "description": "Human-led, AI-enhanced commercial operations consulting and tools for biotech teams.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

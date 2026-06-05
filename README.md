@@ -9,14 +9,14 @@ This repository is a Next.js site that serves the static marketing pages and the
 | URL | Source file | Notes |
 | --- | --- | --- |
 | `/` | `index.html` via `app/route.ts` | Homepage |
-| `/apps/` | `apps/index.html` via `app/[...path]/route.ts` | Apps landing page |
+| `/tools/` | `tools/index.html` via `app/[...path]/route.ts` | Tools landing page |
 | `/intake` | `app/intake/page.tsx` | Intake form |
 | `/api/intake` | `app/api/intake/route.ts` | Intake form submission endpoint |
 | `/admin/intake` | `app/admin/intake/page.tsx` | Private admin review page for intake submissions |
 | `/sitemap.xml` | `sitemap.xml` | XML sitemap |
 | `/robots.txt` | `robots.txt` | Search crawler rules |
 
-Images and icons are committed at the repository root and referenced with relative paths so they work from both the root page and `/apps/`.
+Images and icons are committed at the repository root and referenced with relative paths so they work from both the root page and `/tools/`.
 
 ## Vercel deployment settings
 
@@ -109,7 +109,7 @@ If the error persists after redeploying:
 After deployment, verify these URLs:
 
 - `https://missionatlasxd.com/`
-- `https://missionatlasxd.com/apps/`
+- `https://missionatlasxd.com/tools/`
 - `https://missionatlasxd.com/sitemap.xml`
 - `https://missionatlasxd.com/robots.txt`
 
@@ -143,4 +143,4 @@ If you need to return to GitHub Pages:
    - `185.199.110.153`
    - `185.199.111.153`
 5. If using `www`, point it back to the GitHub Pages hostname required by your GitHub Pages configuration.
-6. Wait for DNS propagation, then verify `https://missionatlasxd.com/`, `https://missionatlasxd.com/apps/`, `https://missionatlasxd.com/sitemap.xml`, and `https://missionatlasxd.com/robots.txt`.
+6. Wait for DNS propagation, then verify `https://missionatlasxd.com/`, `https://missionatlasxd.com/tools/`, `https://missionatlasxd.com/sitemap.xml`, and `https://missionatlasxd.com/robots.txt`.
