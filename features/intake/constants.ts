@@ -1,0 +1,9 @@
+export const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+export const MAX_FILE_COUNT = 12;
+export const ACCEPTED_EXTENSIONS = ["png", "jpg", "jpeg", "pdf", "doc", "docx", "xls", "xlsx", "csv"] as const;
+export const ACCEPTED_EXTENSION_SET = new Set<string>(ACCEPTED_EXTENSIONS);
+export const ACCEPTED_TYPES = ".png,.jpg,.jpeg,.pdf,.doc,.docx,.xls,.xlsx,.csv";
+export const ACCEPTED_FILES_LABEL = "Accepted files: PNG, JPEG, PDF, DOCX, XLSX, CSV.";
+export const ACCEPTED_FILE_TYPES_LABEL = "PNG, JPG, PDF, Word, Excel, or CSV";
+export const GENERIC_INTAKE_ERROR = "Something went wrong while sending your request. Please try again, or email us directly if it keeps happening.";
+export const TOOL_OPTIONS = ["Google Sheets", "Salesforce", "NetSuite", "SAP", "Other"] as const;

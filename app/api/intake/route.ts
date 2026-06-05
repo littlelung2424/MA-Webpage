@@ -1,53 +1,15 @@
 import { put } from "@vercel/blob";
+import { GENERIC_INTAKE_ERROR } from "../../../features/intake/constants";
+import { blobFileName, safeFileName } from "../../../features/intake/files";
 import {
   getSupabaseConfig,
-  SUPABASE_INTAKE_TABLE,
-  supabaseHeaders,
+  saveIntakeSubmissionToSupabase,
   supabaseReadinessError,
-} from "../../../lib/intakeSupabase";
+} from "../../../features/intake/supabase";
+import type { UploadedFile } from "../../../features/intake/types";
+import { isValidEmail, validateServerFiles } from "../../../features/intake/validation";
 
 export const runtime = "nodejs";
-
-const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
-const MAX_FILE_COUNT = 12;
-const ACCEPTED_EXTENSIONS = new Set([
-  "png",
-  "jpg",
-  "jpeg",
-  "pdf",
-  "doc",
-  "docx",
-  "xls",
-  "xlsx",
-  "csv",
-]);
-const ACCEPTED_FILE_TYPES_LABEL = "PNG, JPG, PDF, Word, Excel, or CSV";
-const GENERIC_INTAKE_ERROR =
-  "Something went wrong while sending your request. Please try again, or email us directly if it keeps happening.";
-
-type UploadedFile = {
-  name: string;
-  filename: string;
-  pathname: string;
-  size: number;
-  content_type: string;
-  blob_file_path: string;
-  blob_file_name: string;
-  blob_file_size: number;
-  blob_file_content_type: string;
-};
-
-type IntakeSubmission = {
-  name: string;
-  email: string;
-  toolsOrSystems: string[];
-  processInvolvement: string;
-  task: string;
-  success: string;
-  anythingElse: string;
-  uploadedFiles: UploadedFile[];
-  uploadedSuccessFiles: UploadedFile[];
-};
 
 function clean(value: FormDataEntryValue | null) {
   return typeof value === "string" ? value.trim() : "";
@@ -55,57 +17,6 @@ function clean(value: FormDataEntryValue | null) {
 
 function errorResponse(message: string, status = 400) {
   return Response.json({ error: message }, { status });
-}
-
-function isValidEmail(email: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function extensionFor(fileName: string) {
-  return fileName.split(".").pop()?.toLowerCase() ?? "";
-}
-
-function safeFileName(fileName: string) {
-  return fileName.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/-+/g, "-");
-}
-
-function blobFileName(pathname: string) {
-  return pathname.split("/").pop() || pathname;
-}
-
-async function saveIntakeSubmissionToSupabase({
-  supabaseUrl,
-  submission,
-}: {
-  supabaseUrl: string;
-  submission: IntakeSubmission;
-}) {
-  const response = await fetch(
-    `${supabaseUrl}/rest/v1/${SUPABASE_INTAKE_TABLE}`,
-    {
-      method: "POST",
-      headers: supabaseHeaders("return=minimal"),
-      body: JSON.stringify({
-        name: submission.name,
-        email: submission.email,
-        tools_or_systems: submission.toolsOrSystems,
-        process_involvement: submission.processInvolvement || null,
-        task: submission.task || null,
-        success: submission.success || null,
-        anything_else: submission.anythingElse || null,
-        current_process_files: submission.uploadedFiles,
-        desired_output_files: submission.uploadedSuccessFiles,
-        status: "New",
-        internal_notes: null,
-      }),
-    },
-  );
-
-  if (!response.ok) {
-    throw new Error(
-      `Supabase intake insert failed with status ${response.status}: ${await response.text()}`,
-    );
-  }
 }
 
 export async function POST(request: Request) {
@@ -145,26 +56,9 @@ export async function POST(request: Request) {
       );
     }
 
-    for (const fileSet of [files, successFiles]) {
-      if (fileSet.length > MAX_FILE_COUNT) {
-        return errorResponse(
-          `Please keep each file section to ${MAX_FILE_COUNT} files or fewer.`,
-        );
-      }
-    }
-
-    for (const file of [...files, ...successFiles]) {
-      if (file.size > MAX_FILE_SIZE_BYTES) {
-        return errorResponse(
-          `“${file.name}” is over the 10MB limit. Please choose a smaller file and try again.`,
-        );
-      }
-
-      if (!ACCEPTED_EXTENSIONS.has(extensionFor(file.name))) {
-        return errorResponse(
-          `“${file.name}” is not a supported file type. Please upload a ${ACCEPTED_FILE_TYPES_LABEL} file.`,
-        );
-      }
+    const fileValidationError = validateServerFiles([files, successFiles]);
+    if (fileValidationError) {
+      return errorResponse(fileValidationError);
     }
 
     // Configure Supabase delivery in Vercel Project Settings > Environment Variables.
