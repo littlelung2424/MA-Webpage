@@ -1,68 +1,35 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-type LegacyAsset = {
+type CompatibilityPage = {
   filePath: string;
   contentType: string;
 };
 
-const LEGACY_ASSETS: Record<string, LegacyAsset> = {
-  "02.png": { filePath: "02.png", contentType: "image/png" },
-  "05.png": { filePath: "05.png", contentType: "image/png" },
-  "MA_wavingmascot-hat.png": {
-    filePath: "MA_wavingmascot-hat.png",
-    contentType: "image/png",
-  },
-  "MissionAtlasXD_Mascot.png": {
-    filePath: "MissionAtlasXD_Mascot.png",
-    contentType: "image/png",
-  },
-  "MissionAtlasXD_Mascot_02.png": {
-    filePath: "MissionAtlasXD_Mascot_02.png",
-    contentType: "image/png",
-  },
-  "apple-touch-icon.png": {
-    filePath: "apple-touch-icon.png",
-    contentType: "image/png",
-  },
-  "favicon-16x16.png": {
-    filePath: "favicon-16x16.png",
-    contentType: "image/png",
-  },
-  "favicon-180x180.png": {
-    filePath: "favicon-180x180.png",
-    contentType: "image/png",
-  },
-  "favicon-32x32.png": {
-    filePath: "favicon-32x32.png",
-    contentType: "image/png",
-  },
-  "favicon-48x48.png": {
-    filePath: "favicon-48x48.png",
-    contentType: "image/png",
-  },
-  "favicon-512x512.png": {
-    filePath: "favicon-512x512.png",
-    contentType: "image/png",
-  },
-  "favicon.ico": { filePath: "favicon.ico", contentType: "image/x-icon" },
-  "robots.txt": {
-    filePath: "robots.txt",
-    contentType: "text/plain; charset=utf-8",
-  },
-  "site.webmanifest": {
-    filePath: "site.webmanifest",
-    contentType: "application/manifest+json; charset=utf-8",
-  },
-  "sitemap.xml": {
-    filePath: "sitemap.xml",
-    contentType: "application/xml; charset=utf-8",
-  },
-  tools: { filePath: "tools/index.html", contentType: "text/html; charset=utf-8" },
-  "tools/index.html": {
-    filePath: "tools/index.html",
+const COMPATIBILITY_PAGES: Record<string, CompatibilityPage> = {
+  "index.html": {
+    filePath: "static-pages/index.html",
     contentType: "text/html; charset=utf-8",
   },
+  "tools/index.html": {
+    filePath: "static-pages/tools/index.html",
+    contentType: "text/html; charset=utf-8",
+  },
+};
+
+const LEGACY_ASSET_REDIRECTS: Record<string, string> = {
+  "02.png": "/assets/brand/02.png",
+  "05.png": "/assets/brand/05.png",
+  "MA_wavingmascot-hat.png": "/assets/mascots/MA_wavingmascot-hat.png",
+  "MissionAtlasXD_Mascot.png": "/assets/mascots/MissionAtlasXD_Mascot.png",
+  "MissionAtlasXD_Mascot_02.png": "/assets/mascots/MissionAtlasXD_Mascot_02.png",
+  "apple-touch-icon.png": "/icons/apple-touch-icon.png",
+  "favicon-16x16.png": "/icons/favicon-16x16.png",
+  "favicon-180x180.png": "/icons/favicon-180x180.png",
+  "favicon-32x32.png": "/icons/favicon-32x32.png",
+  "favicon-48x48.png": "/icons/favicon-48x48.png",
+  "favicon-512x512.png": "/icons/favicon-512x512.png",
+  "favicon.ico": "/icons/favicon.ico",
 };
 
 type RouteContext = {
@@ -71,22 +38,28 @@ type RouteContext = {
   }>;
 };
 
-export async function GET(_request: Request, context: RouteContext) {
+export async function GET(request: Request, context: RouteContext) {
   const { path: pathSegments } = await context.params;
   const requestedPath = pathSegments.join("/");
-  const asset = LEGACY_ASSETS[requestedPath];
+  const legacyAssetRedirect = LEGACY_ASSET_REDIRECTS[requestedPath];
 
-  if (!asset) {
+  if (legacyAssetRedirect) {
+    return Response.redirect(new URL(legacyAssetRedirect, request.url), 308);
+  }
+
+  const page = COMPATIBILITY_PAGES[requestedPath];
+
+  if (!page) {
     return new Response("Not found", { status: 404 });
   }
 
   const file = await readFile(
-    path.join(/* turbopackIgnore: true */ process.cwd(), asset.filePath),
+    path.join(/* turbopackIgnore: true */ process.cwd(), page.filePath),
   );
 
   return new Response(file, {
     headers: {
-      "Content-Type": asset.contentType,
+      "Content-Type": page.contentType,
     },
   });
 }

@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 export async function GET() {
-  const html = await readFile(path.join(process.cwd(), "static-pages/index.html"), "utf8");
+  const html = await readFile(path.join(process.cwd(), "static-pages/tools/index.html"), "utf8");
 
   return new Response(html, {
     headers: {
