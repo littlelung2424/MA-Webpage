@@ -7,7 +7,7 @@ const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 const MAX_FILE_COUNT = 12;
 const ACCEPTED_EXTENSIONS = ["png", "jpg", "jpeg", "pdf", "doc", "docx", "xls", "xlsx", "csv"];
 const ACCEPTED_TYPES = ".png,.jpg,.jpeg,.pdf,.doc,.docx,.xls,.xlsx,.csv";
-const ACCEPTED_FILES_LABEL = "Accepted files: PNG, JPG, JPEG, PDF, DOC, DOCX, XLS, XLSX, CSV.";
+const ACCEPTED_FILES_LABEL = "Accepted files: PNG, JPEG, PDF, DOCX, XLSX, CSV.";
 
 type FormState = "idle" | "loading" | "success" | "error";
 type DictationField = "task" | "success";
