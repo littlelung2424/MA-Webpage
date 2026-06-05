@@ -4,19 +4,19 @@ Static website for Mission Atlas xD. The production domain is `missionatlasxd.co
 
 ## Site structure
 
-This repository is a Next.js site that serves the static marketing pages and the `/intake` form/API.
+This repository is a Next.js site that serves the static pages and the `/intake` form/API.
 
 | URL | Source file | Notes |
 | --- | --- | --- |
-| `/` | `index.html` via `app/route.ts` | Homepage |
-| `/tools/` | `tools/index.html` via `app/[...path]/route.ts` | Tools landing page |
+| `/` | `static-pages/index.html` via `app/route.ts` | Homepage |
+| `/tools/` | `static-pages/tools/index.html` via `app/tools/route.ts` | Tools landing page |
 | `/intake` | `app/intake/page.tsx` | Intake form |
 | `/api/intake` | `app/api/intake/route.ts` | Intake form submission endpoint |
 | `/admin/intake` | `app/admin/intake/page.tsx` | Private admin review page for intake submissions |
-| `/sitemap.xml` | `sitemap.xml` | XML sitemap |
-| `/robots.txt` | `robots.txt` | Search crawler rules |
+| `/sitemap.xml` | `public/sitemap.xml` | XML sitemap |
+| `/robots.txt` | `public/robots.txt` | Search crawler rules |
 
-Images and icons are committed at the repository root and referenced with relative paths so they work from both the root page and `/tools/`.
+Images and icons live under `public/assets/` and `public/icons/` so Next.js serves them from stable absolute URLs. Static HTML lives under `static-pages/`, with explicit route handlers in `app/` until those pages are converted to React components; legacy root asset URLs redirect to the new public locations for compatibility. See `docs/structure.md` for the repository layout guide.
 
 ## Vercel deployment settings
 
@@ -31,7 +31,7 @@ Use these exact settings when importing the GitHub repository into Vercel:
 - **Node.js Version:** Vercel default is fine
 - **Environment Variables:** configure the intake variables below
 
-The `vercel.json` file configures the Next.js build and sets explicit content types for `robots.txt`, `sitemap.xml`, and `site.webmanifest`.
+The `vercel.json` file configures the Next.js build and sets explicit content types for `robots.txt`, `sitemap.xml`, and `site.webmanifest`, which are served from `public/`.
 
 ### Intake form environment variables
 
