@@ -1,3 +1,5 @@
+import "../../../features/intake/intake.css";
+import "../../../features/intake-admin/admin.css";
 import { SUPABASE_INTAKE_TABLE } from "../../../lib/intakeSupabase";
 import {
   deleteSubmission,
