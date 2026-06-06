@@ -1,3 +1,4 @@
+import "../../features/intake/intake.css";
 import { IntakeForm } from "../../features/intake/components/IntakeForm";
 
 export default function IntakePage() {

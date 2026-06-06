@@ -1,0 +1,356 @@
+.admin-page {
+  padding-block: 32px;
+}
+
+.admin-card {
+  width: min(1280px, 100%);
+}
+
+.admin-intro {
+  max-width: 820px;
+}
+
+.admin-toolbar {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 22px;
+  padding: 10px 14px;
+  border: 1px solid rgba(7, 24, 65, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--intake-muted);
+  font-weight: 800;
+}
+
+.admin-toolbar strong {
+  color: var(--intake-navy);
+}
+
+.admin-submission-list {
+  display: grid;
+  gap: 22px;
+}
+
+.admin-submission-card,
+.admin-empty-card,
+.admin-error-card {
+  display: grid;
+  gap: 22px;
+  padding: clamp(20px, 3vw, 30px);
+  border: 1px solid rgba(7, 24, 65, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 18px 42px rgba(7, 24, 65, 0.08);
+}
+
+.admin-empty-card {
+  color: var(--intake-muted);
+  font-weight: 800;
+}
+
+.admin-error-card {
+  margin-bottom: 22px;
+  border-color: rgba(194, 63, 63, 0.28);
+  background: rgba(255, 245, 245, 0.9);
+  color: var(--intake-text);
+}
+
+.admin-error-card strong {
+  color: #8f1f1f;
+  font-size: 1.05rem;
+}
+
+.admin-error-card p {
+  margin: 0;
+  color: var(--intake-muted);
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.admin-submission-header {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(7, 24, 65, 0.1);
+}
+
+.admin-submission-header h2 {
+  margin: 0 0 8px;
+  color: var(--intake-navy);
+  font-size: clamp(1.35rem, 2.5vw, 2rem);
+  line-height: 1.1;
+}
+
+.admin-submission-header a,
+.admin-file-list a {
+  color: var(--intake-navy);
+  font-weight: 900;
+  text-decoration-color: rgba(246, 170, 0, 0.75);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.admin-submission-header a:hover,
+.admin-file-list a:hover {
+  color: #c57300;
+}
+
+.admin-meta {
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+  min-width: max-content;
+  color: var(--intake-muted);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.admin-status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 88px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  color: var(--intake-navy);
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.status-new {
+  background: rgba(246, 170, 0, 0.26);
+}
+
+.status-reviewing {
+  background: rgba(255, 138, 0, 0.24);
+}
+
+.status-done {
+  background: rgba(50, 166, 97, 0.18);
+}
+
+.admin-content-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.admin-content-grid section {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid rgba(7, 24, 65, 0.09);
+  border-radius: 12px;
+  background: rgba(248, 251, 255, 0.72);
+}
+
+.admin-content-grid h3,
+.admin-update-form label span,
+.admin-delete-form strong {
+  margin: 0;
+  color: var(--intake-navy);
+  font-size: 0.88rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.admin-content-grid p {
+  margin: 0;
+  color: var(--intake-text);
+  font-weight: 600;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.admin-file-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-file-list li {
+  display: grid;
+  gap: 3px;
+  overflow-wrap: anywhere;
+}
+
+.admin-file-list small,
+.admin-empty {
+  color: var(--intake-muted);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.admin-empty {
+  margin: 0;
+}
+
+.admin-extra-details {
+  padding: 14px 16px;
+  border: 1px dashed rgba(7, 24, 65, 0.2);
+  border-radius: 12px;
+  background: rgba(255, 248, 232, 0.72);
+}
+
+.admin-extra-details summary {
+  color: var(--intake-navy);
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.admin-extra-details dl {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 0;
+}
+
+.admin-extra-details dt {
+  color: var(--intake-navy);
+  font-weight: 900;
+}
+
+.admin-extra-details dd {
+  margin: 3px 0 0;
+  color: var(--intake-muted);
+  overflow-wrap: anywhere;
+}
+
+.admin-update-form {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: end;
+  padding-top: 2px;
+}
+
+.admin-update-form label {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-update-form select,
+.admin-update-form textarea {
+  width: 100%;
+  border: 1px solid var(--intake-border);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--intake-text);
+  font: inherit;
+  font-weight: 600;
+  padding: 12px 13px;
+  outline: none;
+}
+
+.admin-update-form textarea {
+  resize: vertical;
+}
+
+.admin-update-form select:focus,
+.admin-update-form textarea:focus {
+  border-color: var(--intake-navy);
+  box-shadow: 0 0 0 3px rgba(246, 170, 0, 0.24);
+}
+
+.admin-save-button {
+  min-height: 46px;
+  padding-inline: 18px;
+}
+
+.admin-delete-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid rgba(194, 63, 63, 0.28);
+  border-radius: 12px;
+  background: rgba(255, 245, 245, 0.78);
+}
+
+.admin-delete-form p {
+  margin: 8px 0 0;
+  color: var(--intake-muted);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.admin-delete-confirmation {
+  display: flex;
+  grid-column: 1 / -1;
+  gap: 9px;
+  align-items: center;
+  color: #8f1f1f;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.admin-delete-confirmation input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #8f1f1f;
+}
+
+.admin-delete-button {
+  grid-column: 2;
+  grid-row: 1;
+  min-height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: #8f1f1f;
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 900;
+  padding: 12px 18px;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.admin-delete-button:hover {
+  background: #6f1717;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+  .admin-submission-header,
+  .admin-update-form {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-submission-header {
+    display: grid;
+  }
+
+  .admin-meta {
+    justify-items: start;
+    min-width: 0;
+  }
+
+  .admin-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-update-form,
+  .admin-delete-form {
+    align-items: stretch;
+  }
+
+  .admin-delete-form {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-delete-button {
+    grid-column: auto;
+    grid-row: auto;
+    justify-self: start;
+  }
+}
