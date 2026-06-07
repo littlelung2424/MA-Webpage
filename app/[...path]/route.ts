@@ -1,20 +1,8 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
+import { staticHtmlResponse } from "../../lib/staticHtml";
 
-type CompatibilityPage = {
-  filePath: string;
-  contentType: string;
-};
-
-const COMPATIBILITY_PAGES: Record<string, CompatibilityPage> = {
-  "index.html": {
-    filePath: "static-pages/index.html",
-    contentType: "text/html; charset=utf-8",
-  },
-  "tools/index.html": {
-    filePath: "static-pages/tools/index.html",
-    contentType: "text/html; charset=utf-8",
-  },
+const COMPATIBILITY_PAGES: Record<string, string> = {
+  "index.html": "static-pages/index.html",
+  "tools/index.html": "static-pages/tools/index.html",
 };
 
 const LEGACY_ASSET_REDIRECTS: Record<string, string> = {
@@ -47,19 +35,11 @@ export async function GET(request: Request, context: RouteContext) {
     return Response.redirect(new URL(legacyAssetRedirect, request.url), 308);
   }
 
-  const page = COMPATIBILITY_PAGES[requestedPath];
+  const filePath = COMPATIBILITY_PAGES[requestedPath];
 
-  if (!page) {
+  if (!filePath) {
     return new Response("Not found", { status: 404 });
   }
 
-  const file = await readFile(
-    path.join(/* turbopackIgnore: true */ process.cwd(), page.filePath),
-  );
-
-  return new Response(file, {
-    headers: {
-      "Content-Type": page.contentType,
-    },
-  });
+  return staticHtmlResponse(filePath);
 }
