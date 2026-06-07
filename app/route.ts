@@ -1,12 +1,5 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
+import { staticHtmlResponse } from "../lib/staticHtml";
 
 export async function GET() {
-  const html = await readFile(path.join(process.cwd(), "static-pages/index.html"), "utf8");
-
-  return new Response(html, {
-    headers: {
-      "Content-Type": "text/html; charset=utf-8",
-    },
-  });
+  return staticHtmlResponse("static-pages/index.html");
 }
