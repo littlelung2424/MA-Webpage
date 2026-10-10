@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "tsc --noEmit",
-    "screenshot:intake": "playwright screenshot http://localhost:3000/intake intake-preview.png"
+    "screenshot:intake": "playwright screenshot http://localhost:3000/intake intake-preview.png",
+    "test": "tsx --test tests/*.test.ts"
   },
   "dependencies": {
     "@vercel/blob": "latest",
@@ -16,10 +17,13 @@
     "react-dom": "latest"
   },
   "devDependencies": {
+    "@playwright/test": "latest",
     "@types/node": "latest",
+    "@types/pg": "8.15.6",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "typescript": "latest",
-    "@playwright/test": "latest"
+    "embedded-postgres": "17.6.0-beta.15",
+    "tsx": "4.20.6",
+    "typescript": "latest"
   }
 }

@@ -16,22 +16,25 @@ export async function saveIntakeSubmissionToSupabase({
   submission: IntakeSubmission;
 }) {
   const response = await fetch(
-    `${supabaseUrl}/rest/v1/${SUPABASE_INTAKE_TABLE}`,
+    `${supabaseUrl}/rest/v1/rpc/submit_intake_with_notification`,
     {
       method: "POST",
       headers: supabaseHeaders("return=minimal"),
       body: JSON.stringify({
-        name: submission.name,
-        email: submission.email,
-        tools_or_systems: submission.toolsOrSystems,
-        process_involvement: submission.processInvolvement || null,
-        task: submission.task || null,
-        success: submission.success || null,
-        anything_else: submission.anythingElse || null,
-        current_process_files: submission.uploadedFiles,
-        desired_output_files: submission.uploadedSuccessFiles,
-        status: "New",
-        internal_notes: null,
+        p_table: SUPABASE_INTAKE_TABLE,
+        p_submission: {
+          name: submission.name,
+          email: submission.email,
+          tools_or_systems: submission.toolsOrSystems,
+          process_involvement: submission.processInvolvement || null,
+          task: submission.task || null,
+          success: submission.success || null,
+          anything_else: submission.anythingElse || null,
+          current_process_files: submission.uploadedFiles,
+          desired_output_files: submission.uploadedSuccessFiles,
+          status: "New",
+          internal_notes: null,
+        },
       }),
     },
   );

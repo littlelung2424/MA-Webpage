@@ -35,7 +35,7 @@ The `vercel.json` file configures the Next.js build and sets explicit content ty
 
 ### Intake form environment variables
 
-The `/api/intake` route now uses **Supabase only** for intake delivery. Resend/email delivery is intentionally removed.
+The `/api/intake` route saves the submission and a durable notification outbox row in one Supabase RPC transaction. A separate authenticated worker can notify `info@missionatlasxd.com` through Resend. **Email sending is disabled by default.** See [notification setup and recovery](docs/intake-notifications.md) before applying the new migration or approving activation.
 
 Configure the variables below in **Vercel Project Settings > Environment Variables** for the environment you are testing, then redeploy the project. Vercel does not add newly-created environment variables to deployments that are already running, so trigger a fresh production deployment after saving the variables.
 
