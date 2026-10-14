@@ -416,7 +416,7 @@ export function IntakeForm() {
           <div className="status" aria-live="polite">
             {formState === "success" && (
               <div className="status-message success" role="status">
-                <p>Got it — thanks for sending this over.</p>
+                <p>Got it — Thank you for sending this over. We will reach out soon. If you don't hear from us, email info@missionatlasxd.com.</p>
                 <button type="button" aria-label="Dismiss success message" onClick={clearStatusMessage}>
                   ×
                 </button>
