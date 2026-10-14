@@ -1,0 +1,57 @@
+name: Process intake email notifications
+
+on:
+  schedule:
+    # GitHub schedules are best-effort and can be delayed or skipped.
+    - cron: "3,8,13,18,23,28,33,38,43,48,53,58 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mission-atlas-intake-notifications
+  cancel-in-progress: false
+
+jobs:
+  process:
+    name: Process one queued notification
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Invoke authenticated notification worker
+        env:
+          CRON_SECRET: ${{ secrets.MA_INTAKE_CRON_SECRET }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${CRON_SECRET}" ]]; then
+            echo "::error::MA_INTAKE_CRON_SECRET is not configured."
+            exit 1
+          fi
+
+          # Keep the bearer credential out of the process command line and logs.
+          auth_file="$(mktemp)"
+          response_file="$(mktemp)"
+          trap 'rm -f "$auth_file" "$response_file"' EXIT
+          chmod 600 "$auth_file" "$response_file"
+          printf 'header = "Authorization: Bearer %s"\n' "$CRON_SECRET" > "$auth_file"
+
+          http_code="$(curl --silent --show-error --location --max-time 60 \
+            --request POST \
+            --config "$auth_file" \
+            --output "$response_file" \
+            --write-out '%{http_code}' \
+            'https://missionatlasxd.com/api/internal/intake-notifications')"
+
+          if [[ "$http_code" != "200" ]]; then
+            echo "::error::Notification worker returned HTTP $http_code."
+            exit 1
+          fi
+
+          # Do not print the response: it may contain operational details.
+          if ! jq -e '(.enabled == true) and (.processed | type == "number")' "$response_file" >/dev/null; then
+            echo "::error::Worker did not confirm enabled processing."
+            exit 1
+          fi
+          echo "Worker invocation completed successfully."
