@@ -10,3 +10,5 @@ pnpm-debug.log*
 .DS_Store
 
 tsconfig.tsbuildinfo
+work/
+supabase/.temp/
