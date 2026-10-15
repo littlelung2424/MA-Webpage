@@ -35,6 +35,10 @@ export async function GET(request: Request, context: RouteContext) {
     return Response.redirect(new URL(legacyAssetRedirect, request.url), 308);
   }
 
+  if (requestedPath === "tools/index.html") {
+    return Response.redirect(new URL("/workspace", request.url), 308);
+  }
+
   const filePath = COMPATIBILITY_PAGES[requestedPath];
 
   if (!filePath) {
