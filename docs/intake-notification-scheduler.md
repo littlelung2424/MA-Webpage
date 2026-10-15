@@ -1,34 +1,44 @@
-# Scheduled intake email notifications
+# Intake notification scheduler
 
-This workflow calls the existing production worker at `POST https://missionatlasxd.com/api/internal/intake-notifications`. It does not send email itself, change intake records, or bypass the worker's safeguards. The worker processes **at most one** eligible queued notification per invocation.
+The workflow at `.github/workflows/intake-notifications.yml` invokes the existing authenticated Vercel worker approximately every five minutes. Each request processes at most one queued notification. GitHub Actions does not send email itself.
 
-## Setup (required before merging)
+## Setup
 
-1. In Vercel, confirm the production environment has `INTAKE_NOTIFICATIONS_ENABLED=true` and a working `CRON_SECRET` (at least 32 characters). A production redeployment is required after changing Vercel environment variables.
-2. In the **MA-Webpage** GitHub repository, open **Settings → Secrets and variables → Actions → New repository secret**.
-3. Name the secret `MA_INTAKE_CRON_SECRET` and set its value to **the same existing Vercel production `CRON_SECRET`**. Never paste it into code, logs, pull requests, or chat.
-4. Review and merge this PR. Scheduled workflows only run from the default branch.
+1. Confirm Vercel Production has `INTAKE_NOTIFICATIONS_ENABLED=true` and a valid `CRON_SECRET` (at least 32 characters). Redeploy after changing Vercel environment variables.
+2. In MA-Webpage, open **Settings > Secrets and variables > Actions > New repository secret**.
+3. Create `MA_INTAKE_CRON_SECRET` using the exact existing Vercel Production `CRON_SECRET`. Do not share or commit secret values.
+4. Review and merge the PR. Schedules only run from the default branch.
 
-## Test and operate
+## Testing
 
-- In **Actions → Process intake email notifications**, select **Run workflow** on the default branch. The run should succeed when the worker is enabled, including when no notification is pending.
-- Check **Supabase → My Apps → SQL Editor** for the outbox state:
+In **Actions > Process intake email notifications**, choose **Run workflow** on the default branch. A successful run reports either zero queued items or one processed item. The run summary includes only the processed count and status; it never prints the response body or form contents.
 
-  ```sql
-  select submission_id, status, attempts, created_at, accepted_at, last_code
-  from public.intake_notification_outbox
-  order by created_at desc
-  limit 20;
-  ```
+To inspect the outbox in Supabase My Apps SQL Editor:
 
-- Verify actual delivery in Resend and the destination inbox. `accepted` means Resend accepted the email; it does not guarantee inbox delivery.
-- The workflow logs only an HTTP status on errors and a generic success message, not the response body or bearer token.
-- To stop automated requests, disable the workflow in the GitHub Actions UI. To stop email sending immediately, set `INTAKE_NOTIFICATIONS_ENABLED=false` in Vercel Production and redeploy; this also disables manual worker sends.
+```sql
+select submission_id, status, attempts, created_at, accepted_at, last_code
+from public.intake_notification_outbox
+order by created_at desc
+limit 20;
+```
 
-## Limits and reliability
+Confirm actual delivery in Resend and the destination inbox. An `accepted` status means the provider accepted the email, not that inbox delivery is guaranteed.
 
-GitHub scheduled workflows are **best effort**: executions may be delayed or dropped, especially under load, and inactive public repositories can have scheduled workflows disabled. This schedule uses minute 3 then every five minutes to avoid the busiest top-of-hour minute. The scheduler does not guarantee five-minute delivery.
+## Outcomes and troubleshooting
 
-Each run processes **one** notification. If incoming submissions exceed the processing rate, the backlog can grow. A non-200 HTTP response, missing secret, disabled worker, or malformed worker response fails the job. The existing database outbox retains pending jobs for a later run; consult `docs/intake-notifications.md` for reconciliation procedures. Do not repeatedly rerun uncertain sends without reviewing their state.
+- `processed=0`: no eligible notification; successful run.
+- `accepted`: provider accepted one email; successful run.
+- `retry`: retryable provider rejection; workflow succeeds and outbox controls future retry eligibility.
+- `failed`: definite provider/local failure; workflow fails. Inspect the outbox's `last_code` and Vercel logs.
+- `reconciliation`: provider acceptance is uncertain; workflow fails. **Do not manually resend** until the outbox and provider state are reconciled.
+- HTTP 401: check that the GitHub Actions secret matches the Vercel secret. HTTP 403: check endpoint access/deployment protection. HTTP 503: check worker configuration. Network failures, disabled worker, and malformed responses also fail the run.
 
-No Vercel Cron or other scheduler should be enabled concurrently without an explicit operational decision.
+A failed workflow does not prove the email was not sent. The workflow only calls the existing worker and does not automatically resend an uncertain delivery.
+
+## Operating limits
+
+GitHub schedules are best-effort and can be delayed or skipped. Runs are offset from the top of the hour; delivery within five minutes is not guaranteed. Each invocation processes only one notification, so a backlog can grow if submissions arrive faster. Concurrent workflow runs are serialized.
+
+To stop scheduled invocations, disable the workflow in GitHub Actions. To stop sending through both scheduled and manual invocations, set `INTAKE_NOTIFICATIONS_ENABLED=false` in Vercel Production and redeploy. Scheduled runs left enabled will report failure while the worker is disabled.
+
+Do not enable a second scheduler without reviewing potential duplicate scheduling and operating procedures.
