@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Tools for Biotech Operations | Mission Atlas xD</title>
-  <meta name="description" content="Explore Mission Atlas xD tools for Salesforce data cleanup, NetSuite uploads, support scoring, workflow automation, and AI-enhanced biotech operations." />
+  <title>Our Tools | Mission Atlas xD</title>
+  <meta name="description" content="Practical tools. Less manual work. More time for what matters." />
   <meta name="author" content="Mission Atlas xD" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://missionatlasxd.com/tools/" />
@@ -20,8 +20,8 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://missionatlasxd.com/tools/" />
   <meta property="og:site_name" content="Mission Atlas xD" />
-  <meta property="og:title" content="AI Tools for Biotech Operations | Mission Atlas xD" />
-  <meta property="og:description" content="Purpose-built tools for biotech commercial operations, Salesforce workflows, data cleanup, support scoring, and AI-enhanced process automation." />
+  <meta property="og:title" content="Our Tools | Mission Atlas xD" />
+  <meta property="og:description" content="Launch Order Verification and 4C’s QA Scorer from Mission Atlas xD." />
   <meta property="og:image" content="https://missionatlasxd.com/assets/brand/02.png" />
   <meta property="og:image:secure_url" content="https://missionatlasxd.com/assets/brand/02.png" />
   <meta property="og:image:type" content="image/png" />
@@ -30,13 +30,12 @@
   <meta property="og:image:alt" content="Mission Atlas xD logo" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="AI Tools for Biotech Operations | Mission Atlas xD" />
-  <meta name="twitter:description" content="Explore tools for Salesforce data cleanup, NetSuite uploads, support scoring, workflow automation, and biotech ops." />
+  <meta name="twitter:title" content="Our Tools | Mission Atlas xD" />
+  <meta name="twitter:description" content="Launch Order Verification and 4C’s QA Scorer from Mission Atlas xD." />
   <meta name="twitter:image" content="https://missionatlasxd.com/assets/brand/02.png" />
   <meta name="twitter:image:alt" content="Mission Atlas xD logo" />
 
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
-  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -64,19 +63,16 @@
   </script>
 
   <style>
-
     :root {
-      --ma-navy: #06194a;
-      --ma-deep-navy: #031033;
-      --ma-gold: #f7b500;
-      --ma-cream: #fff8e8;
-      --ma-sky: #eaf5ff;
-      --ma-white: #ffffff;
-      --ma-ink: #172033;
-      --ma-muted: #667085;
-      --ma-card: #ffffff;
-      --ma-border: rgba(6, 25, 74, 0.12);
-      --ma-shadow: 0 18px 45px rgba(6, 25, 74, 0.14);
+      --navy: #06194a;
+      --deep-navy: #031033;
+      --gold: #f7b500;
+      --cream: #fff8e8;
+      --sky: #eaf5ff;
+      --text: #263246;
+      --muted: #667085;
+      --border: rgba(6,25,74,0.12);
+      --shadow: 0 18px 45px rgba(6,25,74,0.14);
     }
 
     * {
@@ -95,909 +91,166 @@
     body {
       margin: 0;
       font-family: 'Lato', sans-serif;
-      color: var(--ma-ink);
-      background: var(--ma-cream);
+      background: var(--cream);
+      color: var(--text);
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .site-header {
+    header {
       background: #fffdf8;
-      border-bottom: 1px solid var(--ma-border);
-      position: sticky;
-      top: 0;
-      z-index: 20;
-    }
-
-    .nav-wrap {
       padding: 28px 7%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 18px;
+      border-bottom: 1px solid rgba(6,25,74,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       font-size: 34px;
       font-weight: 900;
-      color: var(--ma-navy);
+      color: var(--navy);
     }
 
+    .brand img {
+      width: 58px;
+    }
 
     .brand .xd {
-      color: var(--ma-gold);
-    }
-    .brand-logo {
-      width: 58px;
-      height: auto;
-      display: block;
+      color: var(--gold);
     }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-      color: var(--ma-navy);
+    nav a {
+      margin-left: 30px;
+      text-decoration: none;
+      color: var(--navy);
       font-weight: 900;
       font-size: 15px;
-    }
-
-    .nav-links a:hover {
-      color: var(--ma-gold);
-    }
-
-    .nav-cta {
-      background: var(--ma-gold);
-      color: var(--ma-navy);
-      padding: 10px 16px;
-      border-radius: 999px;
-      box-shadow: 0 10px 20px rgba(247, 181, 0, 0.24);
-    }
-
-    .nav-links .nav-cta:hover {
-      color: var(--ma-white);
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      background: var(--ma-navy);
-      color: var(--ma-white);
-    }
-
-    .hero-inner {
-      padding: 47px 7% 30px;
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 40px;
-      align-items: center;
-    }
-
-    .eyebrow {
-      color: var(--ma-gold);
-      font-weight: 900;
-      text-transform: uppercase;
-      font-size: 16px;
-      letter-spacing: 1px;
-      margin-bottom: 18px;
-    }
-
-    h1 {
-      color: var(--ma-white);
-      font-size: 58px;
-      line-height: 1.1;
-      margin: 0 0 24px;
-      max-width: 650px;
-    }
-
-
-    @media (max-width: 1200px) {
-      h1 {
-        font-size: 54px;
-      }
-    }
-
-    .hero p {
-      font-size: 22px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.84);
-      max-width: 620px;
-      margin: 0 0 34px;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      padding: 15px 28px;
-      border-radius: 8px;
-      font-weight: 900;
-      border: 1px solid transparent;
       transition: 0.2s ease;
     }
 
-    .btn:hover {
-      transform: translateY(-2px);
+    nav a:hover {
+      color: var(--gold);
     }
 
-    .btn-primary {
-      background: var(--ma-gold);
-      color: var(--ma-navy);
+    /* Scheduling CTA: shared shape, rust-orange accent */
+    nav a.schedule-cta {
+      display: inline-block;
+      padding: 11px 20px;
+      border-radius: 10px;
+      background: #B64F2A;
+      color: #ffffff;
+      box-shadow: 0 8px 18px rgba(182, 79, 42, 0.20);
     }
 
-    .btn-secondary {
-      color: var(--ma-white);
-      border-color: rgba(255,255,255,0.52);
-      background: rgba(255,255,255,0.08);
-    }
-
-    .hero-panel {
-      position: relative;
-      min-height: 455px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .mini-window {
-      position: relative;
-      z-index: 2;
-      background: #ffffff;
-      color: var(--ma-ink);
-      border-radius: 22px;
-      padding: 18px;
-      width: min(546px, 100%);
-      min-height: 350px;
-      box-shadow: 0 18px 45px rgba(6,25,74,0.14);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .window-top {
-      display: flex;
-      gap: 7px;
-      margin-bottom: 18px;
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #d9e3f0;
-    }
-
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      flex: 1;
-    }
-
-    .metric {
-      background: var(--ma-sky);
-      border-radius: 18px;
-      padding: 16px;
-      border: 1px solid var(--ma-border);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .metric strong {
-      display: block;
-      color: var(--ma-navy);
-      font-size: 1.6rem;
-      margin-bottom: 4px;
-    }
-
-    .metric span {
-      color: var(--ma-muted);
-      font-size: 0.82rem;
-      font-weight: 700;
-    }
-
-    section {
-      padding: 58px 7%;
-    }
-
-    .section-heading {
-      max-width: 900px;
-      margin: 0 auto 48px;
-      text-align: center;
-    }
-
-    .section-kicker {
-      color: var(--ma-gold);
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: normal;
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-
-    h2 {
-      text-align: center;
-      font-size: 44px;
-      color: var(--ma-navy);
-      margin-bottom: 10px;
-      letter-spacing: normal;
-    }
-
-    .section-heading p {
-      color: var(--ma-muted);
-      line-height: 1.7;
-      font-size: 1.05rem;
-      margin: 0;
-    }
-
-    .app-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 22px;
-    }
-
-    .app-card {
-      background: white;
-      padding: 29px;
-      border-radius: 18px;
-      box-shadow: 0 10px 30px rgba(6,25,74,0.08);
-      border-top: 5px solid var(--ma-gold);
-      border-left: none;
-      border-right: none;
-      border-bottom: none;
-      transition: 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      min-height: 306px;
-    }
-
-
-
-    .app-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .app-icon {
-      width: 58px;
-      height: 58px;
-      border-radius: 18px;
-      display: grid;
-      place-items: center;
-      background: var(--ma-navy);
-      color: var(--ma-gold);
-      font-size: 1.8rem;
-      margin-bottom: 18px;
-    }
-
-    .app-card h3 {
-      color: var(--ma-navy);
-      font-size: 1.25rem;
-      margin: 0 0 12px;
-      letter-spacing: -0.02em;
-    }
-
-    .app-card p {
-      color: var(--ma-muted);
-      line-height: 1.65;
-      margin: 0 0 18px;
-    }
-
-    .tag-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: auto;
-      padding-top: 14px;
-    }
-
-    .tag {
-      background: #f2f6fc;
-      color: var(--ma-navy);
-      border: 1px solid var(--ma-border);
-      border-radius: 999px;
-      padding: 7px 10px;
-      font-size: 0.78rem;
-      font-weight: 800;
-    }
-
-    .customize-band {
-      background: var(--ma-navy);
-      color: var(--ma-white);
-      border-radius: 34px;
-      padding: 42px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 28px;
-      align-items: center;
-      box-shadow: 0 24px 60px rgba(6, 25, 74, 0.22);
-    }
-
-    .customize-band h2 {
-      color: var(--ma-white);
-      margin-bottom: 14px;
-    }
-
-    .customize-band p {
-      color: rgba(255,255,255,0.8);
-      line-height: 1.7;
-      margin: 0;
-      max-width: 690px;
-    }
-
-    .process {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-    }
-
-    .step {
-      background: #ffffff;
-      border: 1px solid var(--ma-border);
-      border-radius: 24px;
-      padding: 22px;
-    }
-
-    .step-number {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--ma-gold);
-      color: var(--ma-navy);
-      display: grid;
-      place-items: center;
-      font-weight: 900;
-      margin-bottom: 14px;
-    }
-
-    .step h3 {
-      color: var(--ma-navy);
-      margin: 0 0 8px;
-      font-size: 1rem;
-    }
-
-    .step p {
-      color: var(--ma-muted);
-      line-height: 1.6;
-      margin: 0;
-      font-size: 0.94rem;
-    }
-
-    .schedule-section {
-      background: #ffffff;
-      border: 1px solid var(--ma-border);
-      border-radius: 34px;
-      padding: 38px;
-      box-shadow: var(--ma-shadow);
-      max-width: 780px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .schedule-section p {
-      color: var(--ma-muted);
-      font-size: 1.05rem;
-      line-height: 1.7;
-      margin: 0 auto;
-      max-width: 620px;
-    }
-
-    .tools-bottom-mascot {
-      display: flex;
-      justify-content: center;
-      margin-top: -35px;
-      margin-bottom: -2px;
-    }
-
-    .tools-bottom-mascot img {
-      width: 240px;
-      display: block;
-      filter: drop-shadow(0 12px 18px rgba(0,0,0,0.25));
+    nav a.schedule-cta:hover,
+    nav a.schedule-cta:focus-visible {
+      background: #943C20;
+      color: #ffffff;
     }
 
     footer {
-      background: var(--ma-deep-navy);
-      color: rgba(255,255,255,0.76);
-      padding: 30px 24px;
+      background: var(--deep-navy);
+      color: white;
+      padding: 18px 7%;
+      font-size: 14px;
       text-align: center;
-      font-size: 0.92rem;
     }
 
-    @media (max-width: 1000px) {
-      html {
-        scroll-padding-top: 160px;
-      }
 
-      section[id] {
-        scroll-margin-top: 160px;
-      }
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+    a { text-decoration: none; }
+    a:focus-visible { outline: 3px solid var(--navy); outline-offset: 5px; }
+    .skip-link { position: absolute; left: 16px; top: -80px; z-index: 1001; background: white; padding: 12px 18px; border-radius: 8px; }
+    .skip-link:focus { top: 12px; }
+    main { flex: 1; width: min(1120px, 86%); margin: 0 auto; padding: 76px 0 100px; }
+    .intro { text-align: center; margin-bottom: 46px; }
+    h1 { color: var(--navy); font-size: clamp(36px, 5vw, 48px); line-height: 1.15; margin: 0 0 18px; font-weight: 900; }
+    .intro p { color: #536078; font-size: 20px; line-height: 1.6; margin: 0; }
+    .tool-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+    .tool-card { display: flex; flex-direction: column; padding: 36px; min-height: 320px; background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 10px 30px rgba(6,25,74,.06); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .tool-card:hover { border-color: #d5a32b; box-shadow: 0 16px 36px rgba(6,25,74,.10); }
+    .tool-icon { width: 60px; height: 60px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 26px; background: #fff5d9; color: var(--navy); }
+    .tool-icon svg { width: 32px; height: 32px; }
+    /* Same gold 4C badge as the scorer's .company-logo. */
+    .tool-icon.four-c { background: var(--gold); font-weight: 900; font-size: 24px; }
+    .tool-card h2 { color: var(--navy); font-size: 26px; line-height: 1.25; margin: 0 0 14px; font-weight: 900; }
+    .tool-card p { color: #536078; font-size: 17px; line-height: 1.7; margin: 0 0 28px; }
+    .tool-status { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #667085; font-size: 14px; }
+    .tool-arrow { align-self: flex-end; color: var(--navy); width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #fff5d9; }
+    .tool-arrow svg { width: 20px; height: 20px; }
+    @media (max-width: 1100px) {
+      header { flex-wrap: wrap; justify-content: center; gap: 18px; }
+      nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; align-items: center; }
+      nav a { margin: 0; }
     }
-
-    @media (max-width: 900px) {
-
-      .hero-inner,
-      .customize-band {
-        grid-template-columns: 1fr;
-      }
-
-      .app-grid,
-      .process {
-        grid-template-columns: 1fr 1fr;
-      }
+    @media (max-width: 760px) {
+      header { display: block; text-align: center; padding: 18px 5%; }
+      nav { margin-top: 14px; gap: 8px 6px; }
+      nav a { display: inline-block; padding: 8px 10px; border-radius: 999px; background: rgba(6,25,74,.06); font-size: 14px; }
+      .brand { justify-content: center; font-size: 28px; }
+      main { width: 90%; padding: 44px 0 56px; }
+      .intro { margin-bottom: 30px; }
+      .intro p { font-size: 18px; }
+      .tool-grid { grid-template-columns: 1fr; grid-auto-rows: 1fr; gap: 20px; }
+      .tool-card { padding: 28px; min-height: 310px; }
+      .tool-card h2 { font-size: 24px; }
+      footer { padding: 16px 5%; }
     }
-
-    @media (max-width: 800px) {
-
-      .nav-wrap {
-        align-items: center;
-        flex-direction: column;
-        padding: 20px 5%;
-        text-align: center;
-      }
-
-      .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-      }
-
-      .hero-inner {
-        padding: 42px 5% 38px;
-        text-align: center;
-      }
-
-      .hero p,
-      h1 {
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .hero-actions {
-        justify-content: center;
-      }
-
-      h1 {
-        font-size: clamp(38px, 8vw, 50px);
-      }
-
-      .hero p {
-        font-size: 20px;
-      }
+    @media (max-width: 480px) {
+      .brand { font-size: 24px; }
+      .brand img { width: 48px; }
     }
-
-    @media (max-width: 640px) {
-
-      .nav-wrap {
-        align-items: center;
-        flex-direction: column;
-        padding: 18px 5%;
-        text-align: center;
-      }
-
-      .brand {
-        font-size: 24px;
-      }
-
-      .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 12px;
-      }
-
-      .hero-inner {
-        padding: 36px 5% 34px;
-        text-align: center;
-      }
-
-      section {
-        padding: 44px 5%;
-      }
-
-      h1 {
-        font-size: clamp(32px, 9vw, 42px);
-      }
-
-      .hero p {
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .hero-actions {
-        justify-content: center;
-      }
-
-      .hero-panel {
-        min-height: auto;
-      }
-
-      .mini-window {
-        padding: 14px;
-        min-height: auto;
-      }
-
-      .metric-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .app-grid,
-      .process {
-        grid-template-columns: 1fr;
-      }
-
-      .customize-band,
-      .schedule-section {
-        padding: 28px;
-      }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .tool-card, nav a { transition: none; }
+      .tool-card:hover { transform: none; }
     }
-
   </style>
 </head>
-
 <body>
+  <a class="skip-link" href="#tools">Skip to tools</a>
+  <header>
+    <a class="brand" href="/" aria-label="Mission Atlas xD home">
+      <img src="/assets/brand/02.png" alt="Mission Atlas xD Logo">
+      <span>MissionAtlas<span class="xd">XD</span></span>
+    </a>
 
-  <header class="site-header">
-
-    <div class="nav-wrap">
-
-      <a href="/" class="brand">
-        <img src="/assets/brand/02.png" alt="Mission Atlas xD Logo" class="brand-logo">
-        <span>MissionAtlas<span class="xd">XD</span></span>
-      </a>
-
-      <nav class="nav-links">
-        <a href="/">Home</a>
-        <a href="#applications">Applications</a>
-        <a href="#customize">Customize</a>
-        <a href="#schedule" class="nav-cta">Schedule Time</a>
-      </nav>
-
-    </div>
-
+    <nav aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="mailto:info@missionatlasxd.com">Contact Us</a>
+      <a class="schedule-cta" href="https://calendly.com/missionatlasxd" target="_blank" rel="noopener noreferrer">Schedule Time</a>
+      <a href="/intake">Start Your Project</a>
+    </nav>
   </header>
 
-  <main>
-
-    <section class="hero">
-
-      <div class="hero-inner">
-
-        <div>
-
-          <div class="eyebrow">
-            Human-led AI. Built with xD.
-          </div>
-
-          <h1>
-            Applications that turn messy operations into momentum.
-          </h1>
-
-          <p>
-            Explore purpose-built tools designed for biotech,
-            commercial operations, Salesforce workflows,
-            data cleanup, customer support scoring,
-            and AI-enhanced process automation.
-          </p>
-
-          <div class="hero-actions">
-
-            <a href="#applications" class="btn btn-primary">
-              Explore Applications
-            </a>
-
-            <a href="#schedule" class="btn btn-secondary">
-              Schedule a Customization Call
-            </a>
-
-          </div>
-
-        </div>
-
-        <div class="hero-panel">
-
-          <div class="mini-window">
-
-            <div class="window-top">
-              <span class="dot"></span>
-              <span class="dot"></span>
-              <span class="dot"></span>
-            </div>
-
-            <div class="metric-grid">
-
-              <div class="metric">
-                <strong>AI</strong>
-                <span>Enhanced workflows</span>
-              </div>
-
-              <div class="metric">
-                <strong>SFDC</strong>
-                <span>Ops automation</span>
-              </div>
-
-              <div class="metric">
-                <strong>CSV</strong>
-                <span>Upload preparation</span>
-              </div>
-
-              <div class="metric">
-                <strong>QA</strong>
-                <span>Rubric scoring</span>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-    <section id="applications">
-
-      <div class="section-heading">
-
-        <div class="section-kicker">
-          Application Library
-        </div>
-
-        <h2>
-          Ready-to-adapt tools for real operational problems.
-        </h2>
-
-        <p>
-          These applications are starting points.
-          Mission Atlas xD can further configure logic,
-          fields, scoring rules, dashboards, integrations,
-          and workflows around your business.
-        </p>
-
-      </div>
-
-      <div class="app-grid">
-
-        <article class="app-card">
-          <div class="app-icon">🧭</div>
-
-          <h3>Account Enrichment Assistant</h3>
-
-          <p>
-            Uses company domains and firmographic signals
-            to help clean account records and prepare
-            structured data for Salesforce workflows.
-          </p>
-
-          <div class="tag-row">
-            <span class="tag">Salesforce</span>
-            <span class="tag">Data Cleanup</span>
-            <span class="tag">AI Research</span>
-          </div>
-        </article>
-
-        <article class="app-card">
-          <div class="app-icon">📊</div>
-
-          <h3>NetSuite Upload Generator</h3>
-
-          <p>
-            Converts spreadsheet data into cleaner CSV upload
-            formats with validation rules and repeatable exports.
-          </p>
-
-          <div class="tag-row">
-            <span class="tag">Google Sheets</span>
-            <span class="tag">CSV</span>
-            <span class="tag">Finance Ops</span>
-          </div>
-        </article>
-
-        <article class="app-card">
-          <div class="app-icon">🎧</div>
-
-          <h3>Support Interaction Scorer</h3>
-
-          <p>
-            Applies structured rubrics to support interactions
-            to identify strong responses and coaching opportunities.
-          </p>
-
-          <div class="tag-row">
-            <span class="tag">LLM Rubric</span>
-            <span class="tag">QA</span>
-            <span class="tag">Customer Ops</span>
-          </div>
-        </article>
-
-        <article class="app-card">
-          <div class="app-icon">⚙️</div>
-
-          <h3>Workflow Automation Builder</h3>
-
-          <p>
-            Converts repetitive operational work into lightweight
-            automations across spreadsheets and Salesforce.
-          </p>
-
-          <div class="tag-row">
-            <span class="tag">Automation</span>
-            <span class="tag">Ops Design</span>
-            <span class="tag">Human-led AI</span>
-          </div>
-        </article>
-
-        <article class="app-card">
-          <div class="app-icon">🧪</div>
-
-          <h3>Biotech Commercial Ops Toolkit</h3>
-
-          <p>
-            Configurable operational tools for biotech startup
-            teams needing account hygiene and reporting support.
-          </p>
-
-          <div class="tag-row">
-            <span class="tag">Biotech</span>
-            <span class="tag">Commercial Ops</span>
-            <span class="tag">Startup Ready</span>
-          </div>
-        </article>
-
-        <article class="app-card">
-          <div class="app-icon">🚀</div>
-
-          <h3>Custom App Concept Sprint</h3>
-
-          <p>
-            Have a manual workflow that should be a tool?
-            Mission Atlas xD can help prototype the first version.
-          </p>
-
-          <div class="tag-row">
-            <span class="tag">Prototype</span>
-            <span class="tag">Custom Build</span>
-            <span class="tag">Strategy</span>
-          </div>
-        </article>
-
-      </div>
-
-    </section>
-
-    <section id="customize">
-
-      <div class="customize-band">
-
-        <div>
-
-          <div class="section-kicker">
-            Further Customize
-          </div>
-
-          <h2>
-            Start with a framework. Shape it around your business.
-          </h2>
-
-          <p>
-            Every organization has different approval paths,
-            reporting needs, workflows, and team habits.
-            These applications are designed to adapt.
-          </p>
-
-        </div>
-
-        <a href="#schedule" class="btn btn-primary">
-          Talk Through a Use Case
-        </a>
-
-      </div>
-
-    </section>
-
-    <section>
-
-      <div class="section-heading">
-
-        <div class="section-kicker">
-          How It Works
-        </div>
-
-        <h2>
-          From idea to useful tool.
-        </h2>
-
-      </div>
-
-      <div class="process">
-
-        <div class="step">
-          <div class="step-number">1</div>
-          <h3>Identify the friction</h3>
-          <p>We clarify the workflow and where time is being lost.</p>
-        </div>
-
-        <div class="step">
-          <div class="step-number">2</div>
-          <h3>Shape the logic</h3>
-          <p>We define rules, prompts, automation paths, and validations.</p>
-        </div>
-
-        <div class="step">
-          <div class="step-number">3</div>
-          <h3>Build the prototype</h3>
-          <p>We create a usable first version for testing.</p>
-        </div>
-
-        <div class="step">
-          <div class="step-number">4</div>
-          <h3>Refine and scale</h3>
-          <p>We tune the tool and prepare it for team use.</p>
-        </div>
-
-      </div>
-
-    </section>
-
-    <section id="schedule">
-
-      <div class="schedule-section">
-
-        <div>
-
-          <div class="section-kicker">
-            Schedule Time
-          </div>
-
-          <h2>
-            Want one of these customized?
-          </h2>
-
-          <p>
-            Pick a time that works for you.
-            We can talk through the workflow,
-            the tool you want customized,
-            and what would make it useful for your team.
-          </p>
-
-          <br />
-
-          <a
-            href="https://calendly.com/missionatlasxd"
-            class="btn btn-primary"
-            onclick="if (window.Calendly) { Calendly.initPopupWidget({url: 'https://calendly.com/missionatlasxd'}); return false; }"
-          >
-            Open Calendar
-          </a>
-
-        </div>
-
-      </div>
-
-    </section>
-
-    <div class="tools-bottom-mascot">
-      <img src="/assets/mascots/MA_wavingmascot-hat.png" alt="Mission Atlas xD Waving Mascot">
+  <main id="tools" tabindex="-1">
+    <div class="intro">
+      <h1>Our Tools</h1>
+      <p>Practical tools. Less manual work. More time for what matters.</p>
     </div>
-
+    <div class="tool-grid">
+      <!-- Tools are not hosted yet. When a verified URL is available, add href and remove role, aria-disabled and tabindex from that card. -->
+      <a class="tool-card" data-tool="order-verification" role="link" aria-disabled="true" tabindex="0" aria-labelledby="order-title" aria-describedby="order-description order-status">
+        <span class="tool-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3H7a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V12L18 3Z"/><path d="M18 3v9h9M10 16h8M10 21h4M18 23l3 3 7-7"/></svg>
+        </span>
+        <h2 id="order-title">Order Verification</h2>
+        <p id="order-description">Extract purchase order information, match it against quotes, and review discrepancies before processing.</p>
+        <span class="tool-status"><span id="order-status">Not yet available</span><span class="tool-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></span>
+      </a>
+      <a class="tool-card" data-tool="four-c" role="link" aria-disabled="true" tabindex="0" aria-labelledby="qa-title" aria-describedby="qa-description qa-status">
+        <span class="tool-icon four-c" aria-hidden="true">4C</span>
+        <h2 id="qa-title">4C's QA Scorer</h2>
+        <p id="qa-description">Evaluate email conversations using the Four C's framework: Connect, Consult, Close, and Complete.</p>
+        <span class="tool-status"><span id="qa-status">Not yet available</span><span class="tool-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></span>
+      </a>
+    </div>
   </main>
-
-  <footer>
-    © 2026 Mission Atlas xD, All rights reserved.
-  </footer>
-
-  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-
+  <footer>© 2026 Mission Atlas xD, All rights reserved.</footer>
 </body>
 </html>
