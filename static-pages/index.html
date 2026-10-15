@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,6 +38,7 @@
   <meta name="twitter:image:alt" content="Mission Atlas xD logo" />
 
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -64,21 +66,17 @@
   </script>
 
   <style>
-
-  :root {
-    --navy: #06194a;
-    --deep-navy: #031033;
-    --gold: #f7b500;
-
-    --cream: #fff8e8;
-    --sky: #eaf5ff;
-
-    --text: #263246;
-    --muted: #667085;
-
-    --border: rgba(6,25,74,0.12);
-    --shadow: 0 18px 45px rgba(6,25,74,0.14);
-  }
+    :root {
+      --navy: #06194a;
+      --deep-navy: #031033;
+      --gold: #f7b500;
+      --cream: #fff8e8;
+      --sky: #eaf5ff;
+      --text: #263246;
+      --muted: #667085;
+      --border: rgba(6,25,74,0.12);
+      --shadow: 0 18px 45px rgba(6,25,74,0.14);
+    }
 
     * {
       box-sizing: border-box;
@@ -143,15 +141,15 @@
       color: var(--gold);
     }
 
-  .hero {
-    display: grid;
-    grid-template-columns: 1.05fr 0.95fr;
-    align-items: center;
-    gap: 40px;
-    padding: 12px 7% 6px;
-    background: #f7f4e8;
-    overflow: hidden;
-}
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: center;
+      gap: 40px;
+      padding: 12px 7% 6px;
+      background: #f7f4e8;
+      overflow: hidden;
+    }
 
     .eyebrow {
       color: var(--gold);
@@ -201,115 +199,118 @@
       transform: translateY(-2px);
     }
 
+    /* Contact Us — gold */
     .primary {
       background: var(--gold);
       color: var(--navy);
       border: 2px solid var(--gold);
     }
 
+    /* View Services — navy with gold border */
     .secondary {
-      background: white;
-      color: var(--navy);
-      border: 2px solid var(--navy);
-    }
-
-    .project {
       background: var(--navy);
       color: var(--gold);
       border: 2px solid var(--gold);
     }
 
-    .project:hover {
+    /* Start Your Project — white with navy border */
+    .project {
+      background: white;
+      color: var(--navy);
+      border: 2px solid var(--navy);
+    }
+
+    .secondary:hover {
       background: var(--deep-navy);
     }
-    
-/* Keep the clouds anchored to the mascot instead of the wider hero column so browser zoom scales them together. */
-.mascot-scene {
-  position: relative;
-  z-index: 2;
-  width: min(500px, 80%);
-  max-width: 100%;
-}
 
-.hero-mascot-img {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-width: 100%;
-  display: block;
-  filter: drop-shadow(0 18px 18px rgba(6,25,74,0.14));
-}
-    
+    /* Keep clouds anchored to the mascot */
+    .mascot-scene {
+      position: relative;
+      z-index: 2;
+      width: min(500px, 80%);
+      max-width: 100%;
+    }
+
+    .hero-mascot-img {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 100%;
+      display: block;
+      filter: drop-shadow(0 18px 18px rgba(6,25,74,0.14));
+    }
+
     .hero-art {
-  position: relative;
-  min-height: 280px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
+      position: relative;
+      min-height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
 
-.hero-globe {
-  position: absolute;
-  width: 470px;
-  height: 470px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 50% 45%,
-      rgba(255, 244, 210, 0.92) 0%,
-      rgba(255, 236, 170, 0.38) 58%,
-      rgba(255, 248, 232, 0.02) 82%);
-  z-index: 0;
-  transform: translateY(12px);
-}
+    .hero-globe {
+      position: absolute;
+      width: 470px;
+      height: 470px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 45%,
+          rgba(255, 244, 210, 0.92) 0%,
+          rgba(255, 236, 170, 0.38) 58%,
+          rgba(255, 248, 232, 0.02) 82%);
+      z-index: 0;
+      transform: translateY(12px);
+    }
 
     .cloud {
-  position: absolute;
-  width: 30%;
-  aspect-ratio: 150 / 48;
-  height: auto;
-  background: white;
-  border-radius: 999px;
-  opacity: 0.9;
-  z-index: 1;
-  pointer-events: none;
-}
+      position: absolute;
+      width: 30%;
+      aspect-ratio: 150 / 48;
+      height: auto;
+      background: white;
+      border-radius: 999px;
+      opacity: 0.9;
+      z-index: 1;
+      pointer-events: none;
+    }
 
-.cloud::before {
-  content: "";
-  position: absolute;
-  width: 48%;
-  aspect-ratio: 1;
-  height: auto;
-  background: white;
-  border-radius: 50%;
-  left: 14.667%;
-  bottom: 25%;
-}
+    .cloud::before {
+      content: "";
+      position: absolute;
+      width: 48%;
+      aspect-ratio: 1;
+      height: auto;
+      background: white;
+      border-radius: 50%;
+      left: 14.667%;
+      bottom: 25%;
+    }
 
-.cloud::after {
-  content: "";
-  position: absolute;
-  width: 61.333%;
-  aspect-ratio: 1;
-  height: auto;
-  background: white;
-  border-radius: 50%;
-  right: 12%;
-  bottom: 16.667%;
-}
+    .cloud::after {
+      content: "";
+      position: absolute;
+      width: 61.333%;
+      aspect-ratio: 1;
+      height: auto;
+      background: white;
+      border-radius: 50%;
+      right: 12%;
+      bottom: 16.667%;
+    }
 
-.cloud.left {
-  left: 2%;
-  top: 43%;
-  transform: scale(0.78);
-}
+    .cloud.left {
+      left: 2%;
+      top: 43%;
+      transform: scale(0.78);
+    }
 
-.cloud.right {
-  right: 5%;
-  top: 53%;
-  transform: scale(0.88);
-}
+    .cloud.right {
+      right: 5%;
+      top: 53%;
+      transform: scale(0.88);
+    }
 
     .mission {
       background: var(--navy);
@@ -415,56 +416,56 @@
     }
 
     .why {
-  background: linear-gradient(180deg, #fffdf8 0%, #fff7e8 100%);
-  padding-top: 45px;
-  padding-bottom: 35px;
-}
+      background: linear-gradient(180deg, #fffdf8 0%, #fff7e8 100%);
+      padding-top: 45px;
+      padding-bottom: 35px;
+    }
 
-.why .section-kicker {
-  transform: translateY(-20%);
-}
+    .why .section-kicker {
+      transform: translateY(-20%);
+    }
 
-.why-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  max-width: 1180px;
-  margin: 0 auto;
-}
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
 
-.why-item {
-  display: grid;
-  grid-template-columns: 92px 1fr;
-  gap: 22px;
-  align-items: start;
-}
+    .why-item {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
 
-.icon-circle {
-  width: 75px;
-  height: 75px;
-  border-radius: 50%;
-  background: #06194a;
-  color: #f7b500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 42px;
-  box-shadow: 0 10px 22px rgba(6,25,74,0.18);
-}
+    .icon-circle {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      background: #06194a;
+      color: #f7b500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      box-shadow: 0 10px 22px rgba(6,25,74,0.18);
+    }
 
-.why-item h3 {
-  color: #06194a;
-  font-size: 24px;
-  line-height: 1.2;
-  margin: 0 0 10px;
-}
+    .why-item h3 {
+      color: #06194a;
+      font-size: 24px;
+      line-height: 1.2;
+      margin: 0 0 10px;
+    }
 
-.why-item p {
-  margin: 0;
-  font-size: 17px;
-  line-height: 1.7;
-  color: #374151;
-}
+    .why-item p {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.7;
+      color: #374151;
+    }
 
     .contact {
       background: var(--navy);
@@ -497,12 +498,12 @@
       margin-top: 22px;
     }
 
-  .bottom-mascot {
-    width: 290px;
-    display: block;
-    margin-top: -75px;
-    margin-bottom: -2px;
-    filter: drop-shadow(0 12px 12px rgba(0,0,0,0.25));
+    .bottom-mascot {
+      width: 290px;
+      display: block;
+      margin-top: -75px;
+      margin-bottom: -2px;
+      filter: drop-shadow(0 12px 12px rgba(0,0,0,0.25));
     }
 
     footer {
@@ -582,7 +583,6 @@
     }
 
     @media (max-width: 1050px) {
-
       .hero {
         grid-template-columns: 1fr;
         text-align: center;
@@ -604,7 +604,6 @@
     }
 
     @media (max-width: 760px) {
-
       header {
         display: block;
         text-align: center;
@@ -767,14 +766,11 @@
         height: 86px;
       }
     }
-
   </style>
 </head>
 
 <body>
-
   <header>
-
     <div class="brand">
       <img src="/assets/brand/02.png" alt="Mission Atlas xD Logo">
       <span>MissionAtlas<span class="xd">XD</span></span>
@@ -787,15 +783,11 @@
       <a href="#why">Why Us</a>
       <a href="#contact">Contact</a>
     </nav>
-
   </header>
 
   <main id="home">
-
     <section class="hero">
-
       <div>
-
         <div class="eyebrow">
           We carry your weight so you can grow
         </div>
@@ -811,7 +803,6 @@
         </p>
 
         <div class="buttons">
-
           <a class="button primary" href="mailto:info@missionatlasxd.com">
             ✉️ Contact Us
           </a>
@@ -823,35 +814,29 @@
           <a class="button secondary" href="#services">
             View Services
           </a>
-
         </div>
-
       </div>
 
-<div class="hero-art">
-  <div class="hero-globe"></div>
+      <div class="hero-art">
+        <div class="hero-globe"></div>
 
-  <div class="mascot-scene">
-    <div class="cloud left"></div>
-    <div class="cloud right"></div>
+        <div class="mascot-scene">
+          <div class="cloud left"></div>
+          <div class="cloud right"></div>
 
-    <img
-      class="hero-mascot-img"
-      src="/assets/mascots/MissionAtlasXD_Mascot.png"
-      alt="Mission Atlas xD Mascot"
-    >
-  </div>
-
-</div>
-
+          <img
+            class="hero-mascot-img"
+            src="/assets/mascots/MissionAtlasXD_Mascot.png"
+            alt="Mission Atlas xD Mascot"
+          >
+        </div>
+      </div>
     </section>
 
     <section id="about" class="mission">
-
       <div class="mission-icon">🚀</div>
 
       <div>
-
         <h2>Our Mission</h2>
 
         <p>
@@ -860,13 +845,10 @@
           biosciences. We do this with <strong style="color:#f7b500;">xD</strong> fun
           and xtreme determination.
         </p>
-
       </div>
-
     </section>
 
     <section id="services">
-
       <div class="section-kicker">
         What We Do
       </div>
@@ -876,7 +858,6 @@
       </h2>
 
       <div class="cards">
-
         <div class="card">
           <div class="card-icon">☁️</div>
           <h3>Salesforce Optimization</h3>
@@ -911,83 +892,54 @@
           <div class="line"></div>
           <p>Improve Q2C processes and ERP operations from end to end.</p>
         </div>
-
       </div>
-
     </section>
 
-   <section id="why" class="why">
-
-  <div class="section-kicker">
-    Why Mission Atlas xD
-  </div>
-
-  <div class="why-grid">
-
-    <div class="why-item">
-
-      <div class="icon-circle">
-        🤝
+    <section id="why" class="why">
+      <div class="section-kicker">
+        Why Mission Atlas xD
       </div>
 
-      <div>
-        <h3>Founder-Led & Hands-On</h3>
+      <div class="why-grid">
+        <div class="why-item">
+          <div class="icon-circle">🤝</div>
+          <div>
+            <h3>Founder-Led & Hands-On</h3>
+            <p>
+              You work directly with an experienced operator who cares
+              about your success.
+            </p>
+          </div>
+        </div>
 
-        <p>
-          You work directly with an experienced operator who cares
-          about your success.
-        </p>
+        <div class="why-item">
+          <div class="icon-circle">🧬</div>
+          <div>
+            <h3>Biotech Startup Experienced</h3>
+            <p>
+              We understand the pace, resource constraints,
+              and complexity of your world.
+            </p>
+          </div>
+        </div>
+
+        <div class="why-item">
+          <div class="icon-circle">😆</div>
+          <div>
+            <h3>We Do It with xD</h3>
+            <p>
+              We bring positivity, partnership, and xtreme determination
+              to every engagement.
+            </p>
+          </div>
+        </div>
       </div>
-
-    </div>
-
-    <div class="why-item">
-
-      <div class="icon-circle">
-        🧬
-      </div>
-
-      <div>
-        <h3>Biotech Startup Experienced</h3>
-
-        <p>
-          We understand the pace, resource constraints,
-          and complexity of your world.
-        </p>
-      </div>
-
-    </div>
-
-    <div class="why-item">
-
-      <div class="icon-circle">
-        😆
-      </div>
-
-      <div>
-        <h3>We Do It with xD</h3>
-
-        <p>
-          We bring positivity, partnership, and xtreme determination
-          to every engagement.
-        </p>
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
+    </section>
 
     <section id="contact" class="contact">
-
       <div class="contact-inner">
-
         <div>
-
-          <h2>
-            Let’s lighten your load
-          </h2>
+          <h2>Let’s lighten your load</h2>
 
           <p>
             Ready to simplify your systems and scale with confidence?
@@ -995,13 +947,14 @@
           </p>
 
           <div class="buttons">
-
             <a class="button primary" href="mailto:info@missionatlasxd.com">
               ✉️ Contact Us
             </a>
 
+            <a class="button project" href="/intake">
+              Start Your Project
+            </a>
           </div>
-
         </div>
 
         <img
@@ -1009,16 +962,12 @@
           src="/assets/mascots/MA_wavingmascot-hat.png"
           alt="Mission Atlas xD Waving Mascot"
         >
-
       </div>
-
     </section>
-
   </main>
 
   <footer>
     © 2026 Mission Atlas xD, All rights reserved.
   </footer>
-
 </body>
 </html>
