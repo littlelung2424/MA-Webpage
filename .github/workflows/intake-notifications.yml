@@ -3,7 +3,7 @@ name: Process intake email notifications
 on:
   schedule:
     # Best-effort: GitHub may delay or skip runs. Offset from :00 to avoid peak load.
-    - cron: "3,8,13,18,23,28,33,38,43,48,53,58 * * * *"
+    - cron: "3 * * * *"
   workflow_dispatch:
 
 permissions: {} # Outbound HTTPS only; no GitHub repository token permissions needed.
