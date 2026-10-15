@@ -2,7 +2,6 @@ import { staticHtmlResponse } from "../../lib/staticHtml";
 
 const COMPATIBILITY_PAGES: Record<string, string> = {
   "index.html": "static-pages/index.html",
-  "tools/index.html": "static-pages/tools/index.html",
 };
 
 const LEGACY_ASSET_REDIRECTS: Record<string, string> = {
@@ -33,10 +32,6 @@ export async function GET(request: Request, context: RouteContext) {
 
   if (legacyAssetRedirect) {
     return Response.redirect(new URL(legacyAssetRedirect, request.url), 308);
-  }
-
-  if (requestedPath === "tools/index.html") {
-    return Response.redirect(new URL("/workspace", request.url), 308);
   }
 
   const filePath = COMPATIBILITY_PAGES[requestedPath];
