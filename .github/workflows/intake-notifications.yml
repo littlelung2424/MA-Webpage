@@ -1,0 +1,82 @@
+name: Process intake email notifications
+
+on:
+  schedule:
+    # Best-effort: GitHub may delay or skip runs. Offset from :00 to avoid peak load.
+    - cron: "3,8,13,18,23,28,33,38,43,48,53,58 * * * *"
+  workflow_dispatch:
+
+permissions: {} # Outbound HTTPS only; no GitHub repository token permissions needed.
+
+concurrency:
+  group: mission-atlas-intake-notifications
+  cancel-in-progress: false
+
+jobs:
+  process:
+    name: Process one queued notification
+    if: github.repository == 'littlelung2424/MA-Webpage'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      ENDPOINT: https://missionatlasxd.com/api/internal/intake-notifications
+    steps:
+      - name: Invoke notification worker
+        env:
+          CRON_SECRET: ${{ secrets.MA_INTAKE_CRON_SECRET }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${CRON_SECRET}" ]]; then
+            echo "::error::MA_INTAKE_CRON_SECRET is not configured."
+            exit 1
+          fi
+
+          body="$RUNNER_TEMP/worker-response.json"
+          trap 'rm -f "$body"' EXIT
+
+          # Secret goes to curl via stdin config: never in argv or on disk.
+          # Do not follow redirects: a redirect is not a successful worker invocation.
+          if ! code="$(printf 'header = "Authorization: Bearer %s"\n' "$CRON_SECRET" |
+            curl --silent --show-error --config - \
+              --request POST \
+              --connect-timeout 10 --max-time 60 \
+              --output "$body" --write-out '%{http_code}' \
+              "$ENDPOINT")"; then
+            echo "::error::Could not reach the notification worker (network error or timeout)."
+            exit 1
+          fi
+
+          case "$code" in
+            200) ;;
+            401) echo "::error::HTTP 401: check that MA_INTAKE_CRON_SECRET matches Vercel's CRON_SECRET."; exit 1 ;;
+            403) echo "::error::HTTP 403: access forbidden; check endpoint access and deployment protection."; exit 1 ;;
+            503) echo "::error::HTTP 503: worker is not configured (check Resend/Supabase env vars in Vercel)."; exit 1 ;;
+            *) echo "::error::Worker returned HTTP $code. Check Vercel function logs."; exit 1 ;;
+          esac
+
+          # Never print the response body or personal intake data.
+          # Worker returns {"enabled":false,"processed":0} when disabled,
+          # otherwise {"processed":0} or {"processed":1,"status":"<enum>"}.
+          if ! jq -e '
+            type == "object"
+            and (.enabled != false)
+            and (
+              (.processed == 0 and (.status == null))
+              or (.processed == 1 and (.status | IN("accepted", "retry", "failed", "reconciliation")))
+            )
+          ' "$body" >/dev/null; then
+            echo "::error::Worker disabled or returned an unexpected response. Check Vercel logs."
+            exit 1
+          fi
+
+          processed="$(jq -r '.processed' "$body")"
+          status="$(jq -r '.status // "none"' "$body")"
+          echo "Processed: ${processed}; status: ${status}"
+          echo "Processed: ${processed}; status: ${status}" >> "$GITHUB_STEP_SUMMARY"
+
+          if [[ "$status" == "failed" || "$status" == "reconciliation" ]]; then
+            echo "::error::Notification ended as '${status}'. Review public.intake_notification_outbox in Supabase before retrying."
+            exit 1
+          fi
