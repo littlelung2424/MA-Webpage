@@ -154,17 +154,18 @@
     a:focus-visible { outline: 3px solid var(--navy); outline-offset: 5px; }
     .skip-link { position: absolute; left: 16px; top: -80px; z-index: 1001; background: white; padding: 12px 18px; border-radius: 8px; }
     .skip-link:focus { top: 12px; }
-    main { flex: 1; width: min(1120px, 88%); margin: 0 auto; padding: 72px 0 100px; }
-    .intro { text-align: center; margin-bottom: 44px; }
+    main { flex: 1; width: min(1120px, 88%); margin: 0 auto; padding: 54px 0 72px; position: relative; isolation: isolate; }
+    main::before { content: ""; position: absolute; z-index: -1; pointer-events: none; top: 20px; right: -6%; width: 290px; height: 240px; opacity: .3; background-image: radial-gradient(circle, #a6b9d0 1.4px, transparent 1.8px); background-size: 26px 26px; mask-image: radial-gradient(ellipse, black 10%, transparent 75%); }
+    .intro { text-align: center; margin-bottom: 32px; padding: 24px 20px 16px; background: linear-gradient(180deg, rgba(224,233,244,.55), rgba(241,245,249,0)); border-radius: 22px; }
     .eyebrow { display: block; color: var(--pumpkin); text-transform: uppercase; font-size: 12px; font-weight: 900; letter-spacing: .2em; margin-bottom: 14px; }
     .intro::after { content: ""; display: block; width: 54px; height: 4px; background: var(--pumpkin); border-radius: 8px; margin: 25px auto 0; }
     h1 { color: var(--navy); font-size: clamp(38px, 5vw, 54px); line-height: 1.15; margin: 0 0 18px; font-weight: 900; }
     .intro p { color: var(--slate); font-size: 19px; line-height: 1.6; margin: 0; }
     .tool-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
-    .tool-card { display: flex; flex-direction: column; padding: 38px; min-height: 315px; background: white; border: 1px solid #dbe3ed; border-top: 4px solid var(--pumpkin); border-radius: 18px; box-shadow: 0 12px 30px rgba(6,25,74,.07); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .tool-card { display: flex; flex-direction: column; padding: 34px; min-height: 290px; background: white; border: 1px solid #dbe3ed; border-top: 4px solid var(--pumpkin); border-radius: 18px; box-shadow: 0 12px 30px rgba(6,25,74,.07); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
     .tool-card:hover { transform: translateY(-4px); border-color: var(--pumpkin); box-shadow: 0 22px 46px rgba(6,25,74,.13); }
     .tool-card:focus-visible { outline: 3px solid var(--pumpkin); outline-offset: 5px; }
-    .tool-icon { width: 60px; height: 60px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 26px; background: #fff0e7; color: var(--pumpkin); }
+    .tool-icon { width: 60px; height: 60px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 20px; background: #fff0e7; color: var(--pumpkin); }
     .tool-icon svg { width: 32px; height: 32px; }
     /* Same gold 4C badge as the scorer's .company-logo. */
     .tool-icon.four-c { background: var(--gold); color: var(--navy); font-weight: 900; font-size: 24px; }
@@ -174,6 +175,10 @@
     .tool-arrow { align-self: flex-end; color: white; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: var(--pumpkin); transition: background .2s ease, transform .2s ease; }
     .tool-card:hover .tool-arrow { background: var(--pumpkin-dark); transform: translateX(3px); }
     .tool-arrow svg { width: 20px; height: 20px; }
+    .closing { margin-top: 34px; padding: 30px 38px; border-radius: 18px; background: linear-gradient(115deg, #06194a, #153563); color: white; border-left: 4px solid var(--pumpkin); box-shadow: 0 12px 30px rgba(6,25,74,.1); }
+    .closing-kicker { color: #ffba89; text-transform: uppercase; letter-spacing: .16em; font-weight: 900; font-size: 11px; margin: 0 0 10px; }
+    .closing h2 { color: white; font-size: clamp(23px, 3vw, 29px); margin: 0 0 8px; line-height: 1.2; }
+    .closing p:last-child { color: #e0e9f4; font-size: 16px; line-height: 1.6; max-width: 790px; margin: 0; }
     @media (max-width: 1100px) {
       header { flex-wrap: wrap; justify-content: center; gap: 18px; }
       nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; align-items: center; }
@@ -188,7 +193,9 @@
       .intro { margin-bottom: 30px; }
       .intro p { font-size: 18px; }
       .tool-grid { grid-template-columns: 1fr; grid-auto-rows: 1fr; gap: 20px; }
-      .tool-card { padding: 28px; min-height: 310px; }
+      .tool-card { padding: 28px; min-height: 280px; }
+      .closing { padding: 26px; margin-top: 24px; }
+      main::before { right: 0; width: 170px; }
       .tool-card h2 { font-size: 24px; }
       footer { padding: 16px 5%; }
     }
@@ -221,7 +228,7 @@
 
   <main id="tools" tabindex="-1">
     <div class="intro">
-      <span class="eyebrow">Mission Atlas xD / Applications</span>
+      <span class="eyebrow">Mission Atlas xD / Toolbox</span>
       <h1>Our Tools</h1>
       <p>Practical tools. Less manual work. More time for what matters.</p>
     </div>
@@ -241,6 +248,11 @@
         <span class="tool-status"><span id="qa-status">Open tool</span><span class="tool-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></span>
       </a>
     </div>
+    <section class="closing" aria-labelledby="closing-title">
+      <p class="closing-kicker">Built to make work easier</p>
+      <h2 id="closing-title">Less busywork. More progress.</h2>
+      <p>Purpose-built tools to simplify real workflows, reduce repetitive tasks, and give your team more time for what matters.</p>
+    </section>
   </main>
   <footer>© 2026 Mission Atlas xD, All rights reserved.</footer>
 </body>
