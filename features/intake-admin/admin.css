@@ -5,7 +5,7 @@
     radial-gradient(circle at 88% 92%, rgba(255, 138, 0, 0.34), transparent 31%),
     radial-gradient(circle at 82% 14%, rgba(7, 24, 65, 0.11), transparent 36%),
     radial-gradient(circle at 7px 7px, rgba(7, 24, 65, 0.055) 1px, transparent 1.5px) 0 0 / 20px 20px,
-    linear-gradient(135deg, var(--intake-sky) 0%, #ffffff 52%, #fff2c6 100%);
+    linear-gradient(45deg, #fff2c6 0%, #ffffff 48%, var(--intake-sky) 100%);
 }
 
 .admin-card {
