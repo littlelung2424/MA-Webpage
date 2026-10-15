@@ -67,7 +67,10 @@
       --navy: #06194a;
       --deep-navy: #031033;
       --gold: #f7b500;
-      --cream: #fff8e8;
+      --cream: #f1f5f9;
+      --pumpkin: #c65a28;
+      --pumpkin-dark: #a8471e;
+      --slate: #24466d;
       --sky: #eaf5ff;
       --text: #263246;
       --muted: #667085;
@@ -137,22 +140,6 @@
       color: var(--gold);
     }
 
-    /* Scheduling CTA: shared shape, rust-orange accent */
-    nav a.schedule-cta {
-      display: inline-block;
-      padding: 11px 20px;
-      border-radius: 10px;
-      background: #B64F2A;
-      color: #ffffff;
-      box-shadow: 0 8px 18px rgba(182, 79, 42, 0.20);
-    }
-
-    nav a.schedule-cta:hover,
-    nav a.schedule-cta:focus-visible {
-      background: #943C20;
-      color: #ffffff;
-    }
-
     footer {
       background: var(--deep-navy);
       color: white;
@@ -167,21 +154,25 @@
     a:focus-visible { outline: 3px solid var(--navy); outline-offset: 5px; }
     .skip-link { position: absolute; left: 16px; top: -80px; z-index: 1001; background: white; padding: 12px 18px; border-radius: 8px; }
     .skip-link:focus { top: 12px; }
-    main { flex: 1; width: min(1120px, 86%); margin: 0 auto; padding: 76px 0 100px; }
-    .intro { text-align: center; margin-bottom: 46px; }
-    h1 { color: var(--navy); font-size: clamp(36px, 5vw, 48px); line-height: 1.15; margin: 0 0 18px; font-weight: 900; }
-    .intro p { color: #536078; font-size: 20px; line-height: 1.6; margin: 0; }
+    main { flex: 1; width: min(1120px, 88%); margin: 0 auto; padding: 72px 0 100px; }
+    .intro { text-align: center; margin-bottom: 44px; }
+    .eyebrow { display: block; color: var(--pumpkin); text-transform: uppercase; font-size: 12px; font-weight: 900; letter-spacing: .2em; margin-bottom: 14px; }
+    .intro::after { content: ""; display: block; width: 54px; height: 4px; background: var(--pumpkin); border-radius: 8px; margin: 25px auto 0; }
+    h1 { color: var(--navy); font-size: clamp(38px, 5vw, 54px); line-height: 1.15; margin: 0 0 18px; font-weight: 900; }
+    .intro p { color: var(--slate); font-size: 19px; line-height: 1.6; margin: 0; }
     .tool-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
-    .tool-card { display: flex; flex-direction: column; padding: 36px; min-height: 320px; background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 10px 30px rgba(6,25,74,.06); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
-    .tool-card:hover { border-color: #d5a32b; box-shadow: 0 16px 36px rgba(6,25,74,.10); }
-    .tool-icon { width: 60px; height: 60px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 26px; background: #fff5d9; color: var(--navy); }
+    .tool-card { display: flex; flex-direction: column; padding: 38px; min-height: 315px; background: white; border: 1px solid #dbe3ed; border-top: 4px solid var(--pumpkin); border-radius: 18px; box-shadow: 0 12px 30px rgba(6,25,74,.07); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .tool-card:hover { transform: translateY(-4px); border-color: var(--pumpkin); box-shadow: 0 22px 46px rgba(6,25,74,.13); }
+    .tool-card:focus-visible { outline: 3px solid var(--pumpkin); outline-offset: 5px; }
+    .tool-icon { width: 60px; height: 60px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 26px; background: #fff0e7; color: var(--pumpkin); }
     .tool-icon svg { width: 32px; height: 32px; }
     /* Same gold 4C badge as the scorer's .company-logo. */
-    .tool-icon.four-c { background: var(--gold); font-weight: 900; font-size: 24px; }
+    .tool-icon.four-c { background: var(--gold); color: var(--navy); font-weight: 900; font-size: 24px; }
     .tool-card h2 { color: var(--navy); font-size: 26px; line-height: 1.25; margin: 0 0 14px; font-weight: 900; }
-    .tool-card p { color: #536078; font-size: 17px; line-height: 1.7; margin: 0 0 28px; }
-    .tool-status { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #667085; font-size: 14px; }
-    .tool-arrow { align-self: flex-end; color: var(--navy); width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #fff5d9; }
+    .tool-card p { color: var(--slate); font-size: 17px; line-height: 1.7; margin: 0 0 28px; }
+    .tool-status { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--pumpkin); font-weight: 900; font-size: 14px; }
+    .tool-arrow { align-self: flex-end; color: white; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: var(--pumpkin); transition: background .2s ease, transform .2s ease; }
+    .tool-card:hover .tool-arrow { background: var(--pumpkin-dark); transform: translateX(3px); }
     .tool-arrow svg { width: 20px; height: 20px; }
     @media (max-width: 1100px) {
       header { flex-wrap: wrap; justify-content: center; gap: 18px; }
@@ -223,13 +214,14 @@
     <nav aria-label="Primary">
       <a href="/">Home</a>
       <a href="mailto:info@missionatlasxd.com">Contact Us</a>
-      <a class="schedule-cta" href="https://calendly.com/missionatlasxd" target="_blank" rel="noopener noreferrer">Schedule Time</a>
+      <a href="https://calendly.com/missionatlasxd" target="_blank" rel="noopener noreferrer">Schedule Time</a>
       <a href="/intake">Start Your Project</a>
     </nav>
   </header>
 
   <main id="tools" tabindex="-1">
     <div class="intro">
+      <span class="eyebrow">Mission Atlas xD / Applications</span>
       <h1>Our Tools</h1>
       <p>Practical tools. Less manual work. More time for what matters.</p>
     </div>
