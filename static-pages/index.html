@@ -141,6 +141,22 @@
       color: var(--gold);
     }
 
+    /* Scheduling CTA: shared shape, rust-orange accent */
+    nav a.schedule-cta {
+      display: inline-block;
+      padding: 11px 20px;
+      border-radius: 10px;
+      background: #B64F2A;
+      color: #ffffff;
+      box-shadow: 0 8px 18px rgba(182, 79, 42, 0.20);
+    }
+
+    nav a.schedule-cta:hover,
+    nav a.schedule-cta:focus-visible {
+      background: #943C20;
+      color: #ffffff;
+    }
+
     .hero {
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
@@ -781,7 +797,7 @@
       <a href="#about">About</a>
       <a href="#services">What We Do</a>
       <a href="#why">Why Us</a>
-      <a href="#contact">Contact</a>
+      <a class="schedule-cta" href="https://calendly.com/missionatlasxd" target="_blank" rel="noopener noreferrer">Schedule Time</a>
     </nav>
   </header>
 
