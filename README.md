@@ -10,6 +10,8 @@ This repository is a Next.js site that serves the static pages and the `/intake`
 | --- | --- | --- |
 | `/` | `static-pages/index.html` via `app/route.ts` | Homepage |
 | `/tools/` | `static-pages/tools/index.html` via `app/tools/route.ts` | Tools landing page |
+| `/tools/order-verification` | `static-pages/tools/order-verification/index.html` | Order Verification (v16.9) |
+| `/tools/four-c-qa-scorer` | `static-pages/tools/four-c-qa-scorer/index.html` | 4C's QA Scorer (v2) |
 | `/intake` | `app/intake/page.tsx` | Intake form |
 | `/api/intake` | `app/api/intake/route.ts` | Intake form submission endpoint |
 | `/admin/intake` | `app/admin/intake/page.tsx` | Private admin review page for intake submissions |
