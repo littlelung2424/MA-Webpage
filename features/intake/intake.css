@@ -234,7 +234,7 @@
   gap: 10px;
   min-width: 178px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 10px;
   background: var(--intake-gold);
   color: #ffffff;
   cursor: pointer;
