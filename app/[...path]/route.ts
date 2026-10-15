@@ -2,7 +2,6 @@ import { staticHtmlResponse } from "../../lib/staticHtml";
 
 const COMPATIBILITY_PAGES: Record<string, string> = {
   "index.html": "static-pages/index.html",
-  "tools/index.html": "static-pages/tools/index.html",
 };
 
 const LEGACY_ASSET_REDIRECTS: Record<string, string> = {
