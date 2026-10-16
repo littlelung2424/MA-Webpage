@@ -1,0 +1,5 @@
+import type { ReactNode } from "react";
+import Link from "next/link";
+import styles from "./support.module.css";
+export const metadata = { title: "Support Center | Mission Atlas xD", description: "Guides and documentation for Mission Atlas xD tools." };
+export default function SupportLayout({children}:{children:ReactNode}){return <div className={styles.shell}><header className={styles.header}><Link className={styles.brand} href="/"><span className={styles.brandIcon}>✧</span>Mission Atlas xD</Link><nav className={styles.nav} aria-label="Main navigation"><Link href="/">Home</Link><Link href="/workspace">Workspace</Link><Link className={styles.active} href="/support">Support</Link><Link className={styles.workspace} href="/workspace">Launch Workspace ↗</Link></nav></header>{children}<footer className={styles.footer}>© {new Date().getFullYear()} Mission Atlas xD · <Link href="/support">Support Center</Link></footer></div>}
