@@ -252,7 +252,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 }
 
 /* Compact masthead sized to match PO All-in-One v16.9. */
-.atlas-brand-header{display:flex;align-items:center;gap:14px;padding:10px 8%;background:#fffdf8;border-bottom:1px solid var(--border);box-shadow:0 2px 14px rgba(0,0,0,.05);min-height:72px}
+.atlas-brand-header{position:sticky;top:0;z-index:1000;display:flex;align-items:center;gap:14px;padding:10px 8%;background:#fffdf8;border-bottom:1px solid var(--border);box-shadow:0 2px 14px rgba(0,0,0,.05);min-height:72px}
 .atlas-brand-logo{display:block;width:92px;height:auto;max-height:72px;object-fit:contain;object-position:left center;flex-shrink:0;mix-blend-mode:multiply}
 .atlas-brand-title{display:flex;flex-direction:column;gap:2px;min-width:0}
 .atlas-brand-name{font-size:18px;font-weight:900;line-height:1.05;color:var(--ma-navy)}
@@ -265,6 +265,12 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 }
 .atlas-home-link{display:block;flex-shrink:0;border-radius:6px}
 .atlas-home-link:focus-visible{outline:3px solid var(--ma-navy);outline-offset:5px}
+
+/* Keep desktop navigation below the pinned masthead. */
+html{scroll-padding-top:var(--atlas-header-height,88px)}
+@media(min-width:641px){
+  .sidebar{top:var(--atlas-header-height,88px);height:calc(100vh - var(--atlas-header-height,88px))}
+}
 </style>
 </head>
 <body>
@@ -1580,6 +1586,25 @@ if(!config.envMode)config.envMode='claude';
 if(!config.aiProvider)config.aiProvider='claude';
 applyBranding();renderHistory();
 el('todaysDate').value=new Date().toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'numeric'});
+</script>
+
+<script>
+// Measure the masthead so navigation stays clear after resizing or font loading.
+(() => {
+  const header = document.querySelector('.atlas-brand-header');
+  const updateHeaderHeight = () => {
+    document.documentElement.style.setProperty(
+      '--atlas-header-height', header.getBoundingClientRect().height + 'px'
+    );
+  };
+  updateHeaderHeight();
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(updateHeaderHeight).observe(header);
+  } else {
+    window.addEventListener('resize', updateHeaderHeight);
+    window.addEventListener('load', updateHeaderHeight);
+  }
+})();
 </script>
 </body>
 </html>
