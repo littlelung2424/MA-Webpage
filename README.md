@@ -2,6 +2,12 @@
 
 Static website for Mission Atlas xD. The production domain is `missionatlasxd.com`.
 
+## Local development and verification
+
+Use Node.js 24 (matching the production project), then run `npm ci`, `npm run lint` (TypeScript checking), `npm test`, and `npm run build`. Start local development with `npm run dev`. The outbox tests start an isolated embedded PostgreSQL instance under ignored `work/`; they do not use the production database. Configure local values in `.env.local` using `.env.example`, never in tracked files.
+
+See [repository structure](docs/structure.md), [hosted applications](docs/tool-hosting.md), and the [2026-10-15 repository audit](docs/repository-audit-2026-10-15.md).
+
 ## Site structure
 
 This repository is a Next.js site that serves the static pages and the `/intake` form/API.
@@ -9,9 +15,9 @@ This repository is a Next.js site that serves the static pages and the `/intake`
 | URL | Source file | Notes |
 | --- | --- | --- |
 | `/` | `static-pages/index.html` via `app/route.ts` | Homepage |
-| `/tools/` | `static-pages/tools/index.html` via `app/tools/route.ts` | Tools landing page |
-| `/tools/order-verification` | `static-pages/tools/order-verification/index.html` | Order Verification (v16.9) |
-| `/tools/four-c-qa-scorer` | `static-pages/tools/four-c-qa-scorer/index.html` | 4C's QA Scorer (v2) |
+| `/workspace/` | `static-pages/workspace/index.html` via `app/workspace/route.ts` | Tools landing page |
+| `/workspace/order-verification` | `static-pages/workspace/order-verification/index.html` | Order Verification (v16.9) |
+| `/workspace/four-c-qa-scorer` | `static-pages/workspace/four-c-qa-scorer/index.html` | 4C's QA Scorer (v2) |
 | `/intake` | `app/intake/page.tsx` | Intake form |
 | `/api/intake` | `app/api/intake/route.ts` | Intake form submission endpoint |
 | `/admin/intake` | `app/admin/intake/page.tsx` | Private admin review page for intake submissions |
@@ -111,7 +117,7 @@ If the error persists after redeploying:
 After deployment, verify these URLs:
 
 - `https://missionatlasxd.com/`
-- `https://missionatlasxd.com/tools/`
+- `https://missionatlasxd.com/workspace/`
 - `https://missionatlasxd.com/sitemap.xml`
 - `https://missionatlasxd.com/robots.txt`
 
@@ -145,4 +151,4 @@ If you need to return to GitHub Pages:
    - `185.199.110.153`
    - `185.199.111.153`
 5. If using `www`, point it back to the GitHub Pages hostname required by your GitHub Pages configuration.
-6. Wait for DNS propagation, then verify `https://missionatlasxd.com/`, `https://missionatlasxd.com/tools/`, `https://missionatlasxd.com/sitemap.xml`, and `https://missionatlasxd.com/robots.txt`.
+6. Wait for DNS propagation, then verify `https://missionatlasxd.com/`, `https://missionatlasxd.com/workspace/`, `https://missionatlasxd.com/sitemap.xml`, and `https://missionatlasxd.com/robots.txt`.

@@ -1,6 +1,6 @@
 # Intake notification scheduler
 
-The workflow at `.github/workflows/intake-notifications.yml` invokes the existing authenticated Vercel worker approximately every five minutes. Each request processes at most one queued notification. GitHub Actions does not send email itself.
+The workflow at `.github/workflows/intake-notifications.yml` invokes the existing authenticated Vercel worker once per hour, at minute 3 (`3 * * * *`). Each request processes at most one queued notification. GitHub Actions does not send email itself.
 
 ## Setup
 
@@ -37,7 +37,7 @@ A failed workflow does not prove the email was not sent. The workflow only calls
 
 ## Operating limits
 
-GitHub schedules are best-effort and can be delayed or skipped. Runs are offset from the top of the hour; delivery within five minutes is not guaranteed. Each invocation processes only one notification, so a backlog can grow if submissions arrive faster. Concurrent workflow runs are serialized.
+GitHub schedules are best-effort and can be delayed or skipped. Runs are offset from the top of the hour; delivery within an hour is not guaranteed. Each invocation processes only one notification, so scheduled throughput is at most one notification per hour and a backlog can grow if submissions arrive faster. Concurrent workflow runs are serialized.
 
 To stop scheduled invocations, disable the workflow in GitHub Actions. To stop sending through both scheduled and manual invocations, set `INTAKE_NOTIFICATIONS_ENABLED=false` in Vercel Production and redeploy. Scheduled runs left enabled will report failure while the worker is disabled.
 

@@ -1,55 +1,52 @@
 # Repository structure
 
-This project is a small Next.js site with a few preserved static pages. The structure is intentionally split by responsibility so files stay easy to find as the site grows.
+The site combines Next.js routes with standalone HTML tools. Keep this split: the tools remain portable, while the website owns URLs, hosting, public assets, and intake services.
 
-## Top-level layout
+## Folder responsibilities
 
 | Path | Purpose |
 | --- | --- |
-| `app/` | Next.js App Router pages, route handlers, API endpoints, and global styles. |
-| `lib/` | Shared server-side TypeScript helpers used by routes/pages. |
-| `static-pages/` | Static HTML pages that are served by lightweight Next.js route handlers. |
-| `public/` | Static public files served directly by Next.js, including images, icons, sitemap, robots, and manifest files. |
-| `supabase/migrations/` | Database migrations for the intake/admin workflow. |
-| `docs/` | Project documentation for maintainers. |
+| `app/` | Thin Next.js pages, route handlers, API entry points, layout, and global styles. |
+| `components/` | Shared React UI such as `BrandHomeLink.tsx`. |
+| `features/intake/` | Intake form, validation, upload metadata, and submission integration. |
+| `features/intake-admin/` | Admin UI, server actions, data access, and attachment handling. |
+| `features/intake-notifications/` | Notification worker implementation. |
+| `lib/` | Shared server helpers for static HTML and intake database access. |
+| `static-pages/` | Homepage and standalone workspace HTML documents. |
+| `public/assets/brand/` | Shared logos and homepage-link CSS. |
+| `public/assets/mascots/` | Mascot assets. |
+| `public/icons/` | Favicons and app icons. |
+| `public/` | Sitemap, robots rules, and web manifest. |
+| `supabase/migrations/` | Ordered database schema history; retain applied migrations. |
+| `tests/` | Notification worker and isolated PostgreSQL outbox tests. |
+| `.github/workflows/` | Intake notification scheduler. |
+| `docs/` | Maintenance guidance and audit records. |
 
 ## Routing map
 
-| Public URL | Source |
+| URL | Source |
 | --- | --- |
-| `/` | `app/route.ts` reads `static-pages/index.html`. |
-| `/index.html` | `app/[...path]/route.ts` reads `static-pages/index.html` for compatibility. |
-| `/tools/` | `app/tools/route.ts` reads `static-pages/tools/index.html`. |
-| `/tools/index.html` | `app/[...path]/route.ts` reads `static-pages/tools/index.html` for compatibility. |
-| Legacy root asset URLs | `app/[...path]/route.ts` redirects old root asset URLs to their new `public/` locations. |
-| `/intake` | `app/intake/page.tsx`. |
-| `/admin/intake` | `app/admin/intake/page.tsx`. |
-| `/api/intake` | `app/api/intake/route.ts`. |
-| `/api/admin/intake/*` | Admin API route handlers under `app/api/admin/intake/`. |
+| `/` | `app/route.ts` → `static-pages/index.html` |
+| `/workspace` | `app/workspace/route.ts` → `static-pages/workspace/index.html` |
+| `/workspace/order-verification` | Matching route → `static-pages/workspace/order-verification/index.html` |
+| `/workspace/four-c-qa-scorer` | Matching route → `static-pages/workspace/four-c-qa-scorer/index.html` |
+| `/intake` | `app/intake/page.tsx` |
+| `/admin/intake` | `app/admin/intake/page.tsx` |
+| `/api/intake` | Intake submission handler |
+| `/api/admin/intake/debug` | Protected diagnostic handler |
+| `/api/admin/intake/files/download` | Protected attachment download handler |
+| `/api/internal/intake-notifications` | Authenticated notification worker entry point |
+| `/index.html` | Catch-all compatibility alias for the homepage |
+| Legacy root image/icon filenames | Catch-all redirects to public asset URLs |
 
-## Static assets
+The old `/tools` paths and `/workspace/index.html` are not currently compatibility aliases. Use the canonical URLs above; consider redirects before retiring externally shared URLs.
 
-Use `public/` for files that need stable browser URLs:
+## Maintenance rules
 
-| Asset type | Folder | URL pattern |
-| --- | --- | --- |
-| Brand imagery/logos | `public/assets/brand/` | `/assets/brand/...` |
-| Mascot imagery | `public/assets/mascots/` | `/assets/mascots/...` |
-| Favicons/app icons | `public/icons/` | `/icons/...` |
-| SEO/PWA metadata | `public/` | `/robots.txt`, `/sitemap.xml`, `/site.webmanifest` |
-
-When adding a new image, prefer a descriptive file name and place it in the most specific existing folder. Add a new subfolder under `public/assets/` only when the asset category is meaningfully different from brand or mascot imagery.
-
-## Static pages
-
-`static-pages/` contains static HTML that is intentionally not converted to React yet. Keep page-specific inline markup there only while these pages are mostly static. If a page starts sharing significant UI or logic with the app, convert it to an App Router page such as `app/page.tsx` or `app/tools/page.tsx`.
-
-When moving or adding a static page:
-
-1. Put the HTML under `static-pages/`.
-2. Prefer an explicit route folder such as `app/tools/route.ts` for live static pages that still need to return full static HTML documents.
-3. Use `app/[...path]/route.ts` only for compatibility aliases such as `/index.html`, `/tools/index.html`, and old asset redirects.
-4. Add the HTML file to `outputFileTracingIncludes` in `next.config.ts` so Vercel includes it in serverless output tracing.
-5. Use absolute public asset URLs such as `/assets/brand/logo.png`; avoid `../` asset paths.
-6. If moving a previously public asset URL, add a compatibility redirect in `app/[...path]/route.ts`.
-7. Update the README routing table if the public URL changes.
+1. Keep feature logic in `features/`, reusable helpers in `lib/`, and route entry points small.
+2. For each standalone page, add its HTML under `static-pages/`, an explicit `app/.../route.ts`, and the corresponding `outputFileTracingIncludes` entry in `next.config.ts`.
+3. Keep browser assets under `public/` and reference them with absolute URLs such as `/assets/brand/02.png`.
+4. Follow [the branding standard](brand-header-standard.md) for logo links and [tool hosting](tool-hosting.md) when syncing applications.
+5. Update route documentation and the sitemap when public navigation changes. Preserve useful compatibility redirects.
+6. Keep generated output, local secrets, and test databases out of Git. `.env.example` is the committed template.
+7. Do not delete old migrations, compatibility assets, or preview images solely because they are not referenced by the current page markup.
