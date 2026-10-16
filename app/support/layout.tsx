@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./support.module.css";
+import SupportNavigation from "./navigation";
 
 export const metadata = {
   title: "Support Center | Mission Atlas xD",
@@ -21,13 +22,7 @@ export default function SupportLayout({ children }: { children: ReactNode }) {
             <Image src="/assets/brand/02.png" width={58} height={58} alt="Mission Atlas xD logo" unoptimized />
             <span>MissionAtlas<span className={styles.brandXD}>XD</span></span>
           </Link>
-          <nav className={styles.nav} aria-label="Primary">
-            <Link href="/#home">Home</Link>
-            <Link href="/#about">About</Link>
-            <Link href="/#services">What We Do</Link>
-            <Link href="/#why">Why Us</Link>
-            <Link href="/workspace">The Workspace</Link>
-          </nav>
+          <SupportNavigation />
         </header>
         {children}
         <footer className={styles.footer}>
