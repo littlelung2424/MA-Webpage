@@ -20,7 +20,7 @@ The existing organization is appropriate. No broad move, framework rewrite, or d
 
 ## Corrections made
 
-- Updated README and maintenance documentation from retired `/tools` locations to `/workspace`.
+- Aligned README and maintenance documentation with the current `/workspace` routes.
 - Documented `features/`, `components/`, tests, scheduler, current routes, and local verification commands.
 - Corrected the scheduler description: the actual workflow is hourly, not every five minutes. Scheduling behavior was not changed.
 - Corrected Four C's upstream revision and recorded its website-specific homepage link.
@@ -28,13 +28,16 @@ The existing organization is appropriate. No broad move, framework rewrite, or d
 
 ## Recommended follow-ups
 
-1. **Restore old URL redirects if those URLs were shared.** The catch-all currently returns 404 for `/tools`, `/tools/index.html`, `/tools/order-verification`, and `/tools/four-c-qa-scorer`. Map them to the corresponding `/workspace` routes. The current site navigation uses valid workspace URLs.
-2. **Add pull-request verification.** The sole workflow invokes notifications; there is no repository workflow running the build, TypeScript check, and tests. Existing tests focus on notifications/outbox, leaving routes, assets, intake validation, and tool behavior without equivalent regression coverage.
-3. **Keep tool synchronization explicit.** Portable source lives in `Applications`; website copies live here. Compare versions and preserve hosting adaptations. A shared update/check script would reduce drift.
-4. **Review dependency ranges deliberately.** Several dependencies use `latest`. The committed lockfile provides exact resolutions, but regenerating it can introduce major upgrades. Pin or bound versions during a separately tested dependency-maintenance change.
-5. **Consider adding the two workspace tool URLs to the sitemap** if they should be indexed. They are navigable but absent from the current sitemap.
-6. **Review intake failure cleanup separately.** Uploads occur before the database transaction; a subsequent failure can leave orphaned private Blob objects. Existing notification documentation acknowledges this behavior.
-7. **Refresh preview screenshots** after design changes. The stored previews predate the current compact Four C's masthead.
+1. **Add pull-request verification.** The sole workflow invokes notifications; there is no repository workflow running the build, TypeScript check, and tests. Existing tests focus on notifications/outbox, leaving routes, assets, intake validation, and tool behavior without equivalent regression coverage.
+2. **Keep tool synchronization explicit.** Portable source lives in `Applications`; website copies live here. Compare versions and preserve hosting adaptations. A shared update/check script would reduce drift.
+3. **Review dependency ranges deliberately.** Several dependencies use `latest`. The committed lockfile provides exact resolutions, but regenerating it can introduce major upgrades. Pin or bound versions during a separately tested dependency-maintenance change.
+4. **Consider adding the two workspace tool URLs to the sitemap** if they should be indexed. They are navigable but absent from the current sitemap.
+5. **Review intake failure cleanup separately.** Uploads occur before the database transaction; a subsequent failure can leave orphaned private Blob objects. Existing notification documentation acknowledges this behavior.
+
+
+## Owner-directed cleanup
+
+The owner confirmed that `/workspace` is the only supported application route family; no redirects for retired application URLs are needed. Removed outdated preview screenshots and retired route references from the current repository. Future previews should use current workspace naming and reflect the deployed design.
 
 ## Verification limits
 

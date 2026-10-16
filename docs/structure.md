@@ -39,7 +39,7 @@ The site combines Next.js routes with standalone HTML tools. Keep this split: th
 | `/index.html` | Catch-all compatibility alias for the homepage |
 | Legacy root image/icon filenames | Catch-all redirects to public asset URLs |
 
-The old `/tools` paths and `/workspace/index.html` are not currently compatibility aliases. Use the canonical URLs above; consider redirects before retiring externally shared URLs.
+`/workspace` and its listed child routes are the supported application URLs. No alternate application route aliases are maintained.
 
 ## Maintenance rules
 
@@ -49,4 +49,4 @@ The old `/tools` paths and `/workspace/index.html` are not currently compatibili
 4. Follow [the branding standard](brand-header-standard.md) for logo links and [tool hosting](tool-hosting.md) when syncing applications.
 5. Update route documentation and the sitemap when public navigation changes. Preserve useful compatibility redirects.
 6. Keep generated output, local secrets, and test databases out of Git. `.env.example` is the committed template.
-7. Do not delete old migrations, compatibility assets, or preview images solely because they are not referenced by the current page markup.
+7. Do not delete applied migrations or compatibility assets solely because they are not referenced by the current page markup.
